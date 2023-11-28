@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>ShareSpell</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{{ url_for('static' , filename = 'favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static' , filename = 'apple-touch-icon.png') }}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static' , filename = 'aos.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'swiper-bundle.min.css') }}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{{ url_for('static' , filename = 'style.css') }}" rel="stylesheet" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Serenity
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/serenity-bootstrap-corporate-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <div class="logo">
+        <h1 class="text-light"><a href="index.html">ShareSpell</a></h1>
+      
+        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html"><span>About</span> <i class="bi bi-chevron-down"></i></a>
+          
+          </li>
+          <li><a href="services.html">Services</a></li>
+         
+         
+          <li><a class="active" href="blog.html">Blog</a></li>
+         
+
+          <li><a class="getstarted" href="about.html">Get Started</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="breadcrumb-hero">
+        <div class="container">
+          <div class="breadcrumb-hero">
+            <h2>SpellBook</h2>
+            <p>Welcome to our SpellBook, a hub of shared insights! Explore our list of posts where practical knowledge meets community collaboration. Each entry is a valuable piece of the puzzle, contributing to a collective pool of expertise. Join us in discovering the power of shared learning through the straightforward, easy-to-navigate list of posts. At Sharespell, knowledge is just a click away. </p>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li>Blog</li>
+        </ol>
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Blog Section ======= -->
+    <section id="blog" class="blog">
+        <div class="container" data-aos="fade-up">
+  
+          <div class="row">
+  
+            <div class="col-lg-8 entries">
+              {% if posts is not none %}
+              {% for post in posts %}
+              <article class="entry">
+  
+                <h2 class="entry-title">
+                  <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.post_title}}</a>
+                </h2>
+  
+                <div class="entry-meta">
+                  <ul>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.display_name}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.create_date}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Comments: {{post.comment_count}}</a></li>
+                  </ul>
+                </div>
+  
+                <div class="entry-content">
+                  <p>{{post.post_content}}</p>
+                  <div class="read-more">
+                    <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
+                  </div>
+                </div>
+  
+              </article><!-- End blog entry -->
+              {% endfor %}
+              {% endif %}
+              
+              <!-- ... existing code ... -->
+  
+              <div class="blog-pagination">
+                <ul class="justify-content-center">
+                  {% for page_num in range(1, total_pages + 1) %}
+                    <li {% if page_num == current_page %}class="active"{% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>           
+    
+
+       
+
+          </div><!-- End blog entries list -->
+
+          <div class="col-lg-4">
+
+            <div class="sidebar">
+
+              <h3 class="sidebar-title">Search</h3>
+              <div class="sidebar-item search-form">
+                <form action="">
+                  <input type="text">
+                  <button type="submit"><i class="bi bi-search"></i></button>
+                </form>
+              </div><!-- End sidebar search formn-->
+
+              <h3 class="sidebar-title">Categories</h3>
+              <div class="sidebar-item categories">
+                <ul>
+                    {% if categories is not none %}
+                    {% for category in categories %}
+                  <li><a href="#">{{category.name}} <span>({{category.post_count}})</span></a></li>
+                  {% endfor %}
+                  {% endif %}
+                </ul>
+              </div><!-- End sidebar categories-->
+
+               <h3 class="sidebar-title">Recent Posts</h3>
+               
+              <div class="sidebar-item recent-posts">
+                {% if recentPosts is not none %}
+                    {% for rp in recentPosts %}
+                <div class="post-item clearfix">
+                 
+                  <h4><a href="{{ url_for('view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>
+                  <time datetime="2020-01-01">{{rp.date}}</time>
+                
+                </div>   {% endfor %}
+              {% endif %}
+
+
+              </div><!-- End sidebar recent posts-->
+
+              <h3 class="sidebar-title">Popular Tags</h3>
+              <div class="sidebar-item tags">
+                <ul>
+                    {% if tags is not none %}
+                    {% for tag in tags %}
+                  <li><a href="#">{{tag.name}}</a></li>
+                  {% endfor %}
+              {% endif %}
+
+                  
+                </ul>
+              </div><!-- End sidebar tags-->
+
+            </div><!-- End sidebar -->
+
+          </div><!-- End blog sidebar -->
+
+        </div>
+
+      </div>
+    </section><!-- End Blog Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-4 col-md-6 footer-info">
+            <h3>ShareSpell</h3>
+            <p>Step into the enchanted world of ShareSpell & explore the collective wisdom of our community. Dive into a tapestry of insights, expertise, and shared resources. Each post is a brushstroke, contributing to a masterpiece of knowledge. Join us in shaping the narrative of shared learning.</p>
+          </div>
+
+          <div class="col-lg-4 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About us</a></li>
+              <li><a href="#">Services</a></li>
+             
+            </ul>
+          </div>
+
+          <div class="col-lg-4 col-md-6 footer-contact">
+            <h4>Contact Us</h4>
+            <p>
+              <strong>Email:</strong> sonipriyanshi.ps99@gmail.com<br>
+            </p>
+
+            <div class="social-links">
+              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+
+          </div>
+
+          <!-- <div class="col-lg-3 col-md-6 footer-newsletter">
+            <h4>Our Newsletter</h4>
+            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna veniam enim veniam illum dolore legam minim quorum culpa amet magna export quem marada parida nodela caramase seza.</p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+          </div> -->
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- <div class="copyright">
+        &copy; Copyright <strong><span>Serenity</span></strong>. All Rights Reserved
+      </div> -->
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{{ url_for('static' , filename = 'purecounter_vanilla.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'aos.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'glightbox.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'validate.js') }}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{{ url_for('static' , filename = 'main.js') }}"></script>
+
+</body>
+
+</html>

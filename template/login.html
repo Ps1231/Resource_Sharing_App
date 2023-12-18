@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="{{ url_for('static', filename='login.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <script>
+        $(document).ready(function() {
+            // Use 'click' event on the button inside the form
+            $('.login-form button').click(function(e) {
+                e.preventDefault();  // Prevent form submission
+                $('form.login-form').submit();  // Submit the form
+            });
+        });
+    </script>
+    <style>
+        /* Your CSS styles go here */
+    </style>
+    <div class="login-page">
+        <div class="form">
+            <form class="login-form" method="post" action="{{ url_for('login') }}">
+                <p>Have an account??</p>
+                <input type="text" name="username" id="username" required/>
+                <input type="password" name="password" id="password" required/>
+                <button type="submit">Login</button>
+                <div>{% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                </div>
+                <p class="message">Not registered? <a href="{{ url_for('registration') }}">Create an account</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

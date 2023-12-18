@@ -146,3 +146,14 @@ FROM
 GROUP BY
     category;
 '''
+
+
+def get_user_by_username(username):
+    return "SELECT * FROM Users WHERE username = %s"
+
+
+def insert_user(username, email, password, display_name, City, State, Country, about_me, role, Gravatar_url):
+    return """
+    INSERT INTO Users (username, email, password_hash, display_name, City, State, Country, about_me, role, Gravatar_url, creation_date)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP);
+    """

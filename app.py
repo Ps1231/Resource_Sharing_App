@@ -69,7 +69,16 @@ def view_post(post_id):
         cursor.execute(query, params)
         comments = cursor.fetchall()
 
-    return render_template('singlepost.html', post=post, comments=comments)
+        cursor.execute(recent_posts())
+        recentPosts = cursor.fetchall()
+
+        cursor.execute(all_tags())
+        tags = cursor.fetchall()
+
+        cursor.execute(get_category())
+        categories = cursor.fetchall()
+
+    return render_template('singlepost.html', post=post, comments=comments, recentPosts=recentPosts, categories=categories, tags=tags)
 
 
 if __name__ == '__main__':

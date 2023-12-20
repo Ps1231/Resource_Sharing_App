@@ -102,9 +102,7 @@ def registration():
         password = generate_password_hash(request.form['password'])
         email = request.form['email']
         display_name = request.form['display_name']
-        City = request.form['City']
-        State = request.form['State']
-        Country = request.form['Country']
+
         about_me = request.form['about_me']
         role = 'Regular User'
         Gravatar_url = request.form['Gravatar_url']
@@ -122,7 +120,7 @@ def registration():
                 # Insert new user into the database
 
                 cursor.execute(insert_user(username, email, password,
-                               display_name, City, State, Country, about_me, role, Gravatar_url))
+                               display_name,  about_me, role, Gravatar_url), (username, email, password, display_name, about_me, role, Gravatar_url))
                 db.commit()
 
                 flash('Registration successful. You can now log in.', 'success')
@@ -144,8 +142,9 @@ def login():
 
             if user is None:
                 flash('User not found', 'error')
-            # elif not check_password_hash(user['password'], password):
-            elif (user['password_hash'] != password):
+            elif 'password_hash' not in user:
+                flash('Password information not found for the user', 'error')
+            elif not check_password_hash(user['password_hash'], password):
                 flash('Invalid password', 'error')
             else:
                 # Store user information in session
@@ -154,8 +153,6 @@ def login():
                 return redirect(url_for('get_posts_and_tags'))
 
     return render_template('login.html')
-
-
 # @app.route('/login', methods=['GET', 'POST'])
 # def login():
 #     if request.method == 'POST':

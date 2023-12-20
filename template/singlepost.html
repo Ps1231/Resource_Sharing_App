@@ -108,7 +108,9 @@
                   <ul>
                     <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a >{{post.display_name}}</a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a >{{post.create_date}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >{{post.comment_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >Comments: {{post.comment_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >Upvotes: {{post.upvote_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >Downvotes: {{post.downvote_count}}</a></li>
                   </ul>
                 </div>
   
@@ -173,19 +175,7 @@
                   <h4>Leave a Reply</h4>
                   <p>Your email address will not be published. Required fields are marked * </p>
                   <form action="">
-                    <div class="row">
-                      <div class="col-md-6 form-group">
-                        <input name="name" type="text" class="form-control" placeholder="Your Name*">
-                      </div>
-                      <div class="col-md-6 form-group">
-                        <input name="email" type="text" class="form-control" placeholder="Your Email*">
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col form-group">
-                        <input name="website" type="text" class="form-control" placeholder="Your Website">
-                      </div>
-                    </div>
+                    
                     <div class="row">
                       <div class="col form-group">
                         <textarea name="comment" class="form-control" placeholder="Your Comment*"></textarea>

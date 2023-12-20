@@ -108,6 +108,8 @@
                     <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.display_name}}</a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.create_date}}</a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Comments: {{post.comment_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Upvote: {{post.upvote_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Downvote: {{post.downvote_count}}</a></li>
                   </ul>
                 </div>
   

@@ -15,7 +15,7 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
+  
   <!-- Vendor CSS Files -->
   <link href="{{ url_for('static' , filename = 'aos.css') }}" rel="stylesheet">
   <link href="{{ url_for('static' , filename = 'bootstrap.min.css') }}" rel="stylesheet">
@@ -26,18 +26,47 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static' , filename = 'style.css') }}" rel="stylesheet" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" >
 
-  <!-- =======================================================
-  * Template Name: Serenity
-  * Updated: Sep 18 2023 with Bootstrap v5.3.2
-  * Template URL: https://bootstrapmade.com/serenity-bootstrap-corporate-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+
 </head>
 
 <body>
+<style>/* Add this CSS to your existing stylesheet or create a new one */
+/* Add this CSS to your existing stylesheet or create a new one */
 
+.vote-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.upvote-btn,
+.downvote-btn {
+  width: 40px; /* Adjust as needed */
+  height: 40px;
+  background-color: #94C045; /* Green background color */
+  color: #fff; /* White text color */
+  border: none;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 50%; /* Border radius for the circular part */
+  position: relative;
+}
+
+.upvote-btn i,
+.downvote-btn i {
+  font-size: 1em; /* Adjust as needed */
+  color: #fff; /* Explicitly set the color to white */
+}
+
+  </style>
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top d-flex align-items-center">
     <div class="container d-flex align-items-center justify-content-between">
@@ -67,7 +96,7 @@
 
     </div>
   </header><!-- End Header -->
-
+<body>
   <main id="main">
 
     <!-- ======= Breadcrumbs ======= -->
@@ -133,6 +162,22 @@
                   <ul class="tags">
                     <li><a href="#">{{post.tags}}</a></li>
                   </ul>
+                  <i class="bi bi-folder"></i>
+                  <ul class="tags"> 
+                 <!-- Inside your existing HTML code -->
+                  <li>
+                    <div class="vote-buttons">
+                      <form method="post">
+                        <ul>
+                          <li><button  class="upvote-btn" name="action" value="upvote" ><i class="fas fa-arrow-up" style="color: #fff;"></i></button></li>
+                          <li><button  class="downvote-btn" name="action" value="downvote"><i class="fas fa-arrow-down" style="color: #fff;"></i></button></li>
+                        </ul>
+                      </form>
+                    </div>
+                  </li>
+
+                  </ul>
+
                 </div>
                 
               </article><!-- End blog entry -->

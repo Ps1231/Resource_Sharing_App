@@ -7,8 +7,8 @@ def all_posts(limit=None, offset=None):
     p.body AS post_content,
     p.category as category,
     p.create_date as create_date,
-    COUNT(v.vote_type = 'upvote') as upvote_count,
-    COUNT(v.vote_type = 'downvote') as downvote_count,
+    (select count(*) from Votes where post_id=p.post_id and vote_type='upvote' ) as upvote_count,
+    (select count(*) from Votes where post_id=p.post_id and vote_type='downvote' ) as downvote_count,
     (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
     GROUP_CONCAT(t.tag_name) as tags
 FROM
@@ -40,8 +40,8 @@ def search_posts(search_query, limit=None, offset=None):
             p.body AS post_content,
             p.category as category,
             p.create_date as create_date,
-            COUNT(CASE WHEN v.vote_type = 'upvote' THEN 1 END) as upvote_count,
-            COUNT(CASE WHEN v.vote_type = 'downvote' THEN 1 END) as downvote_count,
+            (select count(*) from Votes where post_id=p.post_id and vote_type='upvote' ) as upvote_count,
+            (select count(*) from Votes where post_id=p.post_id and vote_type='downvote' ) as downvote_count,
             (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
             GROUP_CONCAT(t.tag_name) as tags
         FROM
@@ -102,8 +102,8 @@ def get_post_details(post_id):
             p.body AS post_content,
             p.category as category,
             p.create_date as create_date,
-            COUNT(v.vote_type = 'upvote') as upvote_count,
-            COUNT(v.vote_type = 'downvote') as downvote_count,
+             (select count(*) from Votes where post_id=p.post_id and vote_type='upvote' ) as upvote_count,
+            (select count(*) from Votes where post_id=p.post_id and vote_type='downvote' ) as downvote_count,
             (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
             GROUP_CONCAT(t.tag_name) as tags
         FROM
@@ -156,4 +156,59 @@ def insert_user(username, email, password, display_name, about_me, role, Gravata
     return """
     INSERT INTO Users (username, email, password_hash, display_name, about_me, role, Gravatar_url, creation_date)
     VALUES (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
+    """
+# Upvote query
+
+
+def upvote_post(post_id, username):
+    upvote_query = """
+        INSERT INTO Votes (post_id, user_id, vote_type, create_date)
+        VALUES (%s, (SELECT user_id FROM Users WHERE username = %s), 'upvote', CURRENT_TIMESTAMP)
+        ON DUPLICATE KEY UPDATE vote_type = 'upvote', create_date = CURRENT_TIMESTAMP
+    """
+
+    return upvote_query, (post_id, username)
+
+# Downvote query
+
+
+def downvote_post(post_id, username):
+    downvote_query = """
+        INSERT INTO Votes (post_id, user_id, vote_type, create_date)
+        VALUES (%s, (SELECT user_id FROM Users WHERE username = %s), 'downvote', CURRENT_TIMESTAMP)
+        ON DUPLICATE KEY UPDATE vote_type = 'downvote', create_date = CURRENT_TIMESTAMP
+    """
+
+    return downvote_query, (post_id, username)
+# queries.py
+
+
+def get_user_info(user_id):
+    return "SELECT * FROM Users WHERE user_id = %s"
+
+
+def get_user_posts(user_id):
+    return """
+SELECT
+    p.post_id,
+    u.user_id as user_id,
+    p.title as post_title,
+    p.body AS post_content,
+    p.category as category,
+    p.create_date as create_date,
+    (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
+    GROUP_CONCAT(t.tag_name) as tags
+FROM
+    Posts p
+    INNER JOIN Users u ON p.user_id = u.user_id
+   
+    INNER JOIN PostTags pt ON p.post_id = pt.post_id
+    INNER JOIN Tags t ON pt.tag_id = t.tag_id
+where 
+    u.user_id=%s
+GROUP BY
+    p.post_id
+ORDER BY
+    p.create_date DESC
+
     """

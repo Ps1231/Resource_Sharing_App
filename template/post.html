@@ -27,13 +27,7 @@
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static' , filename = 'style.css') }}" rel="stylesheet" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Serenity
-  * Updated: Sep 18 2023 with Bootstrap v5.3.2
-  * Template URL: https://bootstrapmade.com/serenity-bootstrap-corporate-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+
 </head>
 
 <body>
@@ -43,24 +37,29 @@
     <div class="container d-flex align-items-center justify-content-between">
 
       <div class="logo">
-        <h1 class="text-light"><a href="index.html">ShareSpell</a></h1>
+        <h1 class="text-light"><a href="{{ url_for('index')}}">ShareSpell</a></h1>
       
         <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
       </div>
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="index.html">Home</a></li>
+          <li><a href="{{ url_for('index')}}">Home</a></li>
           <li><a href="about.html"><span>About</span> <i class="bi bi-chevron-down"></i></a>
-          
           </li>
-          <li><a href="services.html">Services</a></li>
+          <li><a href="services.html">Write</a></li>
          
          
-          <li><a class="active" href="blog.html">Blog</a></li>
+          <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
          
-
-          <li><a class="getstarted" href="about.html">Get Started</a></li>
+          <li class="dropdown">
+            <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
+            <ul>
+              <li><a href="{{ url_for('logout')}}">Logout</a></li>
+              <li><a href="{{ url_for('account')}}">Account</a></li>
+              
+            </ul>
+          </li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>ShareSpell</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{{ url_for('static' , filename = 'favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static' , filename = 'apple-touch-icon.png') }}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static' , filename = 'aos.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'swiper-bundle.min.css') }}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{{ url_for('static' , filename = 'style.css') }}" rel="stylesheet" rel="stylesheet">
+
+  <link rel="stylesheet" 
+  href="{{ url_for('static' , filename = 'global.css') }}"/>
+  <link rel="stylesheet" 
+  href="{{ url_for('static' , filename = 'index.css') }}"/>
+  <link
+    rel="stylesheet"
+    
+    href="https://fonts.googleapis.com/css2?family=Source Serif Pro:wght@400&display=swap"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap"
+  />
+
+</head>
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+      <div class="container d-flex align-items-center justify-content-between">
+  
+        <div class="logo">
+          <h1 class="text-light"><a href="{{ url_for('index')}}">ShareSpell</a></h1>
+        
+          <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+        </div>
+  
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a href="{{ url_for('index')}}">Home</a></li>
+            <li><a href="about.html"><span>About</span> <i class="bi bi-chevron-down"></i></a>
+            </li>
+            <li><a href="services.html">Write</a></li>
+           
+           
+            <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+           
+            <li class="dropdown">
+              <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
+              <ul>
+                <li><a href="{{ url_for('logout')}}">Logout</a></li>
+                <li><a href="{{ url_for('account')}}">Account</a></li>
+                
+              </ul>
+            </li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+  
+      </div>
+    </header>
+    <main id="main">
+        <section id="breadcrumbs" class="breadcrumbs">
+            <div class="breadcrumb-hero">
+              <div class="container">
+                <div class="breadcrumb-hero">
+                  <h2>SpellBook</h2>
+                  <p>Welcome to our SpellBook, a hub of shared insights! Explore our list of posts where practical knowledge meets community collaboration. Each entry is a valuable piece of the puzzle, contributing to a collective pool of expertise. Join us in discovering the power of shared learning through the straightforward, easy-to-navigate list of posts. At Sharespell, knowledge is just a click away. </p>
+                </div>
+              </div>
+            </div>
+            <div class="container">
+            
+          </section>
+          <div class="frame">
+            <div class="rectangle"></div>
+            {% if user_info is not none %}
+           
+            <div class="priyanshi-soni">{{user_info.display_name}}</div>   
+            {% endif %}
+          <img class="rectangle-icon" alt="" src="{{ url_for('static' , filename = 'rectangle@2x.png') }}" />
+      
+          <div class="priyanshi-soni1">Priyanshi Soni</div>
+          <div class="developer-researcher">
+            Developer | Researcher | Open Souce Enthusiast
+          </div>
+          <div class="regular-user">Regular User</div>
+            <img class="compose-icon" alt="" 
+            src="{{ url_for('static' , filename = 'compose@2x.png') }}"/>
+            <img class="rectangle-icon1" alt="" src="{{ url_for('static' , filename = 'blog-author.jpg') }}" />
+          
+           
+            <div class="rectangle1"></div>
+            <div class="posts">Posts</div>
+          
+            <div class="nov-20-parent">
+              <div class="nov-20">Nov 20</div>
+              <div class="dbgenieplus-effortless-databa">
+                DBGeniePlus: Effortless Database Creation and Population with Python
+              </div>
+              <div class="introduction-databases-are">
+                Introduction Databases are like organized treasure chests for data,
+                and they're super important in the world of computer stuff. But
+                setting up databases and filling them with data can be a bit tricky
+                and time-consuming. Imagine if there was a tool that could do this for
+                you ! Well, good news…
+              </div>
+              <img
+                class="menu-vertical-icon"
+                alt=""
+                src="{{ url_for('static' , filename = 'menu.png') }}"
+              />
+            </div>
+          </div></main>
+        </body>
+      </html>
+      
+      

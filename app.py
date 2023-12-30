@@ -218,25 +218,26 @@ def view_post(post_id):
 @app.route('/account')
 @login_required
 def account():
-    user_id = session.get('user_id')
-
     with db.cursor() as cursor:
         try:
             # Fetch user information
+            user_id = session.get('user_id')
             cursor.execute(get_user_info(user_id))
             user_info = cursor.fetchone()
-
             # Fetch posts of the current user
             cursor.execute(get_user_posts(user_id))
             user_posts = cursor.fetchall()
-
+            db.commit()
         except Exception as e:
-            # Handle the exception appropriately, e.g., print the error
+            # Handle the exception appropriately, e.g., log the error
             print(f"Error fetching user information: {e}")
             user_info = None
             user_posts = []
 
-    return render_template('account.html', user_info=user_info, user_posts=user_posts)
+    return render_template('account1.html', user_info=user_info, user_posts=user_posts)
+# @app.route('/account1')
+# def account1():
+#     return render_template('account.html')
 
 
 if __name__ == '__main__':

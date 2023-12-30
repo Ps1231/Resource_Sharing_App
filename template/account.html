@@ -26,69 +26,49 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap"
     />
   </head>
-  
   <body>
-    <div class="frame">
+    <nav class="frame">
       <div class="rectangle"></div>
-      <div class="frame1">
-        <div class="sharespell">
-          <p class="sharespell1">ShareSpell</p>
-        </div>
-      </div>
-      <div class="rectangle1"></div>
-      <div class="rectangle2"></div>
-     
-      <div class="rectangle4"></div>
-      <div class="rectangle5"></div>
-      <div class="rectangle6"></div>
-      <div class="rectangle7"></div>
-      <div class="rectangle8"></div>
-      <div class="rectangle9"></div>
-      <div class="rectangle10"></div>
-      <div class="rectangle11"></div>
-      <img class="rectangle-icon" alt="" src="{{ url_for('static' , filename = 'rectangle@2x.png') }}" />
-
-      <div class="rectangle12"></div>
-      <div class="image"></div>
-      <div class="rectangle13"></div>
-      <div class="image1"></div>
-      <div class="rectangle14"></div>
-      <div class="rectangle15"></div>
       <div class="blog">blog</div>
       <div class="about">About</div>
       <div class="home">home</div>
       <div class="account">Account</div>
-      {% if user_info is not none %}
-      {% for user in user_info %}
-      <div class="priyanshi-soni">{{user.display_name}}</div>
-      {% endfor %}
-      {% endif %}
-      <div class="posts">Posts</div>
+      <div class="priyanshi-soni">Priyanshi Soni</div>
+    <img class="rectangle-icon" alt="" src="{{ url_for('static' , filename = 'rectangle@2x.png') }}" />
 
-      <div class="nov-20">Nov 20</div>
-      <div class="dbgenieplus-effortless-databa">
-        DBGeniePlus: Effortless Database Creation and Population with Python
-      </div>
-      <div class="introduction-databases-are">
-        Introduction Databases are like organized treasure chests for data, and
-        they're super important in the world of computer stuff. But setting up
-        databases and filling them with data can be a bit tricky and
-        time-consuming. Imagine if there was a tool that could do this for you !
-        Well, good news…
-      </div>
-      <div class="database-development">Database Development</div>
-     
-                
-      <div class="priyanshi-soni1">Priyanshi Soni</div>
-      
-      <div class="developer-researcher">
-        Developer | Researcher | Open Souce Enthusiast
-      </div>
-      <div class="regular-user">Regular User</div>
-      <div class="follow">Follow</div>
-      <img class="compose-icon" alt="" 
-      src="{{ url_for('static' , filename = 'compose@2x.png') }}"/>
-      <img class="rectangle-icon1" alt="" src="{{ url_for('static' , filename = 'profile.png') }}" />
+    <div class="priyanshi-soni1">Priyanshi Soni</div>
+    <div class="developer-researcher">
+      Developer | Researcher | Open Souce Enthusiast
     </div>
+    <div class="regular-user">Regular User</div>
+   <img class="compose-icon" alt="" 
+      src="{{ url_for('static' , filename = 'compose@2x.png') }}"/>
+      <img class="rectangle-icon1" alt="" src="{{ url_for('static' , filename = 'blog-author.jpg') }}" />
+    
+      <div class="sharespell">
+        <p class="sharespell1">ShareSpell</p>
+      </div>
+      <div class="rectangle1"></div>
+      <div class="posts">Posts</div>
+      <div class="nov-20-parent">
+        <div class="nov-20">Nov 20</div>
+        <div class="dbgenieplus-effortless-databa">
+          DBGeniePlus: Effortless Database Creation and Population with Python
+        </div>
+        <div class="introduction-databases-are">
+          Introduction Databases are like organized treasure chests for data,
+          and they’re super important in the world of computer stuff. But
+          setting up databases and filling them with data can be a bit tricky
+          and time-consuming. Imagine if there was a tool that could do this for
+          you ! Well, good news…
+        </div>
+        <img
+          class="menu-vertical-icon"
+          alt=""
+          src="{{ url_for('static' , filename = 'menu.png') }}"
+        />
+      </div>
+    </nav>
   </body>
 </html>
+

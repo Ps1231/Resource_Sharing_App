@@ -184,31 +184,17 @@ def downvote_post(post_id, username):
 
 
 def get_user_info(user_id):
-    return "SELECT * FROM Users WHERE user_id = %s"
+    return f"""
+    SELECT user_id, username, email, display_name
+    FROM Users
+    WHERE user_id = {user_id}
+    """
 
 
 def get_user_posts(user_id):
-    return """
-SELECT
-    p.post_id,
-    u.user_id as user_id,
-    p.title as post_title,
-    p.body AS post_content,
-    p.category as category,
-    p.create_date as create_date,
-    (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
-    GROUP_CONCAT(t.tag_name) as tags
-FROM
-    Posts p
-    INNER JOIN Users u ON p.user_id = u.user_id
-   
-    INNER JOIN PostTags pt ON p.post_id = pt.post_id
-    INNER JOIN Tags t ON pt.tag_id = t.tag_id
-where 
-    u.user_id=%s
-GROUP BY
-    p.post_id
-ORDER BY
-    p.create_date DESC
-
+    return f"""
+    SELECT post_id, title, body, create_date
+    FROM Posts
+    WHERE user_id = {user_id}
+    ORDER BY create_date DESC
     """

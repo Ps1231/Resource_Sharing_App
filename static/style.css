@@ -2065,6 +2065,10 @@ section {
   float: left;
 }
 
+.blog .sidebar .author  {
+  width: 150px;
+  float: center;
+}
 .blog .sidebar .recent-posts h4 {
   font-size: 15px;
   margin-left: 20px;

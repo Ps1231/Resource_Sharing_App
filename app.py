@@ -77,6 +77,7 @@ def login():
                 session['user_id'] = user['user_id']
                 session['username'] = user['username']
                 session['current_user'] = user
+                session['role'] = user['role']
                 flash('Login successful!', 'success')
                 return redirect(url_for('get_posts_and_tags'))
 
@@ -215,8 +216,23 @@ def view_post(post_id):
         return render_template('singlepost.html', post=post, comments=comments, recentPosts=recentPosts, categories=categories, tags=tags)
 
 
+def requires_role(roles):
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapped_view(*args, **kwargs):
+            if session.get('role') in roles:
+                return view_func(*args, **kwargs)
+            else:
+                return 'Access Denied'
+
+        return wrapped_view
+
+    return decorator
+
+
 @app.route('/account')
 @login_required
+@requires_role(['Regular User'])
 def account():
     with db.cursor() as cursor:
         try:

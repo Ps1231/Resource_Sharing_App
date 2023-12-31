@@ -89,49 +89,180 @@
               </div>
             </div>
             <div class="container">
-            
+              <div class="container">
+                <ol>
+                  <li><a href="index.html">Home</a></li>
+                  <li>Posts</li>
+                </ol>
+              </div>
+              <div class="container"></div>
           </section>
-          <div class="frame">
+          <!-- <div class="frame">
             <div class="rectangle"></div>
             {% if user_info is not none %}
-           
-            <div class="priyanshi-soni">{{user_info.display_name}}</div>   
+            <div class="priyanshi-soni">{{user_info.display_name}}</div>
+            <img class="rectangle-icon" alt="" src="{{ url_for('static', filename='rectangle@2x.png') }}" />
+            <div class="priyanshi-soni1">{{user_info.display_name}}</div>
+            <div class="developer-researcher">{{user_info.about_me}}</div>
+            <div class="regular-user">{{user_info.role}}</div>
+            <img class="compose-icon" alt="" src="{{ url_for('static', filename='compose@2x.png') }}" />
+            <img class="rectangle-icon1" alt="" src="{{ url_for('static', filename='blog-author.jpg') }}" />
             {% endif %}
-          <img class="rectangle-icon" alt="" src="{{ url_for('static' , filename = 'rectangle@2x.png') }}" />
-      
-          <div class="priyanshi-soni1">Priyanshi Soni</div>
-          <div class="developer-researcher">
-            Developer | Researcher | Open Souce Enthusiast
-          </div>
-          <div class="regular-user">Regular User</div>
-            <img class="compose-icon" alt="" 
-            src="{{ url_for('static' , filename = 'compose@2x.png') }}"/>
-            <img class="rectangle-icon1" alt="" src="{{ url_for('static' , filename = 'blog-author.jpg') }}" />
-          
-           
             <div class="rectangle1"></div>
-            <div class="posts">Posts</div>
-          
-            <div class="nov-20-parent">
-              <div class="nov-20">Nov 20</div>
-              <div class="dbgenieplus-effortless-databa">
-                DBGeniePlus: Effortless Database Creation and Population with Python
+            <div class="posts">Posts</div> -->
+            <section id="blog" class="blog">
+              <div class="container" data-aos="fade-up">
+        
+                <div class="row">
+        
+                  <div class="col-lg-8 entries">
+            <article class="entry">
+  
+              <h2 class="entry-title">
+              Title</a>
+              </h2>
+
+              <div class="entry-meta">
+                <ul>
+                  <li class="d-flex align-items-center"> Priyanshi Soni</a></li>
+                  <li class="d-flex align-items-center"> 20 Nov</li>
+                  <li class="d-flex align-items-center"> comments</li>
+                  <li class="d-flex align-items-center">upvote </li>
+                  <li class="d-flex align-items-center"> downvote</li>
+                  <li class="d-flex align-items-center"><img style=" height:20px" alt="" src="{{ url_for('static', filename='menu.png') }}" />
+                </li>
+                </ul>
               </div>
-              <div class="introduction-databases-are">
-                Introduction Databases are like organized treasure chests for data,
-                and they're super important in the world of computer stuff. But
-                setting up databases and filling them with data can be a bit tricky
-                and time-consuming. Imagine if there was a tool that could do this for
-                you ! Well, good news…
+
+              <div class="entry-content">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, atque! Eligendi ut cumque mollitia nam quidem aspernatur minus. Voluptatem sint iste voluptatum reprehenderit libero neque necessitatibus similique eum dicta placeat magni qui deserunt laudantium quia ipsa mollitia natus architecto distinctio a, quam explicabo tempore sapiente corrupti fugiat? Qui, maxime commodi!<div class="read-more">
+                 Read More</a>
+                </div>
               </div>
-              <img
-                class="menu-vertical-icon"
-                alt=""
-                src="{{ url_for('static' , filename = 'menu.png') }}"
-              />
+
+            </article> </div>
+            <div class="col-lg-4">
+  
+              <div class="sidebar blog-author ">
+  
+               
+              <div class=" d-flex align-items-center">
+                <img class="author rounded-circle float-left" alt="" src="{{ url_for('static', filename='blog-author.jpg') }}" />
+                
+                <!-- <div class="sidebar-item search-form">
+                  <div class="priyanshi-soni1">{{user_info.display_name}}</div>
+                  <div class="developer-researcher">{{user_info.about_me}}</div>
+                  <div class="regular-user">{{user_info.role}}</div>
+                </div> -->
+                <!-- End sidebar search formn -->
+              </div>
+              <br><br>
+              <div>
+                <h4 class="sidebar-title">harshil</h4>
+                <div class="social-links">
+                  <i></i>Regular user
+                </div>
+                <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, quae autem, sint voluptate laboriosam minus, pariatur veniam tempora natus hic cum quaerat? Et distinctio nam perspiciatis maiores voluptatum at minus!
+                </p>
+              </div>
+                
+              </div><!-- End sidebar -->
+  
+            </div><!-- End blog sidebar -->
+  
+          </div>
+  
+        </div>
+      </section>
+            <!-- <div class="nov-20-parent">
+                {% if user_posts %}
+                {% for post in user_posts %}
+                <div class="nov-20">{{ post.create_date }}</div>
+                <div class="dbgenieplus-effortless-databa">{{ post.title }}</div>
+                <div class="introduction-databases-are">{{ post.body }}</div>
+                <img class="menu-vertical-icon" alt="" src="{{ url_for('static', filename='menu.png') }}" />
+                {% endfor %}
+                {% else %}
+                <p>No posts available.</p>
+                {% endif %}
+            </div> -->
+        </div>
+    </main>
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-4 col-md-6 footer-info">
+            <h3>ShareSpell</h3>
+            <p>Step into the enchanted world of ShareSpell & explore the collective wisdom of our community. Dive into a tapestry of insights, expertise, and shared resources. Each post is a brushstroke, contributing to a masterpiece of knowledge. Join us in shaping the narrative of shared learning.</p>
+          </div>
+
+          <div class="col-lg-4 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About us</a></li>
+              <li><a href="#">Services</a></li>
+             
+            </ul>
+          </div>
+
+          <div class="col-lg-4 col-md-6 footer-contact">
+            <h4>Contact Us</h4>
+            <p>
+              <strong>Email:</strong> sonipriyanshi.ps99@gmail.com<br>
+            </p>
+
+            <div class="social-links">
+              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
             </div>
-          </div></main>
-        </body>
-      </html>
-      
-      
+
+          </div>
+
+          <!-- <div class="col-lg-3 col-md-6 footer-newsletter">
+            <h4>Our Newsletter</h4>
+            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna veniam enim veniam illum dolore legam minim quorum culpa amet magna export quem marada parida nodela caramase seza.</p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+          </div> -->
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- <div class="copyright">
+        &copy; Copyright <strong><span>Serenity</span></strong>. All Rights Reserved
+      </div> -->
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{{ url_for('static' , filename = 'purecounter_vanilla.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'aos.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'glightbox.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
+  <script src="{{ url_for('static' , filename = 'validate.js') }}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{{ url_for('static' , filename = 'main.js') }}"></script>
+
+</body>
+
+</html>

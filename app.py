@@ -251,9 +251,13 @@ def account():
             user_posts = []
 
     return render_template('account1.html', user_info=user_info, user_posts=user_posts)
-# @app.route('/account1')
-# def account1():
-#     return render_template('account.html')
+
+
+@app.route('/newPost')
+@login_required
+@requires_role(['Regular User'])
+def newPost():
+    return render_template('insertPost.html')
 
 
 if __name__ == '__main__':

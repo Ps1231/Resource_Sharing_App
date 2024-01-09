@@ -193,8 +193,21 @@ def get_user_info(user_id):
 
 def get_user_posts(user_id):
     return f"""
-    SELECT post_id, title, body, create_date
-    FROM Posts
-    WHERE user_id = {user_id}
-    ORDER BY create_date DESC
+    	SELECT 
+		p.post_id, 
+		p.title as title, 
+		p.body as body, 
+		p.create_date as create_date,
+		
+        (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'upvote') as upvote_count,
+		(SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'downvote') as downvote_count,
+		(SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count
+	FROM 
+		Posts p
+	JOIN 
+		Users u ON p.user_id = u.user_id
+	WHERE 
+		u.user_id = {user_id}
+	ORDER BY 
+		p.create_date DESC;
     """

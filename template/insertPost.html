@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>ShareSpell</title>
@@ -27,9 +26,46 @@
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static' , filename = 'style.css') }}" rel="stylesheet" rel="stylesheet">
 
+<style>
 
+label {
+    font-size: 20px;
+  letter-spacing: 0.46px;
+  color:#81a73a;
+  
+}
+input[type=text], select ,textarea{
+    width: 98%;
+    padding: 15px;
+    margin: 10px 0 22px 0;
+    border: none;
+    background: #f1f1f1;
+}
+
+ textarea {
+    height :300px;
+}
+input[type=text]:focus,textarea:focus,select:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+.btn {
+    background-color:#94c045;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 98%;
+    opacity: 0.9;
+}
+
+.btn:hover {
+    opacity:1;
+}
+</style>
 </head>
-
 <body>
 
   <!-- ======= Header ======= -->
@@ -47,7 +83,7 @@
           <li><a href="{{ url_for('index')}}">Home</a></li>
           <li><a href="about.html"><span>About</span> <i class="bi bi-chevron-down"></i></a>
           </li>
-          <li><a href="services.html">Write</a></li>
+         
          
          
           <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
@@ -66,141 +102,49 @@
 
     </div>
   </header><!-- End Header -->
-
   <main id="main">
-
-    <!-- ======= Breadcrumbs ======= -->
     <section id="breadcrumbs" class="breadcrumbs">
-      <div class="breadcrumb-hero">
-        <div class="container">
-          <div class="breadcrumb-hero">
-            <h2>SpellBook</h2>
-            <p>Welcome to our SpellBook, a hub of shared insights! Explore our list of posts where practical knowledge meets community collaboration. Each entry is a valuable piece of the puzzle, contributing to a collective pool of expertise. Join us in discovering the power of shared learning through the straightforward, easy-to-navigate list of posts. At Sharespell, knowledge is just a click away. </p>
+        <div class="breadcrumb-hero">
+          <div class="container">
+            <div class="breadcrumb-hero">
+              <h2>SpellBook</h2>
+              <p>Welcome to our SpellBook, a hub of shared insights! Explore our list of posts where practical knowledge meets community collaboration. Each entry is a valuable piece of the puzzle, contributing to a collective pool of expertise. Join us in discovering the power of shared learning through the straightforward, easy-to-navigate list of posts. At Sharespell, knowledge is just a click away. </p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="container">
-        <ol>
-          <li><a href="index.html">Home</a></li>
-          <li>Blog</li>
-        </ol>
-      </div>
-    </section><!-- End Breadcrumbs -->
-
-    <!-- ======= Blog Section ======= -->
-    <section id="blog" class="blog">
-        <div class="container" data-aos="fade-up">
-  
-          <div class="row">
-  
-            <div class="col-lg-8 entries">
-              {% if posts is not none %}
-              {% for post in posts %}
-              <article class="entry">
-  
-                <h2 class="entry-title">
-                  <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.post_title}}</a>
-                </h2>
-  
-                <div class="entry-meta">
-                  <ul>
-                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.display_name}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.create_date}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Comments: {{post.comment_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Upvote: {{post.upvote_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Downvote: {{post.downvote_count}}</a></li>
-                  </ul>
-                </div>
-  
-                <div class="entry-content">
-                  <p>{{post.post_content.split('\n')[:2] | join('\n')}}....</p>
-                  <div class="read-more">
-                    <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
-                  </div>
-                </div>
-  
-              </article><!-- End blog entry -->
-              {% endfor %}
-              {% endif %}
-              
-              <!-- ... existing code ... -->
-  
-              <div class="blog-pagination">
-                <ul class="justify-content-center">
-                  {% for page_num in range(1, total_pages + 1) %}
-                    <li {% if page_num == current_page %}class="active"{% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
-                  {% endfor %}
-                </ul>
-              </div>           
-    
-
-       
-
-          </div><!-- End blog entries list -->
-
-          <div class="col-lg-4">
-
-            <div class="sidebar">
-
-              <h3 class="sidebar-title">Search</h3>
-              <div class="sidebar-item search-form">
-                <form action="">
-                  <input type="text">
-                  <button type="submit"><i class="bi bi-search"></i></button>
-                </form>
-              </div><!-- End sidebar search formn-->
-
-              <h3 class="sidebar-title">Categories</h3>
-              <div class="sidebar-item categories">
-                <ul>
-                    {% if categories is not none %}
-                    {% for category in categories %}
-                  <li><a href="#">{{category.name}} <span>({{category.post_count}})</span></a></li>
-                  {% endfor %}
-                  {% endif %}
-                </ul>
-              </div><!-- End sidebar categories-->
-
-               <h3 class="sidebar-title">Recent Posts</h3>
-               
-              <div class="sidebar-item recent-posts">
-                {% if recentPosts is not none %}
-                    {% for rp in recentPosts %}
-                <div class="post-item clearfix">
-                 
-                  <h4><a href="{{ url_for('view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>
-                  <time datetime="2020-01-01">{{rp.date}}</time>
-                
-                </div>   {% endfor %}
-              {% endif %}
-
-
-              </div><!-- End sidebar recent posts-->
-
-              <h3 class="sidebar-title">Popular Tags</h3>
-              <div class="sidebar-item tags">
-                <ul>
-                    {% if tags is not none %}
-                    {% for tag in tags %}
-                  <li><a href="#">{{tag.name}}</a></li>
-                  {% endfor %}
-              {% endif %}
-
-                  
-                </ul>
-              </div><!-- End sidebar tags-->
-
-            </div><!-- End sidebar -->
-
-          </div><!-- End blog sidebar -->
-
+        <div class="container">
+          <ol>
+            <li>New Post</li>
+           
+          </ol>
         </div>
-
-      </div>
-    </section><!-- End Blog Section -->
-
-  </main><!-- End #main -->
-
+      </section><!-- End Breadcrumbs -->
+      <section id="blog" class="blog">  
+<div class="container" >
+ <label for="uname"><b>Title</b></label>
+    <div>
+        <input type="text" placeholder="Enter Blog Title" name="uname" required>
+    </div>
+ <label for="psw"><b>Blog Content</b></label>
+    <div>
+        <textarea type="password" placeholder="Enter Blog Content" name="psw" required></textarea>
+    </div>
+ <label for="category"><b>Category</b></label>
+    <div>
+        <select id="category" name="category">
+        <option value="Travel">Travel</option>
+        <option value="Food">Food</option>
+        <option value="Lifestyle">Lifestyle</option>
+        <option value="Tech">Tech</option>
+        </select>
+    </div>
+ <label for="tags"><b>Tags</b></label>
+    <div>
+        <input type="text" placeholder="Enter Tags" name="tags" required>
+    </div>
+ <button type="submit" class="btn"><b>Post Blog</b></button>
+</div>
+</section></main>
   <!-- ======= Footer ======= -->
   <footer id="footer">
     <div class="footer-top">

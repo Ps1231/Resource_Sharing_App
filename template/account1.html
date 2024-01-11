@@ -120,7 +120,7 @@
                   <li class="d-flex align-items-center">upvote: {{post.upvote_count}} </li>
                   <li class="d-flex align-items-center"> downvote: {{post.downvote_count}}</li>
                   <li class="d-flex align-items-center">
-                    <li class="dropdown"><a ><img class="getstarted navbar" style=" height:20px" alt="" src="{{ url_for('static', filename='menu.png') }}" />
+                    <li class="dropdown"><a HREF="#"><img class="getstarted navbar" style=" height:20px" alt="" src="{{ url_for('static', filename='menu.png') }}" />
                       </a>
                       <ul>
                         <li><a href="{{ url_for('logout')}}">Update</a></li>
@@ -147,13 +147,7 @@
                
               <div class=" d-flex align-items-center">
                 <img class="author rounded-circle float-left" alt="" src="{{ url_for('static', filename='blog-author.jpg') }}" />
-                
-                <!-- <div class="sidebar-item search-form">
-                  <div class="priyanshi-soni1">{{user_info.display_name}}</div>
-                  <div class="developer-researcher">{{user_info.about_me}}</div>
-                  <div class="regular-user">{{user_info.role}}</div>
-                </div> -->
-                <!-- End sidebar search formn -->
+            
               </div>
               <br><br>{% if user_info is not none %}
               
@@ -175,18 +169,7 @@
   
         </div>
       </section>
-            <!-- <div class="nov-20-parent">
-                {% if user_posts %}
-                {% for post in user_posts %}
-                <div class="nov-20">{{ post.create_date }}</div>
-                <div class="dbgenieplus-effortless-databa">{{ post.title }}</div>
-                <div class="introduction-databases-are">{{ post.body }}</div>
-                <img class="menu-vertical-icon" alt="" src="{{ url_for('static', filename='menu.png') }}" />
-                {% endfor %}
-                {% else %}
-                <p>No posts available.</p>
-                {% endif %}
-            </div> -->
+          
         </div>
     </main>
 
@@ -226,22 +209,13 @@
 
           </div>
 
-          <!-- <div class="col-lg-3 col-md-6 footer-newsletter">
-            <h4>Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna veniam enim veniam illum dolore legam minim quorum culpa amet magna export quem marada parida nodela caramase seza.</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div> -->
 
         </div>
       </div>
     </div>
 
     <div class="container">
-      <!-- <div class="copyright">
-        &copy; Copyright <strong><span>Serenity</span></strong>. All Rights Reserved
-      </div> -->
+ 
       <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>

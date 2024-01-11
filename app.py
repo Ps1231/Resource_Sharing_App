@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, flash, session, g
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, render_template, request, flash, session, redirect, url_for
 import pymysql
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 from config import DATABASE_CONFIG
 from queries import *
-from flask import redirect, url_for
+import re
 
 # from models import Users, Base
 import datetime
@@ -15,42 +16,67 @@ app.secret_key = '#qwertyuiop!!!!234567$$'
 db = pymysql.connect(**DATABASE_CONFIG, cursorclass=pymysql.cursors.DictCursor)
 
 
-# engine = create_engine("mysql+pymysql://root:rashi@2003@localhost/resource")
-# Base.metadata.create_all(engine)  # Create tables if they don't exist
-# Session = sessionmaker(bind=engine)
-# ss = Session()
-
-
 @app.route('/registration/', methods=['GET', 'POST'])
 def registration():
     if request.method == 'POST':
-        username = request.form['username']
-        password = generate_password_hash(request.form['password'])
+        # Limit username to 50 characters
+        username = request.form['username'][:50]
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
         email = request.form['email']
-        display_name = request.form['display_name']
-
-        about_me = request.form['about_me']
+        # Limit display name to 50 characters
+        display_name = request.form['display_name'][:50]
+        # Limit about me to 130 characters
+        about_me = request.form['about_me'][:130]
         role = 'Regular User'
         Gravatar_url = request.form['Gravatar_url']
 
-        with db.cursor() as cursor:
+        # Check if all fields are provided
+        if not username or not password or not confirm_password or not email or not display_name:
+            flash('All fields are required.', 'error')
+        elif password != confirm_password:
+            flash('Passwords do not match.', 'error')
+        else:
             # Check if the username or email already exists
-            cursor.execute(
-                "SELECT * FROM Users WHERE username = %s OR email = %s", (username, email))
-            existing_user = cursor.fetchone()
+            with db.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM Users WHERE username = %s OR email = %s", (username, email))
+                existing_user = cursor.fetchone()
 
-            if existing_user:
-                flash(
-                    'Username or email already exists. Please choose a different one.', 'error')
-            else:
-                # Insert new user into the database
+                if existing_user:
+                    flash(
+                        'Username or email already exists. Please choose a different one.', 'error')
+                else:
+                    # Validate email format
+                    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                        flash('Invalid email address.', 'error')
+                    else:
+                        # Check password strength and provide suggestions
+                        if len(password) < 8:
+                            flash(
+                                'Password must be at least 8 characters long.', 'error')
+                        elif not any(char.isdigit() for char in password):
+                            flash(
+                                'Password must contain at least one digit.', 'error')
+                        elif not any(char.isalpha() for char in password):
+                            flash(
+                                'Password must contain at least one letter.', 'error')
+                        elif not any(char.isupper() for char in password):
+                            flash(
+                                'Password must contain at least one uppercase letter.', 'error')
+                        else:
+                            # Hash the password before storing in the database
+                            hashed_password = generate_password_hash(password)
 
-                cursor.execute(insert_user(username, email, password,
-                               display_name,  about_me, role, Gravatar_url), (username, email, password, display_name, about_me, role, Gravatar_url))
-                db.commit()
+                            # Insert new user into the database
+                            cursor.execute(insert_user(username, email, hashed_password,
+                                           display_name, about_me, role, Gravatar_url),
+                                           (username, email, hashed_password, display_name, about_me, role, Gravatar_url))
+                            db.commit()
 
-                flash('Registration successful. You can now log in.', 'success')
-                return redirect(url_for('login'))
+                            flash(
+                                'Registration successful. You can now log in.', 'success')
+                            return redirect(url_for('login'))
 
     return render_template('registration.html')
 
@@ -60,27 +86,30 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        if not username or not password:
+            flash('Username and password are required.', 'error')
+        else:
+            with db.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM Users WHERE username = %s", (username,))
+                user = cursor.fetchone()
 
-        with db.cursor() as cursor:
-            cursor.execute(
-                "SELECT * FROM Users WHERE username = %s", (username,))
-            user = cursor.fetchone()
+                if user is None:
+                    flash('User not found', 'error')
+                elif 'password_hash' not in user:
+                    flash('Password information not found for the user', 'error')
+                elif not check_password_hash(user['password_hash'], password):
+                    flash('Invalid password', 'error')
+                else:
+                    session.clear()
+                    session['user_id'] = user['user_id']
+                    session['username'] = user['username']
+                    session['current_user'] = user
+                    session['role'] = user['role']
+                    flash('Login successful!', 'success')
+                    return redirect(url_for('get_posts_and_tags'))
 
-            if user is None:
-                flash('User not found', 'error')
-            elif 'password_hash' not in user:
-                flash('Password information not found for the user', 'error')
-            elif not check_password_hash(user['password_hash'], password):
-                flash('Invalid password', 'error')
-            else:
-                session.clear()
-                session['user_id'] = user['user_id']
-                session['username'] = user['username']
-                session['current_user'] = user
-                session['role'] = user['role']
-                flash('Login successful!', 'success')
-                return redirect(url_for('get_posts_and_tags'))
-
+    # Return the template even if the login attempt fails
     return render_template('login.html')
 
 

@@ -79,17 +79,21 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html"><span>About</span> <i class="bi bi-chevron-down"></i></a>
-          
+          <li><a href="{{ url_for('index')}}">Home</a></li>
+         
+          <li><a href="{{ url_for('newPost')}}">Write</a></li>
+         
+         
+          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+         
+          <li class="dropdown">
+            <a class="getstarted" href="#"><span>Get Started</span><i class="bi bi-chevron-right"></i> </a>
+            <ul>
+              <li><a href="{{ url_for('logout')}}">Logout</a></li>
+              <li><a href="{{ url_for('account')}}">Account</a></li>
+              
+            </ul>
           </li>
-          <li><a href="services.html">Services</a></li>
-         
-         
-          <li><a class="active" href="blog.html">Blog</a></li>
-         
-
-          <li><a class="getstarted" href="about.html">Get Started</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -138,8 +142,8 @@
                     <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a >{{post.display_name}}</a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a >{{post.create_date}}</a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >Comments: {{post.comment_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >Upvotes: {{post.upvote_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >Downvotes: {{post.downvote_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> <a >Upvotes: {{post.upvote_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a >Downvotes: {{post.downvote_count}}</a></li>
                   </ul>
                 </div>
   
@@ -162,7 +166,7 @@
                   <ul class="tags">
                     <li><a href="#">{{post.tags}}</a></li>
                   </ul>
-                  <i class="bi bi-folder"></i>
+                  
                   <ul class="tags"> 
                  <!-- Inside your existing HTML code -->
                   <li>
@@ -367,7 +371,7 @@
       <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
       <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
       <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
-      <script src="{{ url_for('static' , filename = 'validate.js') }}"></script>
+     
     
       <!-- Template Main JS File -->
       <script src="{{ url_for('static' , filename = 'main.js') }}"></script>

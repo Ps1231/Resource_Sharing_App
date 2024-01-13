@@ -81,12 +81,9 @@ input[type=text]:focus,textarea:focus,select:focus {
       <nav id="navbar" class="navbar">
         <ul>
           <li><a href="{{ url_for('index')}}">Home</a></li>
-          <li><a href="about.html"><span>About</span> <i class="bi bi-chevron-down"></i></a>
-          </li>
-         
-         
-         
-          <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+          <li><a class="active" href="#"><span>Write</span> </a></li>
+        
+          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
          
           <li class="dropdown">
             <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
@@ -213,7 +210,7 @@ input[type=text]:focus,textarea:focus,select:focus {
   <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
-  <script src="{{ url_for('static' , filename = 'validate.js') }}"></script>
+ 
 
   <!-- Template Main JS File -->
   <script src="{{ url_for('static' , filename = 'main.js') }}"></script>

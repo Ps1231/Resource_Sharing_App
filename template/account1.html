@@ -27,10 +27,6 @@
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static' , filename = 'style.css') }}" rel="stylesheet" rel="stylesheet">
 
-  <link rel="stylesheet" 
-  href="{{ url_for('static' , filename = 'global.css') }}"/>
-  <link rel="stylesheet" 
-  href="{{ url_for('static' , filename = 'index.css') }}"/>
   <link
     rel="stylesheet"
     
@@ -57,12 +53,11 @@
         <nav id="navbar" class="navbar">
           <ul>
             <li><a href="{{ url_for('index')}}">Home</a></li>
-            <li><a href="about.html"><span>About</span> <i class="bi bi-chevron-down"></i></a>
-            </li>
+            
             <li><a href="{{ url_for('newPost') }}" rel="stylesheet">Write</a></li>
            
            
-            <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+            <li><a  href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
            
             <li class="dropdown">
               <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
@@ -115,10 +110,10 @@
               <div class="entry-meta">
                 <ul>
                   
-                  <li class="d-flex align-items-center"> {{post.create_date}}</li>
-                  <li class="d-flex align-items-center"> comments: {{post.comment_count}}</li>
-                  <li class="d-flex align-items-center">upvote: {{post.upvote_count}} </li>
-                  <li class="d-flex align-items-center"> downvote: {{post.downvote_count}}</li>
+                  <li class="d-flex align-items-center"><i class="bi bi-clock"></i> {{post.create_date}}</li>
+                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> comments: {{post.comment_count}}</li>
+                  <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> upvotes: {{post.upvote_count}} </li>
+                  <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> downvotes: {{post.downvote_count}}</li>
                   <li class="d-flex align-items-center">
                     <li class="dropdown"><a HREF="#"><img class="getstarted navbar" style=" height:20px" alt="" src="{{ url_for('static', filename='menu.png') }}" />
                       </a>
@@ -232,7 +227,7 @@
   <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
-  <script src="{{ url_for('static' , filename = 'validate.js') }}"></script>
+  
 
   <!-- Template Main JS File -->
   <script src="{{ url_for('static' , filename = 'main.js') }}"></script>

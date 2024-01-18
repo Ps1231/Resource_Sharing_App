@@ -202,15 +202,41 @@ def handle_vote(post_id, user_id, vote_type):
         existing_vote = cursor.fetchone()
 
         if existing_vote:
-            # User has already voted, handle this case (e.g., show an error message)
-            pass
+            # User has already voted, check if the same vote_type is selected
+            if existing_vote['vote_type'] == vote_type:
+                # Same vote_type, revert the vote
+                cursor.execute(
+                    "DELETE FROM Votes WHERE post_id = %s AND user_id = %s",
+                    (post_id, user_id)
+                )
+            else:
+                # Different vote_type, update the vote
+                cursor.execute(
+                    "UPDATE Votes SET vote_type = %s WHERE post_id = %s AND user_id = %s",
+                    (vote_type, post_id, user_id)
+                )
         else:
             # Insert the new vote
             cursor.execute(
                 "INSERT INTO Votes (post_id, user_id, vote_type, create_date) VALUES (%s, %s, %s, NOW())",
                 (post_id, user_id, vote_type)
             )
-            db.commit()
+
+        db.commit()
+
+
+def check_user_vote(post_id, user_id, vote_type):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT vote_type FROM Votes WHERE post_id = %s AND user_id = %s",
+            (post_id, user_id)
+        )
+        existing_vote = cursor.fetchone()
+
+        if existing_vote and existing_vote['vote_type'] == vote_type:
+            return True
+        else:
+            return False
 
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
@@ -221,6 +247,8 @@ def view_post(post_id):
         user_id = session.get('user_id')
 
         if user_id:
+            # Fetch the user's vote status for the post
+
             if action in ('upvote', 'downvote'):
                 handle_vote(post_id, user_id, action)
 

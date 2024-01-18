@@ -109,25 +109,26 @@ body {
     <div class="login-page">
         <div class="form">
             <form class="register-form" method="post" action="{{ url_for('registration') }}">
+              <div class="error-message">
+                {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
+            </div>
                 <p>Register Now !!!</p>
-                <input type="text" name="username" placeholder="Username" required/>
+                <input type="text" name="username" title="It must be Letters only" placeholder="Username" required/>
                 
-                <input type="password" name="password" placeholder="Password"  id="myInput" required/>
+                <input type="password" name="password" title="It must be Letters only" placeholder="Password"  id="myInput" required/>
                 <input type="checkbox" onclick="myFunction()" style="width:10%">Show Password
-                <input type="password" name="confirm_password" placeholder="Confirm Password" id="myInput1" required/>
+                <input type="password" name="confirm_password" title="It must be Letters only" placeholder="Confirm Password" id="myInput1" required/>
                 <input type="checkbox" onclick="myFunction1()" style="width:10%">Show Password
-                <input type="email" name="email" placeholder="Email address" required/> <!-- Use type="email" for email input -->
-                <input type="text" name="display_name" placeholder="Display Name" required/>
+                <input type="email" name="email" title="It must be Letters only" placeholder="Email address" required/> <!-- Use type="email" for email input -->
+                <input type="text" name="display_name" title="It must be Letters only" placeholder="Display Name" required/>
                
-                <input type="text" name="about_me" placeholder="About Me" required/>
+                <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" required/>
                
-                <input type="text" name="Gravatar_url" placeholder="Gravatar URL" required/>
+                <input type="text" name="Gravatar_url" title="URL of your Profile picture" placeholder="Gravatar URL" required/>
                 <button type="submit">Create</button>
-                <div class="error-message">
-                    {% for message in get_flashed_messages() %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
+               
                 <p class="message">Already registered? <a href="{{ url_for('login') }}">Sign In</a></p>
             </form>
             

@@ -72,7 +72,7 @@
     <div class="container d-flex align-items-center justify-content-between">
 
       <div class="logo">
-        <h1 class="text-light"><a href="index.html">ShareSpell</a></h1>
+        <h1 class="text-light"><a href="{{ url_for('index')}}">ShareSpell</a></h1>
       
         <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
       </div>
@@ -314,9 +314,9 @@
               <div class="col-lg-4 col-md-6 footer-links">
                 <h4>Useful Links</h4>
                 <ul>
-                  <li><a href="#">Home</a></li>
-                  <li><a href="#">About us</a></li>
-                  <li><a href="#">Services</a></li>
+                  <li><a href="{{ url_for('index')}}">Home</a></li>
+                  <li><a href="{{ url_for('index')}}#about">About us</a></li>
+                  <li><a href="{{ url_for('index')}}#services">Services</a></li>
                  
                 </ul>
               </div>

@@ -33,9 +33,13 @@ def registration():
 
         # Check if all fields are provided
         if not username or not password or not confirm_password or not email or not display_name:
+            session['registration_form_data'] = request.form
             flash('All fields are required.', 'error')
+
         elif password != confirm_password:
+            session['registration_form_data'] = request.form
             flash('Passwords do not match.', 'error')
+
         else:
             # Check if the username or email already exists
             with db.cursor() as cursor:
@@ -44,17 +48,23 @@ def registration():
                 existing_user = cursor.fetchone()
 
                 if existing_user:
+                    session['registration_form_data'] = request.form
                     flash(
                         'Username or email already exists. Please choose a different one.', 'error')
+
                 else:
                     # Validate email format
                     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                        session['registration_form_data'] = request.form
                         flash('Invalid email address.', 'error')
+
                     else:
                         # Check password strength and provide suggestions
                         if len(password) < 8:
+
                             flash(
                                 'Password must be at least 8 characters long.', 'error')
+
                         elif not any(char.isdigit() for char in password):
                             flash(
                                 'Password must contain at least one digit.', 'error')
@@ -73,12 +83,15 @@ def registration():
                                            display_name, about_me, role, Gravatar_url),
                                            (username, email, hashed_password, display_name, about_me, role, Gravatar_url))
                             db.commit()
+                            session.pop('registration_form_data', None)
+                            session['registered_username'] = username
+                            session['registered_password'] = password
 
                             flash(
                                 'Registration successful. You can now log in.', 'success')
                             return redirect(url_for('login'))
-
-    return render_template('registration.html')
+    form_data = session.pop('registration_form_data', {})
+    return render_template('registration.html', form_data=form_data)
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -139,8 +152,9 @@ POSTS_PER_PAGE = 10
 
 @app.route('/')
 def index():
+    user_id = session.get('user_id')
     background_image_url = url_for('static', filename='hero-bg.jpg')
-    return render_template('index.html', background_image_url=background_image_url)
+    return render_template('index.html', background_image_url=background_image_url, user_id=user_id)
 
 
 @app.route('/posts')

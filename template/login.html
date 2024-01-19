@@ -16,6 +16,14 @@
                 $('form.login-form').submit();  // Submit the form
             });
         });
+        function myFunction() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+              x.type = "text";
+            } else {
+              x.type = "password";
+            }
+          }
     </script>
     <style>
         /* Your CSS styles go here */
@@ -24,8 +32,9 @@
         <div class="form">
             <form class="login-form" method="post" action="{{ url_for('login') }}">
                 <p>Have an account??</p>
-                <input type="text" name="username" id="username" required/>
-                <input type="password" name="password" id="password" required/>
+                <input type="text" name="username" value="{{ session['registered_username'] }}" id="username" required/>
+                <input type="password" name="password" value="{{ session['registered_password'] }}" id="password" required/>
+                <input type="checkbox" onclick="myFunction()" style="width:10%">Show Password
                 <button type="submit">Login</button>
                 <div>{% with messages = get_flashed_messages() %}
                     {% if messages %}

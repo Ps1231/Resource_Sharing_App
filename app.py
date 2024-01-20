@@ -20,21 +20,21 @@ db = pymysql.connect(**DATABASE_CONFIG, cursorclass=pymysql.cursors.DictCursor)
 def registration():
     if request.method == 'POST':
         # Limit username to 50 characters
-        username = request.form['username'][:50]
+        username = request.form['username']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         email = request.form['email']
         # Limit display name to 50 characters
-        display_name = request.form['display_name'][:50]
+        display_name = request.form['display_name']
         # Limit about me to 130 characters
-        about_me = request.form['about_me'][:130]
+        about_me = request.form['about_me']
         role = 'Regular User'
         Gravatar_url = request.form['Gravatar_url']
 
         # Check if all fields are provided
         if not username or not password or not confirm_password or not email or not display_name:
             session['registration_form_data'] = request.form
-            flash('All fields are required.', 'error')
+            flash('Please fill the required fields', 'error')
 
         elif password != confirm_password:
             session['registration_form_data'] = request.form

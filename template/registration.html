@@ -36,7 +36,7 @@
  font-family: "Roboto", sans-serif;
  outline: 0;
  background: #f2f2f2;
- width: 100%;
+ width: 98.5%;
  border: 0;
  margin: 0 0 15px;
  padding: 15px;
@@ -69,6 +69,14 @@
 .form .message a {
  color: #4CAF50;
  text-decoration: none;
+}
+.asterisk_required_field::after {
+  content: ' *';
+  color: red;
+  position: absolute;
+  margin: 2px 0px 0px -18px;
+  font-size: 20px;
+  padding: 0 5px 0 0;
 }
 body {
  background: #4CAF50; /* fallback for old browsers */
@@ -115,14 +123,14 @@ body {
                 {% endfor %}
             </div>
                 <p>Register Now !!!</p>
-                <input type="text" name="username" title="It must be Letters only" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="3" maxlength="50" required/>
+                <input type="text" name="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"  required/> <span class="asterisk_required_field"></span>
                 
-                <input type="password" name="password" title="It must be Letters only" placeholder="Password"  id="myInput" minlength="8" maxlength="20" required/>
+                <input type="password" name="password" title="Password" placeholder="Password"  id="myInput" minlength="8" maxlength="20" required/> <span class="asterisk_required_field"></span>
                 <input type="checkbox" onclick="myFunction()" style="width:10%">Show Password
-                <input type="password" name="confirm_password" title="It must be Letters only" placeholder="Confirm Password" minlength="8" maxlength="20" id="myInput1" required/>
+                <input type="password" title="Confirm Password" name="confirm_password" title="It must be Letters only" placeholder="Confirm Password" minlength="8" maxlength="20" id="myInput1" required/> <span class="asterisk_required_field"></span>
                 <input type="checkbox" onclick="myFunction1()" style="width:10%">Show Password
-                <input type="email" name="email" title="It must be Letters only" placeholder="Email address" value="{{ form_data.get('email', '') }}" required/> <!-- Use type="email" for email input -->
-                <input type="text" name="display_name" title="It must be Letters only" placeholder="Display Name" value="{{ form_data.get('display_name', '') }}" minlength="3" maxlength="50" required/>
+                <input type="email" name="email" title="Email" maxlength="40" placeholder="Email address" value="{{ form_data.get('email', '') }}" required/>  <span class="asterisk_required_field"></span>
+                <input type="text" name="display_name" title="Display Name (This name will be displayed)" placeholder="Display Name" value="{{ form_data.get('display_name', '') }}" minlength="4" maxlength="50" required/> <span class="asterisk_required_field"></span>
                
                 <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="130"required/>
                

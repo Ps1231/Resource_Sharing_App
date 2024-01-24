@@ -123,14 +123,22 @@
               {% endif %}
               
               <!-- ... existing code ... -->
-  
               <div class="blog-pagination">
                 <ul class="justify-content-center">
-                  {% for page_num in range(1, total_pages + 1) %}
-                    <li {% if page_num == current_page %}class="active"{% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
-                  {% endfor %}
+                    {% for page_num in range(1, total_pages + 1) %}
+                        {% if search_query %}
+                            <li {% if page_num == current_page %}class="active"{% endif %}>
+                                <a href="?page={{ page_num }}&search_query={{ search_query }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li {% if page_num == current_page %}class="active"{% endif %}>
+                                <a href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
-              </div>           
+            </div>
+                      
     
           </div><!-- End blog entries list -->
 

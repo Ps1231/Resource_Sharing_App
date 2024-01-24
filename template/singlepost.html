@@ -207,30 +207,33 @@
                     <div>
                     
                       <h5><a href="">{{comment.Commenter_Name}}</a></h5>
+                          <h6><a href="#" class="reply"><i class="bi bi-star-fill" ></i> Likes:</a>
+                      </h6>
+                      
                       <time >{{comment.Comment_DateTime}}</time>
                       <p>
                        {{comment.Comment_Text}}
                       </p>
+                      
                     </div>
                   </div>
                 </div><!-- End comment #1 -->
                 {% endfor %}
                 {% endif %}
   
-                <div class="reply-form">
+                <div class="reply-form" >
                   <h4>Leave a Reply</h4>
                   <p>Your email address will not be published. Required fields are marked * </p>
-                  <form action="">
-                    
+                  <form method="post" action="{{ url_for('view_post', post_id=post_id) }}">
                     <div class="row">
-                      <div class="col form-group">
-                        <textarea name="comment" class="form-control" placeholder="Your Comment*"></textarea>
-                      </div>
+                        <div class="col form-group">
+                            <textarea name="comment" id="comment" class="form-control" placeholder="Your Comment*"></textarea>
+                        </div>
                     </div>
+                    <input type="hidden" name="action" value="comment">
                     <button type="submit" class="btn btn-primary">Post Comment</button>
-  
-                  </form>
-  
+                </form>
+                
                 </div>
   
               </div><!-- End blog comments -->

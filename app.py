@@ -184,7 +184,8 @@ def get_posts_and_tags():
         else:
             cursor.execute("SELECT COUNT(*) FROM Posts")
         total_posts = cursor.fetchone()["COUNT(*)"]
-        total_pages = (total_posts + POSTS_PER_PAGE - 1) // POSTS_PER_PAGE
+        total_pages = max(
+            (total_posts + POSTS_PER_PAGE - 1) // POSTS_PER_PAGE, 1)
 
         cursor.execute(recent_posts())
         recentPosts = cursor.fetchall()
@@ -259,12 +260,23 @@ def view_post(post_id):
     if request.method == 'POST':
         action = request.form['action']
         user_id = session.get('user_id')
+        comment_text = request.form['comment']
 
         if user_id:
             # Fetch the user's vote status for the post
 
             if action in ('upvote', 'downvote'):
                 handle_vote(post_id, user_id, action)
+
+            if comment_text:
+                # Store the comment in the database
+                with db.cursor() as cursor:
+                    query = "INSERT INTO Comments (post_id, user_id, text, create_date) VALUES (%s, %s, %s, NOW())"
+                    cursor.execute(query, (post_id, user_id, comment_text))
+                    db.commit()
+
+                flash('Comment posted successfully', 'success')
+                return redirect(url_for('view_post', post_id=post_id))
 
     with db.cursor() as cursor:
         query, params = get_post_details(post_id)
@@ -284,7 +296,7 @@ def view_post(post_id):
         cursor.execute(get_category())
         categories = cursor.fetchall()
 
-        return render_template('singlepost.html', post=post, comments=comments, recentPosts=recentPosts, categories=categories, tags=tags)
+        return render_template('singlepost.html', post=post, comments=comments, recentPosts=recentPosts, categories=categories, tags=tags, post_id=post_id)
 
 
 def requires_role(roles):

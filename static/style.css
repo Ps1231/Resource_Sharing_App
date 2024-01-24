@@ -9,6 +9,14 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+.asterisk_required_field::after {
+  content: ' *';
+  color: red;
+  position: absolute;
+  margin: 2px 0px 0px -18px;
+  font-size: 20px;
+  padding: 0 5px 0 0;
+}
 body {
   font-family: "Open Sans", sans-serif;
   color: #444444;
@@ -1869,13 +1877,20 @@ section {
   color: #94c045;
 }
 
-.blog .blog-comments .comment h5 .reply {
-  padding-left: 10px;
-  color: #3c4133;
+.blog .blog-comments .comment h6 a:hover {
+  color: #94c045;
 }
 
-.blog .blog-comments .comment h5 .reply i {
-  font-size: 20px;
+.blog .blog-comments .comment h6 .reply {
+  
+   display: block;
+  font-size: 14px;
+  color: #565e49;
+  margin-bottom: 5px;
+}
+
+.blog .blog-comments .comment h6 .reply i {
+  font-size: 15px;
 }
 
 .blog .blog-comments .comment time {
@@ -1885,6 +1900,12 @@ section {
   margin-bottom: 5px;
 }
 
+.blog .blog-comments .comment a {
+  display: block;
+  font-size: 14px;
+  color: #565e49;
+  margin-bottom: 5px;
+}
 .blog .blog-comments .comment.comment-reply {
   padding-left: 40px;
 }

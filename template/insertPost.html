@@ -118,21 +118,23 @@ input[type=text]:focus,textarea:focus,select:focus {
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
 <div class="container" >
- <label for="uname"><b>Title</b></label>
+ <label for="title"><b>Title</b></label>
     <div>
-        <input type="text" placeholder="Enter Blog Title" name="uname" required>
+        <input type="text" placeholder="Enter Blog Title" name="title" id='title' required>
     </div>
- <label for="psw"><b>Blog Content</b></label>
+ <label for="content"><b>Blog Content</b></label>
     <div>
-        <textarea type="password" placeholder="Enter Blog Content" name="psw" required></textarea>
+        <textarea type="password" placeholder="Enter Blog Content" name="content" id="content" required></textarea>
     </div>
  <label for="category"><b>Category</b></label>
     <div>
         <select id="category" name="category">
-        <option value="Travel">Travel</option>
-        <option value="Food">Food</option>
-        <option value="Lifestyle">Lifestyle</option>
-        <option value="Tech">Tech</option>
+          {% if categories is not none %}
+          {% for category in categories %}
+        <option>{{category.name}} </option>
+        {% endfor %}
+        {% endif %}
+        
         </select>
     </div>
  <label for="tags"><b>Tags</b></label>

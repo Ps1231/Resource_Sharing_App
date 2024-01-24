@@ -340,7 +340,23 @@ def account():
 @login_required
 @requires_role(['Regular User'])
 def newPost():
-    return render_template('insertPost.html')
+    with db.cursor() as cursor:
+        cursor.execute(get_category())
+        categories = cursor.fetchall()
+    if request.method == 'POST':
+        # Limit username to 50 characters
+        title = request.form['title']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        email = request.form['email']
+        # Limit display name to 50 characters
+        display_name = request.form['display_name']
+        # Limit about me to 130 characters
+        about_me = request.form['about_me']
+        role = 'Regular User'
+        Gravatar_url = request.form['Gravatar_url']
+
+    return render_template('insertPost.html', categories=categories)
 
 
 if __name__ == '__main__':

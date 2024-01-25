@@ -64,6 +64,41 @@ input[type=text]:focus,textarea:focus,select:focus {
 .btn:hover {
     opacity:1;
 }
+#tagList {
+  list-style: none;
+  padding: 10px;
+}
+
+#tagList li {
+  display: inline-block;
+  margin-right: 10px;
+  background-color: #e0e0e0;
+  padding: 15px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.remove-tag {
+  position: absolute;
+  top: 0;
+  right: 3px;
+  cursor: pointer;
+}
+ .addTags,
+.addTags:focus {
+  background: #94c045;
+  padding: 8px 25px;
+  margin-left: 30px;
+  border-radius: 50px;
+  color: #fff;
+}
+
+.addTags:hover,
+.addTags:focus:hover {
+  color: #fff;
+  background: #9fc658;
+}
+
 </style>
 </head>
 <body>
@@ -117,8 +152,10 @@ input[type=text]:focus,textarea:focus,select:focus {
         </div>
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
+        <form method="post" action="{{ url_for('newPost') }}">
+
 <div class="container" >
- <label for="title"><b>Title</b></label>
+ <label for="title" ><b>Title</b></label>
     <div>
         <input type="text" placeholder="Enter Blog Title" name="title" id='title' required>
     </div>
@@ -137,13 +174,85 @@ input[type=text]:focus,textarea:focus,select:focus {
         
         </select>
     </div>
+ 
  <label for="tags"><b>Tags</b></label>
-    <div>
-        <input type="text" placeholder="Enter Tags" name="tags" required>
-    </div>
- <button type="submit" class="btn"><b>Post Blog</b></button>
-</div>
-</section></main>
+ <div>
+     <input type="text" id="tagInput" placeholder="Enter Tags" name="tags" required>
+     <button type="button" class='addTags' onclick="addTag()">Add Tag</button>
+ </div>
+
+ <ul id="tagList"></ul>
+
+ <button type="submit" class="btn" id="saveButton" onclick="submitForm()"><b>Post Blog</b></button>
+</div></form>
+</section>
+<script>
+  let tagCount = 0;
+  const maxTags = 3;
+
+  function addTag() {
+      const tagInput = document.getElementById("tagInput");
+      const tagList = document.getElementById("tagList");
+      const tag = tagInput.value.trim();
+
+      if (tag !== "" && tagCount < maxTags) {
+          // Display the tag in the list
+          const li = document.createElement("li");
+          li.textContent = tag;
+
+          // Create a close icon for tag removal
+          const closeIcon = document.createElement("span");
+          closeIcon.className = "remove-tag";
+          closeIcon.innerHTML = "&times;";
+          closeIcon.addEventListener("click", function () {
+              removeTag(li);
+          });
+
+          // Append close icon to the tag
+          li.appendChild(closeIcon);
+
+          // Append tag to the list
+          tagList.appendChild(li);
+
+          // Increment tag count
+          tagCount++;
+
+          // Clear the input field
+          tagInput.value = "";
+      }
+  }
+
+  function removeTag(tagElement) {
+      tagElement.remove();
+      tagCount--;
+
+  }
+
+  // Function to reset the tag count, clear the tag list, and disable the "Post Blog" button
+  function saveTags() {
+      // Perform save action here
+      console.log("Tags saved!");
+
+      // Reset tag count, clear the tag list, and disable the "Post Blog" button
+      tagCount = 0;
+      document.getElementById("tagList").innerHTML = "";
+     
+  }
+  // Function to handle form submission
+    function submitForm() {
+        // Your existing form submission logic here
+
+        // Simulate a successful post creation for demonstration purposes
+        // Replace this with your actual logic to create a post
+        const postCreatedSuccessfully = true;
+
+        if (postCreatedSuccessfully) {
+            // Display an alert with the success message
+            alert('Post created successfully!');
+        }
+    }
+</script>
+</main>
   <!-- ======= Footer ======= -->
   <footer id="footer">
     <div class="footer-top">
@@ -202,7 +311,10 @@ input[type=text]:focus,textarea:focus,select:focus {
   <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
- 
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 
   <!-- Template Main JS File -->
   <script src="{{ url_for('static' , filename = 'main.js') }}"></script>

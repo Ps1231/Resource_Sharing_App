@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, render_template, request, flash, session, redirect, url_for
+from flask import Flask, render_template, request, flash, session, redirect, url_for, jsonify
 import pymysql
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -336,25 +336,41 @@ def account():
     return render_template('account1.html', user_info=user_info, user_posts=user_posts)
 
 
-@app.route('/newPost')
+@app.route('/newPost', methods=['GET', 'POST'])
 @login_required
 @requires_role(['Regular User'])
 def newPost():
     with db.cursor() as cursor:
         cursor.execute(get_category())
         categories = cursor.fetchall()
-    if request.method == 'POST':
-        # Limit username to 50 characters
-        title = request.form['title']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        email = request.form['email']
-        # Limit display name to 50 characters
-        display_name = request.form['display_name']
-        # Limit about me to 130 characters
-        about_me = request.form['about_me']
-        role = 'Regular User'
-        Gravatar_url = request.form['Gravatar_url']
+
+        if request.method == 'POST':
+            user_id = session.get('user_id')
+            title = request.form['title']
+            body = request.form['content']
+            category = request.form['category']
+
+            tags = request.form.getlist('tags')
+
+            cursor.execute(
+                "INSERT INTO Posts (title, body, category,  user_id,create_date, last_edit_date) VALUES (%s, %s, %s, %s, NOW(),  NOW())",
+                (title, body, category,  user_id)
+            )
+            post_id = cursor.lastrowid
+
+            for tag_name in tags:
+                cursor.execute(
+                    "INSERT INTO Tags (tag_name) VALUES (%s) ON DUPLICATE KEY UPDATE tag_name=tag_name", (
+                        tag_name,)
+                )
+                tag_id = cursor.lastrowid
+                cursor.execute(
+                    "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (
+                        post_id, tag_id)
+                )
+
+            db.commit()
+            cursor.close()
 
     return render_template('insertPost.html', categories=categories)
 

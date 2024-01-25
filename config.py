@@ -12,12 +12,3 @@ DATABASE_CONFIG = {
 
 SECRET_KEY = 'your_secret_key_here'
 DEBUG = True
-
-# Include the correct port number in the connection string
-# engine = create_engine("mysql+pymysql://root:rashi@2003@localhost/resource")
-
-
-# base = automap_base()
-# base.prepare(engine, reflect=True)
-# Session = sessionmaker(bind=engine)
-# session = Session()

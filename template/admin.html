@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>  
+    body {
+        display: flexbox;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+        margin: 0;
+        background-color: #f4f4f4;
+    }
+
+    /* Style for container */
+    .container {
+        text-align: center;
+        margin: 5px;
+        padding: 5px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .container:hover {
+        transform: scale(1.1);
+    }
+
+    /* Style for image */
+    .container img {
+        width: 100px; /* Adjust the width as needed */
+        height: 100px; /* Adjust the height as needed */
+        border-radius: 50%; /* Make it round */
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    /* Style for heading */
+    .container h1 {
+        font-size: 24px;
+        color: #333;
+    }
+
+    /* Style for home button */
+    .home-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        text-decoration: none;
+        background-color: #3498db;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .home-button:hover {
+        background-color: #2980b9;
+    }
+    </style>
+</head>
+<body>
+
+<!-- Container for Admin -->
+<a href="{{url_for('login')}}" class="container">
+    <img src="static/img/admin.jpg" alt="Admin Image">
+    <h1>Route wise</h1>
+</a>
+
+<!-- Container for User with link -->
+<a href="{{url_for('login')}}" class="container">
+    <img src="static/img/user.jpg" alt="User Image">
+    <h1>Time wise</h1>
+</a>
+
+<!-- Home Button -->
+<a href="{{url_for('index')}}" class="home-button">Home</a>
+
+</body>
+</html>

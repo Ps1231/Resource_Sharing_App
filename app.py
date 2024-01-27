@@ -375,5 +375,10 @@ def newPost():
     return render_template('insertPost.html', categories=categories)
 
 
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    return render_template('adminDashboard.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

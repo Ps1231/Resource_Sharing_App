@@ -125,16 +125,12 @@
               <!-- ... existing code ... -->
               <div class="blog-pagination">
                 <ul class="justify-content-center">
-                    {% for page_num in range(1, total_pages + 1) %}
-                        {% if search_query %}
-                            <li {% if page_num == current_page %}class="active"{% endif %}>
-                                <a href="?page={{ page_num }}&search_query={{ search_query }}">{{ page_num }}</a>
-                            </li>
-                        {% else %}
+                    {% for page_num in range(1, total_pages+1) %}
+                     
                             <li {% if page_num == current_page %}class="active"{% endif %}>
                                 <a href="?page={{ page_num }}">{{ page_num }}</a>
                             </li>
-                        {% endif %}
+                        
                     {% endfor %}
                 </ul>
             </div>
@@ -149,7 +145,7 @@
               <h3 class="sidebar-title">Search</h3>
               <div class="sidebar-item search-form">
                 <form action="">
-                  <input type="text">
+                  <input type="text" id="search-input" placeholder="Search" maxlength="50">
                   <button type="submit"><i class="bi bi-search"></i></button>
                 </form>
               </div><!-- End sidebar search formn-->
@@ -165,16 +161,16 @@
                 </ul>
               </div><!-- End sidebar categories-->
 
-               <h3 class="sidebar-title">Recent Posts</h3>
+               <h3 class="sidebar-title">Popular Posts</h3>
                
               <div class="sidebar-item recent-posts">
-                {% if recentPosts is not none %}
-                    {% for rp in recentPosts %}
+                {% if popularPosts is not none %}
+                    {% for rp in popularPosts %}
                 <div class="post-item clearfix">
                  
                   <h4><a href="{{ url_for('view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>
                   <time datetime="2020-01-01">{{rp.date}}</time>
-                
+                  
                 </div>   {% endfor %}
               {% endif %}
 
@@ -254,7 +250,51 @@
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the search input element
+        const searchInput = document.getElementById('search-input');
+    
+        // Get the search form element
+        const searchForm = document.querySelector('form');
+    
+        // Add a submit event listener to the search form
+        searchForm.addEventListener('submit', function(event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+    
+            // Get the search query from the search input element
+            const searchQuery = searchInput.value.trim();
+    
+            // If the search query is not empty, redirect to the search results page with the search query
+            if (searchQuery) {
+                window.location.href = '?page=1&search_query=' + encodeURIComponent(searchQuery);
+            }
+        });
+    
+        // Get all the pagination link elements
+        const paginationLinks = document.querySelectorAll('.blog-pagination ul li a');
+    
+        // Add a click event listener to each pagination link
+        paginationLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                // Prevent the default link click behavior
+                event.preventDefault();
+    
+                // Get the page number from the clicked link
+                const pageNum = parseInt(link.textContent);
+    
+                // If the search query is not empty, redirect to the specified page with the search query
+                if (searchInput.value.trim()) {
+                    window.location.href = '?page=' + pageNum + '&search_query=' + encodeURIComponent(searchInput.value.trim());
+                } else {
+                    // Otherwise, redirect to the specified page without the search query
+                    window.location.href = '?page=' + pageNum;
+                }
+            });
+        });
+    });
+    </script>
   <!-- Vendor JS Files -->
   <script src="{{ url_for('static' , filename = 'purecounter_vanilla.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'aos.js') }}"></script>

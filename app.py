@@ -1,11 +1,12 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, render_template, request, flash, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, session, redirect, url_for, jsonify, abort
 import pymysql
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 from config import DATABASE_CONFIG
 from queries import *
 import re
+from math import ceil
 
 # from models import Users, Base
 import datetime
@@ -161,50 +162,37 @@ def index():
 @login_required
 def get_posts_and_tags():
     # Get the page parameter from the URL, default to 1 if not provided
-    page = int(request.args.get('page', 1))
-
-    # Get the search query from the URL parameters
-    search_query = request.args.get('search_query', '')
+    page = request.args.get('page', 1, type=int)
+    if page < 1:
+        abort(403)
 
     # Calculate the offset based on the page number
     offset = (page - 1) * POSTS_PER_PAGE
 
     with db.cursor() as cursor:
-        if search_query:
-            # Remove limit and offset from the search_posts call
-            cursor.execute(search_posts(search_query))
-        else:
-            cursor.execute(all_posts(limit=POSTS_PER_PAGE, offset=offset))
+        # Fetch posts with LIMIT and OFFSET
+        cursor.execute(all_posts(limit=POSTS_PER_PAGE, offset=offset))
         posts = cursor.fetchall()
 
         # Count the total number of posts for pagination
-        if search_query:
-            cursor.execute(
-                "SELECT COUNT(*) FROM Posts WHERE title LIKE %s OR content LIKE %s", (search_query, search_query))
-        else:
-            cursor.execute("SELECT COUNT(*) FROM Posts")
+        cursor.execute(get_total_rows_query())
         total_posts = cursor.fetchone()["COUNT(*)"]
-        total_pages = max(
-            (total_posts + POSTS_PER_PAGE - 1) // POSTS_PER_PAGE, 1)
+        total_pages = ceil(total_posts / POSTS_PER_PAGE)
+        if page > total_pages:
+            abort(403)
 
-        cursor.execute(recent_posts())
-        recentPosts = cursor.fetchall()
+        # Fetch additional data (popularPosts, tags, categories) as needed
+        cursor.execute(popular_posts())
+        popularPosts = cursor.fetchall()
 
         cursor.execute(all_tags())
         tags = cursor.fetchall()
 
         cursor.execute(get_category())
         categories = cursor.fetchall()
-    return render_template('post.html', posts=posts, recentPosts=recentPosts, tags=tags, current_page=page, total_pages=total_pages, categories=categories)
 
-
-@app.route('/search', methods=['GET'])
-def search_redirect():
-    # Get the search query from the URL parameters
-    search_query = request.args.get('search_query', '')
-
-    # Redirect to the main posts route with the search query
-    return redirect(url_for('get_posts_and_tags', search_query=search_query))
+    return render_template('post.html', posts=posts, popularPosts=popularPosts, tags=tags,
+                           current_page=page, total_pages=total_pages, categories=categories)
 
 
 def handle_vote(post_id, user_id, vote_type):
@@ -258,25 +246,26 @@ def check_user_vote(post_id, user_id, vote_type):
 @login_required
 def view_post(post_id):
     if request.method == 'POST':
-        action = request.form['action']
         user_id = session.get('user_id')
-        comment_text = request.form['comment']
 
         if user_id:
+            if 'action' in request.form:
+                action = request.form['action']
             # Fetch the user's vote status for the post
+                if action in ('upvote', 'downvote'):
+                    handle_vote(post_id, user_id, action)
 
-            if action in ('upvote', 'downvote'):
-                handle_vote(post_id, user_id, action)
+            if 'comment' in request.form:
+                comment_text = request.form['comment']
+                if comment_text:
+                    # Store the comment in the database
+                    with db.cursor() as cursor:
+                        query = "INSERT INTO Comments (post_id, user_id, text, create_date) VALUES (%s, %s, %s, NOW())"
+                        cursor.execute(query, (post_id, user_id, comment_text))
+                        db.commit()
 
-            if comment_text:
-                # Store the comment in the database
-                with db.cursor() as cursor:
-                    query = "INSERT INTO Comments (post_id, user_id, text, create_date) VALUES (%s, %s, %s, NOW())"
-                    cursor.execute(query, (post_id, user_id, comment_text))
-                    db.commit()
-
-                flash('Comment posted successfully', 'success')
-                return redirect(url_for('view_post', post_id=post_id))
+                    flash('Comment posted successfully', 'success')
+                    return redirect(url_for('view_post', post_id=post_id))
 
     with db.cursor() as cursor:
         query, params = get_post_details(post_id)
@@ -287,8 +276,8 @@ def view_post(post_id):
         cursor.execute(query, params)
         comments = cursor.fetchall()
 
-        cursor.execute(recent_posts())
-        recentPosts = cursor.fetchall()
+        cursor.execute(popular_posts())
+        popularPosts = cursor.fetchall()
 
         cursor.execute(all_tags())
         tags = cursor.fetchall()
@@ -296,7 +285,7 @@ def view_post(post_id):
         cursor.execute(get_category())
         categories = cursor.fetchall()
 
-        return render_template('singlepost.html', post=post, comments=comments, recentPosts=recentPosts, categories=categories, tags=tags, post_id=post_id)
+        return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id)
 
 
 def requires_role(roles):

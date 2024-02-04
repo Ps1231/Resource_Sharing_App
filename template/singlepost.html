@@ -170,8 +170,8 @@
                     <div class="vote-buttons">
                       <form method="post">
                         <ul>
-                          <li><button  class="upvote-btn" name="action" value="upvote" ><i class="fas fa-arrow-up" style="color: #fff;"></i></button></li>
-                          <li><button  class="downvote-btn" name="action" value="downvote"><i class="fas fa-arrow-down" style="color: #fff;"></i></button></li>
+                          <li><button class="upvote-btn" name="action" value="upvote" ><i class="fas fa-arrow-up" style="color: #fff;"></i></button></li>
+                          <li><button class="downvote-btn" name="action" value="downvote"><i class="fas fa-arrow-down" style="color: #fff;"></i></button></li>
                         </ul>
                       </form>
                     </div>
@@ -207,7 +207,7 @@
                     <div>
                     
                       <h5><a href="">{{comment.Commenter_Name}}</a></h5>
-                          <h6><a href="#" class="reply"><i class="bi bi-star-fill" ></i> Likes:</a>
+                          <h6><a href="#" class="reply"><i class="bi bi-star-fill" ></i> Likes: {{comment.Comment_Score}}</a>
                       </h6>
                       
                       <time >{{comment.Comment_DateTime}}</time>
@@ -263,11 +263,11 @@
                     </ul>
                   </div><!-- End sidebar categories-->
     
-                   <h3 class="sidebar-title">Recent Posts</h3>
+                   <h3 class="sidebar-title">Popular Posts</h3>
                    
                   <div class="sidebar-item recent-posts">
-                    {% if recentPosts is not none %}
-                        {% for rp in recentPosts %}
+                    {% if popularPosts is not none %}
+                        {% for rp in popularPosts %}
                     <div class="post-item clearfix">
                      
                       <h4><a href="{{ url_for('view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>

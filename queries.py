@@ -31,6 +31,10 @@ ORDER BY
     return query
 
 
+def get_total_rows_query():
+    return f"SELECT COUNT(*) FROM ({all_posts()}) AS subquery"
+
+
 def search_posts(search_query, limit=None, offset=None):
     query = '''
         SELECT
@@ -83,9 +87,26 @@ ORDER BY
 LIMIT 5;'''
 
 
-def recent_posts():
-    return '''SELECT post_id  , title, DATE_FORMAT(create_date, '%e %b %Y') AS date
-              FROM Posts ORDER BY create_date DESC LIMIT 5;'''
+def popular_posts():
+    return '''SELECT
+    p.post_id as post_id,
+    p.title as title,
+    p.body as post_body, -- Corrected alias name for p.body
+    DATE_FORMAT(p.create_date, '%e %b %Y') as date,
+    (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'upvote') as upvote_count
+FROM
+    Posts p
+    LEFT JOIN Votes v ON p.post_id = v.post_id
+WHERE
+    v.vote_type = 'upvote' OR v.vote_type IS NULL
+GROUP BY
+    p.post_id
+ORDER BY
+    upvote_count DESC
+LIMIT
+    5;
+'''
+
 
 # queries.py
 
@@ -124,16 +145,25 @@ def get_post_details(post_id):
 
 
 def get_comments(post_id):
-    query = '''SELECT
+    query = '''
+    SELECT
         Comments.text AS Comment_Text,
         Users.display_name AS Commenter_Name,
-        Comments.create_date AS Comment_DateTime
+        Comments.create_date AS Comment_DateTime,
+        COUNT(CommentScore.id) AS Comment_Score
     FROM
         Comments
     JOIN
         Users ON Comments.user_id = Users.user_id
+    LEFT JOIN
+        CommentScore ON Comments.comment_id = CommentScore.comment_id
     WHERE
-        Comments.post_id = %s '''
+        Comments.post_id = %s
+    GROUP BY
+        Comments.comment_id
+    ORDER BY
+        Comment_DateTime DESC
+    '''
     return query, (post_id,)
 
 

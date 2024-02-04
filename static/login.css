@@ -19,12 +19,13 @@
   font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
-  width: 100%;
+  width: 98.5%;
   border: 0;
   margin: 0 0 15px;
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
+  text-align: LEFT;
 }
 .form button {
   font-family: "Roboto", sans-serif;

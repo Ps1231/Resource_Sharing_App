@@ -1,0 +1,37 @@
+{% if posts is not none %}
+  {% for post in posts %}
+    <article class="entry">
+      <h2 class="entry-title">
+        <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{ post.post_title }}</a>
+      </h2>
+
+      <div class="entry-meta">
+        <ul>
+          <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{ post.display_name }}</a></li>
+          <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{ post.create_date }}</a></li>
+          <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Comments: {{ post.comment_count }}</a></li>
+          <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Upvote: {{ post.upvote_count }}</a></li>
+          <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Downvote: {{ post.downvote_count }}</a></li>
+        </ul>
+      </div>
+
+      <div class="entry-content">
+        <p>{{ post.post_content.split('\n')[:2] | join('\n') }}....</p>
+        <div class="read-more">
+          <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
+        </div>
+      </div>
+    </article><!-- End blog entry -->
+  {% endfor %}
+{% endif %}
+
+<!-- ... existing code ... -->
+<div class="blog-pagination">
+  <ul class="justify-content-center">
+    {% for page_num in range(1, total_pages + 1) %}
+      <li {% if page_num == current_page %}class="active"{% endif %}>
+        <a href="#" data-category="{{ category }}" data-page="{{ page_num }}" class="ajax-page-link">{{ page_num }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

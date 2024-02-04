@@ -80,6 +80,7 @@ body {
  -moz-osx-font-smoothing: grayscale;      
 }
     </style>
+    
     <script>
         $(document).ready(function() {
             // Use 'click' event on the button inside the form
@@ -104,6 +105,59 @@ body {
               x.type = "password";
             }
           }
+          function validate_password() {
+
+            let pass = document.getElementById('myInput').value;
+            let confirm_pass = document.getElementById('myInput1').value;
+            if (pass != confirm_pass) {
+              document.getElementById('wrong_pass_alert').style.color = 'red';
+              document.getElementById('wrong_pass_alert').innerHTML
+                = '☒ Use same password';
+              document.getElementById('create').disabled = true;
+              document.getElementById('create').style.opacity = (0.4);
+            } else {
+              document.getElementById('wrong_pass_alert').style.color = 'green';
+              document.getElementById('wrong_pass_alert').innerHTML =
+                '🗹 Password Matched';
+              document.getElementById('create').disabled = false;
+              document.getElementById('create').style.opacity = (1);
+            }
+          }
+      
+          function wrong_pass_alert() {
+            if (document.getElementById('myInput').value != "" &&
+              document.getElementById('myInput1').value != "") {
+              alert("Your response is submitted");
+            } else {
+              alert("Please fill all the fields");
+            }
+          }
+          function validate_username() {
+            let username = document.getElementById('username').value;
+            let alphanumericRegex = /^[a-zA-Z0-9]+$/;
+    
+            if (!alphanumericRegex.test(username)) {
+                document.getElementById('username_alert').style.color = 'red';
+                document.getElementById('username_alert').innerHTML = '☒ Use alphanumeric characters only';
+                document.getElementById('create').disabled = true;
+                document.getElementById('create').style.opacity = 0.4;
+            } else {
+                document.getElementById('username_alert').style.color = 'green';
+                document.getElementById('username_alert').innerHTML = '🗹 Valid Username';
+                document.getElementById('create').disabled = false;
+                document.getElementById('create').style.opacity = 1;
+            }
+        }
+    
+        function wrong_username_alert() {
+            let username = document.getElementById('username').value;
+    
+            if (username === "") {
+                alert("Please fill in the username field");
+            } else {
+                alert("Please use alphanumeric characters only for the username");
+            }
+        }
     </script>
    
 
@@ -117,19 +171,24 @@ body {
                 {% endfor %}
             </div>
                 <p>Register Now !!!</p>
-                <input type="text" name="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"  required/> <span class="asterisk_required_field"></span>
+                <input type="text" name="username" onkeyup="validate_username()"  id="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"   required/> <span class="asterisk_required_field"></span>
                 
                 <input type="password" name="password" title="Password" placeholder="Password"  id="myInput" minlength="8" maxlength="20" required/> <span class="asterisk_required_field"></span>
                 <input type="checkbox" onclick="myFunction()" style="width:10%">Show Password
-                <input type="password" title="Confirm Password" name="confirm_password" title="It must be Letters only" placeholder="Confirm Password" minlength="8" maxlength="20" id="myInput1" required/> <span class="asterisk_required_field"></span>
+                <input type="password" title="Confirm Password" name="confirm_password" title="It must be Letters only" placeholder="Confirm Password" minlength="8" maxlength="20" id="myInput1" onkeyup="validate_password()" required/> <span class="asterisk_required_field"></span>
                 <input type="checkbox" onclick="myFunction1()" style="width:10%">Show Password
+                
                 <input type="email" name="email" title="Email" maxlength="40" placeholder="Email address" value="{{ form_data.get('email', '') }}" required/>  <span class="asterisk_required_field"></span>
                 <input type="text" name="display_name" title="Display Name (This name will be displayed)" placeholder="Display Name" value="{{ form_data.get('display_name', '') }}" minlength="4" maxlength="50" required/> <span class="asterisk_required_field"></span>
                
                 <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="130"required/>
                
                 <input type="text" name="Gravatar_url" title="URL of your Profile picture" placeholder="Gravatar URL" value="{{ form_data.get('Gravatar_url', '') }}" required/>
-                <button type="submit" value="Submit">Create</button>
+                <span id="wrong_pass_alert" ></span>
+                <span id="username_alert" ></span>
+                <button type="submit" id="create" class="submit_btn"
+
+                onclick="wrong_pass_alert()"value="Submit">Create</button>
                
                 <p class="message">Already registered? <a href="{{ url_for('login') }}">Sign In</a></p>
             </form>

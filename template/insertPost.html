@@ -254,6 +254,7 @@ input[type=text]:focus,textarea:focus,select:focus {
 </script>
 </main>
   <!-- ======= Footer ======= -->
+  <!-- ======= Footer ======= -->
   <footer id="footer">
     <div class="footer-top">
       <div class="container">
@@ -267,9 +268,9 @@ input[type=text]:focus,textarea:focus,select:focus {
           <div class="col-lg-4 col-md-6 footer-links">
             <h4>Useful Links</h4>
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About us</a></li>
-              <li><a href="#">Services</a></li>
+              <li><a href="{{ url_for('index')}}">Home</a></li>
+              <li><a href="{{ url_for('index')}}#about">About us</a></li>
+              <li><a href="{{ url_for('index')}}#services">Services</a></li>
              
             </ul>
           </div>
@@ -294,7 +295,7 @@ input[type=text]:focus,textarea:focus,select:focus {
     </div>
 
     <div class="container">
-  
+
       <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
@@ -311,10 +312,7 @@ input[type=text]:focus,textarea:focus,select:focus {
   <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+ 
 
   <!-- Template Main JS File -->
   <script src="{{ url_for('static' , filename = 'main.js') }}"></script>

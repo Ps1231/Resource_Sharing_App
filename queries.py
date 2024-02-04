@@ -35,6 +35,45 @@ def get_total_rows_query():
     return f"SELECT COUNT(*) FROM ({all_posts()}) AS subquery"
 
 
+def posts_by_category(category, limit=None, offset=None):
+    query = f'''SELECT
+        p.post_id,
+        u.gravatar_url as user_image,
+        u.display_name as display_name,
+        p.title as post_title,
+        p.body AS post_content,
+        p.category as category,
+        p.create_date as create_date,
+        (select count(*) from Votes where post_id=p.post_id and vote_type='upvote' ) as upvote_count,
+        (select count(*) from Votes where post_id=p.post_id and vote_type='downvote' ) as downvote_count,
+        (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
+        GROUP_CONCAT(t.tag_name) as tags
+    FROM
+        Posts p
+        INNER JOIN Users u ON p.user_id = u.user_id
+        LEFT JOIN Votes v ON p.post_id = v.post_id
+        INNER JOIN PostTags pt ON p.post_id = pt.post_id
+        INNER JOIN Tags t ON pt.tag_id = t.tag_id
+    WHERE
+        p.category = '{category}'
+    GROUP BY
+        p.post_id
+    ORDER BY
+        p.create_date DESC
+    '''
+
+    if limit is not None:
+        query += f" LIMIT {limit}"
+    if offset is not None:
+        query += f" OFFSET {offset}"
+
+    return query
+
+
+def get_total_rows_query_for_categorypost():
+    return f"SELECT COUNT(*) FROM ({posts_by_category()}) AS subquery"
+
+
 def search_posts(search_query, limit=None, offset=None):
     query = '''
         SELECT
@@ -240,4 +279,33 @@ def get_user_posts(user_id):
 		u.user_id = {user_id}
 	ORDER BY 
 		p.create_date DESC;
+    """
+
+
+def get_author_posts(username):
+    return """
+        SELECT 
+            p.post_id, 
+            p.title as title, 
+            p.body as body, 
+            p.create_date as create_date,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'upvote') as upvote_count,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'downvote') as downvote_count,
+            (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count
+        FROM 
+            Posts p
+        JOIN 
+            Users u ON p.user_id = u.user_id
+        WHERE 
+            u.username = %s
+        ORDER BY 
+            p.create_date DESC;
+    """
+
+
+def get_author_info(username):
+    return """
+        SELECT user_id, username, email, display_name, about_me, role
+        FROM Users
+        WHERE username = %s
     """

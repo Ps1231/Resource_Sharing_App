@@ -80,7 +80,7 @@
       </div>
       <div class="container">
         <ol>
-          <li><a href="index.html">Home</a></li>
+          <li><a href="{{ url_for('index')}}">Home</a></li>
           <li>Blog</li>
         </ol>
       </div>
@@ -121,7 +121,7 @@
               </article><!-- End blog entry -->
               {% endfor %}
               {% endif %}
-              
+         
               <!-- ... existing code ... -->
               <div class="blog-pagination">
                 <ul class="justify-content-center">
@@ -134,8 +134,11 @@
                     {% endfor %}
                 </ul>
             </div>
-                      
-    
+            
+            
+  
+
+            
           </div><!-- End blog entries list -->
 
           <div class="col-lg-4">
@@ -152,10 +155,10 @@
 
               <h3 class="sidebar-title">Categories</h3>
               <div class="sidebar-item categories">
-                <ul>
+                <ul id="category-list">
                     {% if categories is not none %}
                     {% for category in categories %}
-                  <li><a href="#">{{category.name}} <span>({{category.post_count}})</span></a></li>
+                  <li><a href="#" class="category-link" data-category="{{ category.name }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
                   {% endfor %}
                   {% endif %}
                 </ul>
@@ -202,6 +205,7 @@
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
+  <!-- ======= Footer ======= -->
   <footer id="footer">
     <div class="footer-top">
       <div class="container">
@@ -215,9 +219,9 @@
           <div class="col-lg-4 col-md-6 footer-links">
             <h4>Useful Links</h4>
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About us</a></li>
-              <li><a href="#">Services</a></li>
+              <li><a href="{{ url_for('index')}}">Home</a></li>
+              <li><a href="{{ url_for('index')}}#about">About us</a></li>
+              <li><a href="{{ url_for('index')}}#services">Services</a></li>
              
             </ul>
           </div>
@@ -242,7 +246,7 @@
     </div>
 
     <div class="container">
-     
+
       <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
@@ -250,51 +254,7 @@
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the search input element
-        const searchInput = document.getElementById('search-input');
-    
-        // Get the search form element
-        const searchForm = document.querySelector('form');
-    
-        // Add a submit event listener to the search form
-        searchForm.addEventListener('submit', function(event) {
-            // Prevent the default form submission behavior
-            event.preventDefault();
-    
-            // Get the search query from the search input element
-            const searchQuery = searchInput.value.trim();
-    
-            // If the search query is not empty, redirect to the search results page with the search query
-            if (searchQuery) {
-                window.location.href = '?page=1&search_query=' + encodeURIComponent(searchQuery);
-            }
-        });
-    
-        // Get all the pagination link elements
-        const paginationLinks = document.querySelectorAll('.blog-pagination ul li a');
-    
-        // Add a click event listener to each pagination link
-        paginationLinks.forEach(function(link) {
-            link.addEventListener('click', function(event) {
-                // Prevent the default link click behavior
-                event.preventDefault();
-    
-                // Get the page number from the clicked link
-                const pageNum = parseInt(link.textContent);
-    
-                // If the search query is not empty, redirect to the specified page with the search query
-                if (searchInput.value.trim()) {
-                    window.location.href = '?page=' + pageNum + '&search_query=' + encodeURIComponent(searchInput.value.trim());
-                } else {
-                    // Otherwise, redirect to the specified page without the search query
-                    window.location.href = '?page=' + pageNum;
-                }
-            });
-        });
-    });
-    </script>
+
   <!-- Vendor JS Files -->
   <script src="{{ url_for('static' , filename = 'purecounter_vanilla.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'aos.js') }}"></script>
@@ -303,7 +263,7 @@
   <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
-
+ 
 
   <!-- Template Main JS File -->
   <script src="{{ url_for('static' , filename = 'main.js') }}"></script>

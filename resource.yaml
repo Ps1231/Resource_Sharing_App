@@ -118,7 +118,7 @@ table_definition:
       - id: int auto_increment primary key
       - user_id: int not null
       - comment_id: int not null
-      - voted: enum ('true','false')
+      
     foreign_keys:
       - fk_column: user_id
         references_table: Users

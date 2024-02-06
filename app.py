@@ -29,7 +29,7 @@ def registration():
         display_name = request.form['display_name']
         # Limit about me to 130 characters
         about_me = request.form['about_me']
-        role = 'Admin'
+        role = 'Regular User'
         Gravatar_url = request.form['Gravatar_url']
 
         # Check if all fields are provided
@@ -242,6 +242,25 @@ def check_user_vote(post_id, user_id, vote_type):
             return False
 
 
+def handle_like(user_id, comment_id):
+    with db.cursor() as cursor:
+        # Check if the user has already liked the comment
+        query = "SELECT * FROM CommentScore WHERE user_id = %s AND comment_id = %s"
+        cursor.execute(query, (user_id, comment_id))
+        existing_like = cursor.fetchone()
+
+        if existing_like:
+            # User already liked, remove the like
+            query = "DELETE FROM CommentScore WHERE user_id = %s AND comment_id = %s"
+            cursor.execute(query, (user_id, comment_id))
+        else:
+            # User hasn't liked yet, add the like
+            query = "INSERT INTO CommentScore (user_id, comment_id) VALUES (%s, %s)"
+            cursor.execute(query, (user_id, comment_id))
+
+        db.commit()
+
+
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def view_post(post_id):
@@ -254,6 +273,9 @@ def view_post(post_id):
             # Fetch the user's vote status for the post
                 if action in ('upvote', 'downvote'):
                     handle_vote(post_id, user_id, action)
+            if 'like' in request.form:
+                comment_id = request.form.get('like')
+                handle_like(user_id, comment_id)
 
             if 'comment' in request.form:
                 comment_text = request.form['comment']
@@ -285,7 +307,7 @@ def view_post(post_id):
         cursor.execute(get_category())
         categories = cursor.fetchall()
 
-        return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id)
+        return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id, )
 
 
 def requires_role(roles):

@@ -186,10 +186,12 @@ def get_post_details(post_id):
 def get_comments(post_id):
     query = '''
     SELECT
+        Comments.comment_id as comment_id,
         Comments.text AS Comment_Text,
         Users.display_name AS Commenter_Name,
         Comments.create_date AS Comment_DateTime,
-        COUNT(CommentScore.id) AS Comment_Score
+        (select count(*) from CommentScore where Comments.comment_id = CommentScore.comment_id )  AS Comment_Score
+    
     FROM
         Comments
     JOIN

@@ -145,7 +145,7 @@
                     <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a >Downvotes: {{post.downvote_count}}</a></li>
                   </ul>
                 </div>
-  
+                to detect arduino in linux
                 <div class="entry-content">
                   <p>
                    {{post.post_content}}
@@ -207,8 +207,13 @@
                     <div>
                     
                       <h5><a href="">{{comment.Commenter_Name}}</a></h5>
-                          <h6><a href="#" class="reply"><i class="bi bi-star-fill" ></i> Likes: {{comment.Comment_Score}}</a>
-                      </h6>
+                      <form method="post"><h6><button
+                        
+                        class="reply"
+                        value="{{ comment.comment_id }}"
+                        name="like"
+                        ><i class="bi bi-star-fill"></i> Likes: {{comment.Comment_Score}}</button>
+                      </h6></form>
                       
                       <time >{{comment.Comment_DateTime}}</time>
                       <p>
@@ -362,6 +367,7 @@
       <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
       <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
       <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
      
     
       <!-- Template Main JS File -->

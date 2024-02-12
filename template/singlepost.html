@@ -145,7 +145,7 @@
                     <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a >Downvotes: {{post.downvote_count}}</a></li>
                   </ul>
                 </div>
-                to detect arduino in linux
+               
                 <div class="entry-content">
                   <p>
                    {{post.post_content}}
@@ -208,12 +208,13 @@
                     
                       <h5><a href="">{{comment.Commenter_Name}}</a></h5>
                       <form method="post"><h6><button
-                        
                         class="reply"
                         value="{{ comment.comment_id }}"
                         name="like"
-                        ><i class="bi bi-star-fill"></i> Likes: {{comment.Comment_Score}}</button>
-                      </h6></form>
+                        style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer; padding: 0; margin: 0 5px 0 0;"
+                      >
+                        <i class="bi bi-star-fill"></i> Likes: {{comment.Comment_Score}}
+                      </button></h6></form>
                       
                       <time >{{comment.Comment_DateTime}}</time>
                       <p>

@@ -346,6 +346,14 @@ def account():
     return render_template('account1.html', user_info=user_info, user_posts=user_posts)
 
 
+def get_tag_id(tag_name):
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
+        result = cursor.fetchone()
+        return result[0] if result else None
+
+
 @app.route('/newPost', methods=['GET', 'POST'])
 @login_required
 def newPost():
@@ -358,8 +366,7 @@ def newPost():
             title = request.form['title']
             body = request.form['content']
             category = request.form['category']
-
-            tags = request.form.getlist('tags')
+            tags = request.form.get('tags', '').split(',')
 
             cursor.execute(
                 "INSERT INTO Posts (title, body, category,  user_id,create_date, last_edit_date) VALUES (%s, %s, %s, %s, NOW(),  NOW())",
@@ -372,7 +379,8 @@ def newPost():
                     "INSERT INTO Tags (tag_name) VALUES (%s) ON DUPLICATE KEY UPDATE tag_name=tag_name", (
                         tag_name,)
                 )
-                tag_id = cursor.lastrowid
+                tag_id = cursor.lastrowid if cursor.rowcount == 1 else get_tag_id(
+                    tag_name)
                 cursor.execute(
                     "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (
                         post_id, tag_id)

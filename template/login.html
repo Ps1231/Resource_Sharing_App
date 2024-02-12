@@ -34,8 +34,8 @@
         <div class="form">
             <form class="login-form" method="post" action="{{ url_for('login') }}">
                 <p>Have an account??</p>
-                <input type="text" name="username" maxlength='25' title="Username" placeholder='username' value="{{ session['registered_username'] }}" id="username" required/><span class="asterisk_required_field"></span>
-                <input type="password" name="password" maxlength='25' title="Password" placeholder='username' value="{{ session['registered_password'] }}" id="password" required/><span class="asterisk_required_field"></span>
+                <input type="text" name="username" maxlength='25' title="Username" placeholder='Username' value="{{ session['registered_username'] }}" id="username" required/><span class="asterisk_required_field"></span>
+                <input type="password" name="password" maxlength='25' title="Password" placeholder='Password' value="{{ session['registered_password'] }}" id="password" required/><span class="asterisk_required_field"></span>
                 <input type="checkbox" onclick="myFunction()" style="width:10%">Show Password
                 <button type="submit">Login</button>
                 <div>{% with messages = get_flashed_messages() %}

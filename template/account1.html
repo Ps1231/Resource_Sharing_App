@@ -116,20 +116,21 @@
                   <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> downvotes: {{post.downvote_count}}</li>
                   <li class="d-flex align-items-center">
                     {% if current_user is not none %} {% if current_user == Username %}
-                    <li class="dropdown"><a HREF="#"><img class="getstarted navbar" style=" height:20px" alt="" src="{{ url_for('static', filename='menu.png') }}" />
-                      </a>
-                      <ul>
-                        <li><a href="{{ url_for('logout')}}">Update</a></li>
-                        
-                        
-                      </ul>
-                    </li> {% endif %}{% endif %}
+                    <form method="post" action="{{ url_for('delete_post') }}">
+                        <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                        <button type="submit" class="delete-post-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-trash"></i></button>
+                    </form><form method="post" action="{{ url_for('edit_post', post_id=post.post_id) }}">
+                      <button type="submit" class="edit-post-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-pencil"></i></button>
+                  </form>
+
+                {% endif %}{% endif %}
+                    
                   </li>
                 </ul>
               </div>
 
               <div class="entry-content">
-                <p> {{post.body.split('\n')[:2] | join('\n')}}....</p><div class="read-more">
+                <p> <p>{{ post.body.split()[:25] | join(' ') }}...</p><div class="read-more">
                   <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet"> Read More</a>
                 </div>
               </div>

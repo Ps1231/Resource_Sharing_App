@@ -217,10 +217,25 @@
                       </button></h6></form>
                       
                       <time >{{comment.Comment_DateTime}}</time>
-                      <p>
-                       {{comment.Comment_Text}}
-                      </p>
-                      
+                      {% if session.role == 'admin' %}
+                        <form method="post" action="{{ url_for('delete_comment') }}">
+                            <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+                            <button type="submit" class="delete-comment-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-trash"></i></button>
+                        </form>
+                      {% elif comment.user_id == session.user_id %}
+                      <form method="post" action="{{ url_for('update_comment') }}">
+                          <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+                          <textarea name="updated_comment_text" style="width: 600px;max-width: 700px; resize: both;" rows="4" cols="50">{{ comment.Comment_Text }}</textarea>
+        
+                          <button type="submit" class="update-comment-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-pencil"></i></button>
+                      </form>
+                      <form method="post" action="{{ url_for('delete_comment') }}">
+                          <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+                          <button type="submit" class="delete-comment-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-trash"></i></button>
+                      </form>
+                  {% else %}
+                      <p>{{ comment.Comment_Text }}</p>
+                  {% endif %}
                     </div>
                   </div>
                 </div><!-- End comment #1 -->

@@ -112,7 +112,7 @@
                 </div>
   
                 <div class="entry-content">
-                  <p>{{post.post_content.split('\n')[:2] | join('\n')}}....</p>
+                  <p>{{ post.post_content.split()[:25] | join(' ') }}...</p>
                   <div class="read-more">
                     <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
                   </div>

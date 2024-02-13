@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>ShareSpell</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{{ url_for('static' , filename = 'favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static' , filename = 'apple-touch-icon.png') }}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static' , filename = 'aos.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static' , filename = 'swiper-bundle.min.css') }}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{{ url_for('static' , filename = 'style.css') }}" rel="stylesheet" rel="stylesheet">
+
+<style>
+
+label {
+    font-size: 20px;
+  letter-spacing: 0.46px;
+  color:#81a73a;
+  
+}
+input[type=text], select ,textarea{
+    width: 98%;
+    padding: 15px;
+    margin: 10px 0 22px 0;
+    border: none;
+    background: #f1f1f1;
+}
+
+ textarea {
+    height :300px;
+}
+input[type=text]:focus,textarea:focus,select:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+.btn {
+    background-color:#94c045;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 98%;
+    opacity: 0.9;
+}
+
+.btn:hover {
+    opacity:1;
+}
+#tagList {
+  list-style: none;
+  padding: 10px;
+}
+
+#tagList li {
+  display: inline-block;
+  margin-right: 10px;
+  background-color: #e0e0e0;
+  padding: 15px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.remove-tag {
+  position: absolute;
+  top: 0;
+  right: 3px;
+  cursor: pointer;
+}
+ .addTags,
+.addTags:focus {
+  background: #94c045;
+  padding: 8px 25px;
+  margin-left: 30px;
+  border-radius: 50px;
+  color: #fff;
+}
+
+.addTags:hover,
+.addTags:focus:hover {
+  color: #fff;
+  background: #9fc658;
+}
+
+</style>
+</head>
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <div class="logo">
+        <h1 class="text-light"><a href="{{ url_for('index')}}">ShareSpell</a></h1>
+      
+        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a href="{{ url_for('index')}}">Home</a></li>
+          
+        
+          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+          <li><a href="{{ url_for('account')}}">Account</a></li>
+          <li class="dropdown">
+            <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
+            <ul>
+              <li><a href="{{ url_for('logout')}}">Logout</a></li>
+              <li><a href="{{ url_for('account')}}">Account</a></li>
+              
+            </ul>
+          </li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+  <main id="main">
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="breadcrumb-hero">
+          <div class="container">
+            <div class="breadcrumb-hero">
+              <h2>SpellBook</h2>
+              <p>Welcome to our SpellBook, a hub of shared insights! Explore our list of posts where practical knowledge meets community collaboration. Each entry is a valuable piece of the puzzle, contributing to a collective pool of expertise. Join us in discovering the power of shared learning through the straightforward, easy-to-navigate list of posts. At Sharespell, knowledge is just a click away. </p>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <ol>
+            <li>New Post</li>
+           
+          </ol>
+        </div>
+      </section><!-- End Breadcrumbs -->
+      <section id="blog" class="blog">  
+    <form method="post" action="{{ url_for('edit_post', post_id=post.post_id) }}">
+      <div class="container" >
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" value="{{ post.title }}" required>
+      <label for="body">Body:</label>
+      <textarea id="body" name="body" rows="10" required>{{ post.body }}</textarea>
+      <label for="category">Category:</label>
+      <select id="category" name="category">
+    
+        {% for category in categories %}
+        <option value="{{ category.name }}" {% if category.name == post.category %} selected {% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Save Changes</button></div>
+    </form>
+  </section>
+ 
+  </main>
+    <!-- ======= Footer ======= -->
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+      <div class="footer-top">
+        <div class="container">
+          <div class="row">
+  
+            <div class="col-lg-4 col-md-6 footer-info">
+              <h3>ShareSpell</h3>
+              <p>Step into the enchanted world of ShareSpell & explore the collective wisdom of our community. Dive into a tapestry of insights, expertise, and shared resources. Each post is a brushstroke, contributing to a masterpiece of knowledge. Join us in shaping the narrative of shared learning.</p>
+            </div>
+  
+            <div class="col-lg-4 col-md-6 footer-links">
+              <h4>Useful Links</h4>
+              <ul>
+                <li><a href="{{ url_for('index')}}">Home</a></li>
+                <li><a href="{{ url_for('index')}}#about">About us</a></li>
+                <li><a href="{{ url_for('index')}}#services">Services</a></li>
+               
+              </ul>
+            </div>
+  
+            <div class="col-lg-4 col-md-6 footer-contact">
+              <h4>Contact Us</h4>
+              <p>
+                <strong>Email:</strong> sonipriyanshi.ps99@gmail.com<br>
+              </p>
+  
+              <div class="social-links">
+                <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+              </div>
+  
+            </div>
+  
+          </div>
+        </div>
+      </div>
+  
+      <div class="container">
+  
+        <div class="credits">
+          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
+      </div>
+    </footer><!-- End Footer -->
+  
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  
+    <!-- Vendor JS Files -->
+    <script src="{{ url_for('static' , filename = 'purecounter_vanilla.js') }}"></script>
+    <script src="{{ url_for('static' , filename = 'aos.js') }}"></script>
+    <script src="{{ url_for('static' , filename = 'bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static' , filename = 'glightbox.min.js') }}"></script>
+    <script src="{{ url_for('static' , filename = 'isotope.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static' , filename = 'swiper-bundle.min.js') }}"></script>
+    <script src="{{ url_for('static' , filename = 'noframework.waypoints.js') }}"></script>
+   
+  
+    <!-- Template Main JS File -->
+    <script src="{{ url_for('static' , filename = 'main.js') }}"></script>
+  
+  </body>
+  
+  </html>

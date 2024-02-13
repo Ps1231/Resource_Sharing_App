@@ -2,7 +2,7 @@ mysql:
   host: localhost
   user: root
   password: rashi@2003
-  database: resource
+  database: resource1
   num_records: 10
 
 table_definition:
@@ -28,6 +28,7 @@ table_definition:
       - title: VARCHAR(255)
       - body: TEXT
       - create_date: TIMESTAMP
+
       - deletion_date: TIMESTAMP
       - category: enum ('Class Notes & Study Materials','Textbooks & References','Internship & Job Opportunities','Events & Hackathons','Study Groups & Tutoring')
 
@@ -88,16 +89,6 @@ table_definition:
       - tag_id
       - post_id
 
-  #         create table Tags(
-  # tag_id int auto_increment primary key , tag_name varchar (30) unique );
-  # CREATE TABLE PostTags (
-  #     tag_id INT AUTO_INCREMENT ,
-  #     post_id INT,
-  #     foreign key (tag_id) references Tags(tag_id),
-  #     FOREIGN KEY (post_id) REFERENCES Posts(post_id),
-  #     primary key(tag_id,post_id)
-  # );
-
   ReportedContent:
     columns:
       - report_id: INT AUTO_INCREMENT PRIMARY KEY
@@ -116,7 +107,7 @@ table_definition:
       - id: int auto_increment primary key
       - user_id: int not null
       - comment_id: int not null
-      
+
     foreign_keys:
       - fk_column: user_id
         references_table: Users

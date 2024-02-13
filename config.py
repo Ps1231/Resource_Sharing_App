@@ -6,7 +6,7 @@ DATABASE_CONFIG = {
     'host': 'localhost',
     'user': 'root',
     'password': 'rashi@2003',
-    'db': 'resource',
+    'db': 'resource1',
     'charset': 'utf8mb4'
 }
 

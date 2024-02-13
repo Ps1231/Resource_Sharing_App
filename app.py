@@ -310,6 +310,55 @@ def view_post(post_id):
         return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id, )
 
 
+@app.route('/delete-comment', methods=['POST'])
+@login_required
+def delete_comment():
+    user_id = session.get('user_id')
+    comment_id = request.form.get('comment_id')
+
+    # Fetch the comment from the database
+    with db.cursor() as cursor:
+        query = "SELECT user_id FROM Comments WHERE comment_id = %s"
+        cursor.execute(query, (comment_id,))
+        comment = cursor.fetchone()
+
+        if comment and (comment['user_id'] == user_id or session.get('role') == 'admin'):
+            # Delete the comment
+            delete_query = "DELETE FROM Comments WHERE comment_id = %s"
+            cursor.execute(delete_query, (comment_id,))
+            db.commit()
+            flash('Comment deleted successfully', 'success')
+        else:
+            flash('You are not authorized to delete this comment', 'error')
+
+    return redirect(request.referrer)
+
+
+@app.route('/update-comment', methods=['POST'])
+@login_required
+def update_comment():
+    user_id = session.get('user_id')
+    comment_id = request.form.get('comment_id')
+    updated_comment_text = request.form.get('updated_comment_text')
+
+    # Fetch the comment from the database
+    with db.cursor() as cursor:
+        query = "SELECT user_id FROM Comments WHERE comment_id = %s"
+        cursor.execute(query, (comment_id,))
+        comment = cursor.fetchone()
+
+        if comment and comment['user_id'] == user_id:
+            # Update the comment
+            update_query = "UPDATE Comments SET text = %s WHERE comment_id = %s"
+            cursor.execute(update_query, (updated_comment_text, comment_id))
+            db.commit()
+            flash('Comment updated successfully', 'success')
+        else:
+            flash('You are not authorized to update this comment', 'error')
+
+    return redirect(request.referrer)
+
+
 def requires_role(roles):
     def decorator(view_func):
         @wraps(view_func)
@@ -354,6 +403,64 @@ def get_tag_id(tag_name):
         return result[0] if result else None
 
 
+@app.route('/delete-post', methods=['POST'])
+@login_required
+def delete_post():
+    user_id = session.get('user_id')
+    post_id = request.form.get('post_id')
+
+    # Fetch the post from the database
+    with db.cursor() as cursor:
+        query = "SELECT user_id FROM Posts WHERE post_id = %s"
+        cursor.execute(query, (post_id,))
+        post = cursor.fetchone()
+
+        if post and post['user_id'] == user_id:
+            # Delete the post
+            delete_query = "DELETE FROM Posts WHERE post_id = %s"
+            cursor.execute(delete_query, (post_id,))
+            db.commit()
+            flash('Post deleted successfully', 'success')
+        else:
+            flash('You are not authorized to delete this post', 'error')
+
+    return redirect(request.referrer)
+
+
+@app.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    # Fetch the post details from the database
+    with db.cursor() as cursor:
+        # Execute a SELECT query to fetch the post details by its ID
+        query = "SELECT * FROM Posts WHERE post_id = %s"
+        cursor.execute(query, (post_id,))
+        post_data = cursor.fetchone()
+
+        if post_data is None:
+            # If no post is found with the given ID, return a 404 error
+            abort(404)
+
+        if request.method == 'POST':
+            title = request.form.get('title')
+            body = request.form.get('body')
+            category = request.form.get('category')
+            cursor.execute(get_category())
+            categories = cursor.fetchall()
+
+            if title and body and category:
+                # Update the post details in the database
+                update_query = "UPDATE Posts SET title = %s, body = %s, category = %s WHERE post_id = %s"
+                cursor.execute(update_query, (title, body, category, post_id))
+                db.commit()
+                flash('Post updated successfully', 'success')
+                return redirect(url_for('view_post', post_id=post_id))
+            else:
+                flash('Please fill in all fields', 'error')
+
+    return render_template('edit_post.html', post=post_data, categories=categories)
+
+
 @app.route('/newPost', methods=['GET', 'POST'])
 @login_required
 def newPost():
@@ -369,7 +476,7 @@ def newPost():
             tags = request.form.get('tags', '').split(',')
 
             cursor.execute(
-                "INSERT INTO Posts (title, body, category,  user_id,create_date, last_edit_date) VALUES (%s, %s, %s, %s, NOW(),  NOW())",
+                "INSERT INTO Posts (title, body, category,  user_id,create_date) VALUES (%s, %s, %s, %s, NOW())",
                 (title, body, category,  user_id)
             )
             post_id = cursor.lastrowid

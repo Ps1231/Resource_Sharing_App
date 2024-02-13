@@ -188,6 +188,7 @@ def get_comments(post_id):
     SELECT
         Comments.comment_id as comment_id,
         Comments.text AS Comment_Text,
+        Comments.user_id as user_id,
         Users.display_name AS Commenter_Name,
         Comments.create_date AS Comment_DateTime,
         (select count(*) from CommentScore where Comments.comment_id = CommentScore.comment_id )  AS Comment_Score

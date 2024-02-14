@@ -138,11 +138,18 @@
   
                 <div class="entry-meta">
                   <ul>
-                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a >{{post.display_name}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a >{{post.create_date}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a >Comments: {{post.comment_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> <a >Upvotes: {{post.upvote_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a >Downvotes: {{post.downvote_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> {{post.display_name}}</li>
+                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> {{post.create_date}}</li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> Comments: {{post.comment_count}}</li>
+                    <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> Upvotes: {{post.upvote_count}}</li>
+                    <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> Downvotes: {{post.downvote_count}}</li>
+                    <li class="d-flex align-items-center">
+                      {% if  post.user_id == session.user_id %} 
+                      <form method="post" action="{{ url_for('edit_post', post_id=post.post_id) }}">
+                      <button type="submit" class="edit-post-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-pencil"></i></button>
+                      </form>
+                      {% endif %}
+                    </li>
                   </ul>
                 </div>
                
@@ -163,7 +170,7 @@
                   <ul class="tags">
                     <li><a href="#">{{post.tags}}</a></li>
                   </ul>
-                  
+               
                   <ul class="cats"> 
                  <!-- Inside your existing HTML code -->
                   <li>

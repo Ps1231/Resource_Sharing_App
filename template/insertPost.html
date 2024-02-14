@@ -7,6 +7,8 @@
   <title>ShareSpell</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
   <!-- Favicons -->
   <link href="{{ url_for('static' , filename = 'favicon.png') }}" rel="icon">
@@ -64,41 +66,54 @@ input[type=text]:focus,textarea:focus,select:focus {
 .btn:hover {
     opacity:1;
 }
-#tagList {
-  list-style: none;
+.icons ion-icon {
   padding: 10px;
-}
-
-#tagList li {
-  display: inline-block;
-  margin-right: 10px;
-  background-color: #e0e0e0;
-  padding: 15px;
-  border-radius: 5px;
-  position: relative;
-}
-
-.remove-tag {
-  position: absolute;
-  top: 0;
-  right: 3px;
   cursor: pointer;
 }
- .addTags,
-.addTags:focus {
-  background: #94c045;
-  padding: 8px 25px;
-  margin-left: 30px;
-  border-radius: 50px;
-  color: #fff;
-}
+.tags-input { 
+  display: inline-block; 
+  position: relative; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  padding: 5px; 
+  box-shadow: 2px 2px 5px #00000033; 
+  width: 50%; 
+} 
 
-.addTags:hover,
-.addTags:focus:hover {
-  color: #fff;
-  background: #9fc658;
-}
+.tags-input ul { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+} 
 
+.tags-input li { 
+  display: inline-block; 
+  background-color: #f2f2f2; 
+  color: #333; 
+  border-radius: 20px; 
+  padding: 5px 10px; 
+  margin-right: 5px; 
+  margin-bottom: 5px; 
+} 
+
+.tags-input input[type="text"] { 
+  border: none; 
+  outline: none; 
+  padding: 5px; 
+  font-size: 14px; 
+} 
+
+.tags-input input[type="text"]:focus { 
+  outline: none; 
+} 
+
+.tags-input .delete-button { 
+  background-color: transparent; 
+  border: none; 
+  color: #999; 
+  cursor: pointer; 
+  margin-left: 5px; 
+} 
 </style>
 </head>
 <body>
@@ -152,7 +167,7 @@ input[type=text]:focus,textarea:focus,select:focus {
         </div>
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
-        <form method="post" action="{{ url_for('newPost') }}">
+        <form method="post"  action="{{ url_for('newPost') }}">
 
 <div class="container" >
  <label for="title" ><b>Title</b></label>
@@ -176,82 +191,107 @@ input[type=text]:focus,textarea:focus,select:focus {
     </div>
  
  <label for="tags"><b>Tags</b></label>
- <div>
-     <input type="text" id="tagInput" placeholder="Enter Tags" name="tags" required>
-     <button type="button" class='addTags' onclick="addTag()">Add Tag</button>
+ <div class="tags-input"> 
+  <ul id="tags"></ul> 
+  <input type="text" id="input-tag" 
+      placeholder="Enter tag name" /> 
+</div> 
+ <!-- <div>
+     <input type="text" id="tagInput" placeholder="Enter Tags" name="tags">
+     <button type="button" class='addTags' onsubmit="addTag()">Add Tag</button>
  </div>
 
- <ul id="tagList"></ul>
+ <ul id="tagList"></ul> -->
 
- <button type="submit" class="btn" id="saveButton" onclick="submitForm()"><b>Post Blog</b></button>
+ <button type="submit" class="btn" id="saveButton" ><b>Post Blog</b></button>
 </div></form>
-</section>
-<script>
-  let tagCount = 0;
-  const maxTags = 3;
+</section><script> 
+  // Get the tags and input elements from the DOM 
+  const tags = document.getElementById('tags'); 
+  const input = document.getElementById('input-tag'); 
 
-  function addTag() {
-      const tagInput = document.getElementById("tagInput");
-      const tagList = document.getElementById("tagList");
-      const tag = tagInput.value.trim();
+  // Add an event listener for keydown on the input element 
+  input.addEventListener('keydown', function (event) { 
 
-      if (tag !== "" && tagCount < maxTags) {
-          // Display the tag in the list
-          const li = document.createElement("li");
-          li.textContent = tag;
+      // Check if the key pressed is 'Enter' 
+      if (event.key === 'Enter') { 
+        
+          // Prevent the default action of the keypress 
+          // event (submitting the form) 
+          event.preventDefault(); 
+        
+          // Create a new list item element for the tag 
+          const tag = document.createElement('li'); 
+        
+          // Get the trimmed value of the input element 
+          const tagContent = input.value.trim(); 
+        
+          // If the trimmed value is not an empty string 
+          if (tagContent !== '') { 
+        
+              // Set the text content of the tag to  
+              // the trimmed value 
+              tag.innerText = tagContent; 
 
-          // Create a close icon for tag removal
-          const closeIcon = document.createElement("span");
-          closeIcon.className = "remove-tag";
-          closeIcon.innerHTML = "&times;";
-          closeIcon.addEventListener("click", function () {
-              removeTag(li);
-          });
+              // Add a delete button to the tag 
+              tag.innerHTML += '<button class="delete-button">X</button>'; 
+                
+              // Append the tag to the tags list 
+              tags.appendChild(tag); 
+                
+              // Clear the input element's value 
+              input.value = ''; 
+          } 
+      } 
+  }); 
 
-          // Append close icon to the tag
-          li.appendChild(closeIcon);
+  // Add an event listener for click on the tags list 
+  tags.addEventListener('click', function (event) { 
 
-          // Append tag to the list
-          tagList.appendChild(li);
+      // If the clicked element has the class 'delete-button' 
+      if (event.target.classList.contains('delete-button')) { 
+        
+          // Remove the parent element (the tag) 
+          event.target.parentNode.remove(); 
+      } 
+  }); 
 
-          // Increment tag count
-          tagCount++;
+  // Add an event listener for form submission
+const form = document.querySelector('form');
+form.addEventListener('submit', function(event) {
+// Prevent the default form submission behavior
+event.preventDefault();
 
-          // Clear the input field
-          tagInput.value = "";
-      }
-  }
+// Get the tag IDs from the tags list
+const tagIds = [];
+const tags = document.querySelectorAll('#tags li');
+for (let i = 0; i < tags.length; i++) {
+tagIds.push(tags[i].textContent.trim());
+}
 
-  function removeTag(tagElement) {
-      tagElement.remove();
-      tagCount--;
-
-  }
-
-  // Function to reset the tag count, clear the tag list, and disable the "Post Blog" button
-  function saveTags() {
-      // Perform save action here
-      console.log("Tags saved!");
-
-      // Reset tag count, clear the tag list, and disable the "Post Blog" button
-      tagCount = 0;
-      document.getElementById("tagList").innerHTML = "";
-     
-  }
-  // Function to handle form submission
-    function submitForm() {
-        // Your existing form submission logic here
-
-        // Simulate a successful post creation for demonstration purposes
-        // Replace this with your actual logic to create a post
-        const postCreatedSuccessfully = true;
-
-        if (postCreatedSuccessfully) {
-            // Display an alert with the success message
-            alert('Post created successfully!');
-        }
-    }
-</script>
+// Send a POST request to the server with the tag IDs
+fetch('/newPost', {
+method: 'POST',
+body: JSON.stringify({
+title: document.querySelector('#title').value,
+content: document.querySelector('#content').value,
+tagIds: tagIds
+}),
+headers: {
+'Content-Type': 'application/json'
+}
+})
+.then(function(response) {
+return response.text();
+})
+.then(function(text) {
+console.log(text);
+})
+.catch(function(error) {
+console.error(error);
+});
+});
+</script> 
 </main>
   <!-- ======= Footer ======= -->
   <!-- ======= Footer ======= -->
@@ -303,7 +343,7 @@ input[type=text]:focus,textarea:focus,select:focus {
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+  
   <!-- Vendor JS Files -->
   <script src="{{ url_for('static' , filename = 'purecounter_vanilla.js') }}"></script>
   <script src="{{ url_for('static' , filename = 'aos.js') }}"></script>

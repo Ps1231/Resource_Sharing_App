@@ -154,6 +154,7 @@ def get_post_details(post_id):
     query = '''
         SELECT
             p.post_id,
+            p.user_id as user_id,
             u.gravatar_url as user_image,
             u.about_me as about,
             u.role,

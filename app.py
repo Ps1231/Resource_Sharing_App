@@ -118,6 +118,7 @@ def login():
                     session.clear()
                     session['user_id'] = user['user_id']
                     session['username'] = user['username']
+                    session['display_name'] = user['display_name']
                     session['current_user'] = user
                     session['role'] = user['role']
                     flash('Login successful!', 'success')
@@ -264,6 +265,7 @@ def handle_like(user_id, comment_id):
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def view_post(post_id):
+
     if request.method == 'POST':
         user_id = session.get('user_id')
 
@@ -307,7 +309,7 @@ def view_post(post_id):
         cursor.execute(get_category())
         categories = cursor.fetchall()
 
-        return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id, )
+        return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id)
 
 
 @app.route('/delete-comment', methods=['POST'])
@@ -395,14 +397,6 @@ def account():
     return render_template('account1.html', user_info=user_info, user_posts=user_posts)
 
 
-def get_tag_id(tag_name):
-    with db.cursor() as cursor:
-        cursor.execute(
-            "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
-        result = cursor.fetchone()
-        return result[0] if result else None
-
-
 @app.route('/delete-post', methods=['POST'])
 @login_required
 def delete_post():
@@ -461,6 +455,21 @@ def edit_post(post_id):
     return render_template('edit_post.html', post=post_data, categories=categories)
 
 
+def get_tag_id(tag_name):
+    with db.cursor() as cursor:
+        try:
+            cursor.execute(
+                "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            else:
+                return None
+        except Exception as e:
+            print("Error fetching tag_id:", e)
+            return None
+
+
 @app.route('/newPost', methods=['GET', 'POST'])
 @login_required
 def newPost():
@@ -469,29 +478,39 @@ def newPost():
         categories = cursor.fetchall()
 
         if request.method == 'POST':
+            data = request.json
             user_id = session.get('user_id')
             title = request.form['title']
             body = request.form['content']
             category = request.form['category']
-            tags = request.form.get('tags', '').split(',')
+
+            # Retrieve tags list directly from the request object
+            tags = data.get('tagIds')
 
             cursor.execute(
-                "INSERT INTO Posts (title, body, category,  user_id,create_date) VALUES (%s, %s, %s, %s, NOW())",
+                "INSERT INTO Posts (title, body, category,  user_id, create_date) VALUES (%s, %s, %s, %s, NOW())",
                 (title, body, category,  user_id)
             )
             post_id = cursor.lastrowid
 
             for tag_name in tags:
+                # Check if the tag already exists in the Tags table
                 cursor.execute(
-                    "INSERT INTO Tags (tag_name) VALUES (%s) ON DUPLICATE KEY UPDATE tag_name=tag_name", (
-                        tag_name,)
-                )
-                tag_id = cursor.lastrowid if cursor.rowcount == 1 else get_tag_id(
-                    tag_name)
+                    "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
+                tag_row = cursor.fetchone()
+
+                if tag_row:
+                    # If tag exists, get its tag_id
+                    tag_id = tag_row[0]
+                else:
+                    # If tag doesn't exist, insert it into Tags table
+                    cursor.execute(
+                        "INSERT INTO Tags (tag_name) VALUES (%s)", (tag_name,))
+                    tag_id = cursor.lastrowid
+
+                # Insert entry into PostTags table
                 cursor.execute(
-                    "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (
-                        post_id, tag_id)
-                )
+                    "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (post_id, tag_id))
 
             db.commit()
             cursor.close()

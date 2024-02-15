@@ -84,7 +84,7 @@
           <li><a href="{{ url_for('newPost')}}">Write</a></li>
          
          
-          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
          
           <li class="dropdown">
             <a class="getstarted" href="#"><span>Get Started</span><i class="bi bi-chevron-right"></i> </a>
@@ -232,7 +232,7 @@
                       {% elif comment.user_id == session.user_id %}
                       <form method="post" action="{{ url_for('update_comment') }}">
                           <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
-                          <textarea name="updated_comment_text" style="width: 600px;max-width: 700px; resize: both;" rows="4" cols="50">{{ comment.Comment_Text }}</textarea>
+                          <textarea name="updated_comment_text" style="width: 700px;min-height:50px;height:100px;max-height:100px;max-width: 700px; resize: both;" rows="4" cols="50">{{ comment.Comment_Text }}</textarea>
         
                           <button type="submit" class="update-comment-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-pencil"></i></button>
                       </form>
@@ -286,7 +286,7 @@
                     <ul>
                         {% if categories is not none %}
                         {% for category in categories %}
-                      <li><a href="#">{{category.name}} <span>({{category.post_count}})</span></a></li>
+                      <li><a href="{{ url_for('get_posts_and_tags', category=category.name) }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
                       {% endfor %}
                       {% endif %}
                     </ul>
@@ -313,7 +313,7 @@
                     <ul>
                         {% if tags is not none %}
                         {% for tag in tags %}
-                      <li><a href="#">{{tag.name}}</a></li>
+                      <li><a href="{{ url_for('get_posts_and_tags', tag=tag.name) }}">{{tag.name}}</a></li>
                       {% endfor %}
                   {% endif %}
     

@@ -159,30 +159,43 @@ def index():
     return render_template('index.html', background_image_url=background_image_url, user_id=user_id)
 
 
-@app.route('/posts')
+@app.route('/posts', methods=['GET', 'POST'])
 @login_required
 def get_posts_and_tags():
-    # Get the page parameter from the URL, default to 1 if not provided
+    search_query = request.values.get('search', '')
+    selected_category = request.args.get('category')
+    selected_tag = request.values.get('tag', '')
+
     page = request.args.get('page', 1, type=int)
     if page < 1:
         abort(403)
 
-    # Calculate the offset based on the page number
     offset = (page - 1) * POSTS_PER_PAGE
 
     with db.cursor() as cursor:
-        # Fetch posts with LIMIT and OFFSET
-        cursor.execute(all_posts(limit=POSTS_PER_PAGE, offset=offset))
+        if search_query:
+            cursor.execute(search_posts(
+                search_query, limit=POSTS_PER_PAGE, offset=offset))
+        elif selected_category:
+            cursor.execute(search_posts_by_category(
+                selected_category, limit=POSTS_PER_PAGE, offset=offset))
+        elif selected_tag:
+            cursor.execute(search_posts_by_tag(
+                selected_tag, limit=POSTS_PER_PAGE, offset=offset))
+        else:
+            cursor.execute(all_posts(limit=POSTS_PER_PAGE, offset=offset))
         posts = cursor.fetchall()
 
-        # Count the total number of posts for pagination
-        cursor.execute(get_total_rows_query())
-        total_posts = cursor.fetchone()["COUNT(*)"]
+        if not search_query and not selected_category and not selected_tag:
+            cursor.execute(get_total_rows_query())
+            total_posts = cursor.fetchone()["COUNT(*)"]
+
+        else:
+            total_posts = len(posts)
         total_pages = ceil(total_posts / POSTS_PER_PAGE)
         if page > total_pages:
             abort(403)
 
-        # Fetch additional data (popularPosts, tags, categories) as needed
         cursor.execute(popular_posts())
         popularPosts = cursor.fetchall()
 
@@ -192,8 +205,8 @@ def get_posts_and_tags():
         cursor.execute(get_category())
         categories = cursor.fetchall()
 
-    return render_template('post.html', posts=posts, popularPosts=popularPosts, tags=tags,
-                           current_page=page, total_pages=total_pages, categories=categories)
+    return render_template('post.html', posts=posts, popularPosts=popularPosts, tags=tags, clicked_tag=selected_tag,
+                           current_page=page, total_pages=total_pages, categories=categories, search_query=search_query, clicked_category=selected_category)
 
 
 def handle_vote(post_id, user_id, vote_type):
@@ -427,7 +440,9 @@ def edit_post(post_id):
     # Fetch the post details from the database
     with db.cursor() as cursor:
         # Execute a SELECT query to fetch the post details by its ID
+
         query = "SELECT * FROM Posts WHERE post_id = %s"
+
         cursor.execute(query, (post_id,))
         post_data = cursor.fetchone()
 
@@ -435,10 +450,17 @@ def edit_post(post_id):
             # If no post is found with the given ID, return a 404 error
             abort(404)
 
+        tags_query = "SELECT t.tag_name FROM Tags t INNER JOIN PostTags pt ON t.tag_id = pt.tag_id WHERE pt.post_id = %s"
+        cursor.execute(tags_query, (post_id,))
+        tags_data = cursor.fetchall()
+        tags = [tag['tag_name'] for tag in tags_data]
+
         if request.method == 'POST':
             title = request.form.get('title')
             body = request.form.get('body')
             category = request.form.get('category')
+            new_tags = request.form.getlist('tag[]')
+
             cursor.execute(get_category())
             categories = cursor.fetchall()
 
@@ -446,13 +468,35 @@ def edit_post(post_id):
                 # Update the post details in the database
                 update_query = "UPDATE Posts SET title = %s, body = %s, category = %s WHERE post_id = %s"
                 cursor.execute(update_query, (title, body, category, post_id))
+
+                # Delete existing tags for the post
+                delete_tags_query = "DELETE FROM PostTags WHERE post_id = %s"
+                cursor.execute(delete_tags_query, (post_id,))
+
+                if new_tags:
+                    for tag in new_tags:
+                        # Check if the tag already exists
+                        cursor.execute(
+                            "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag,))
+                        existing_tag = cursor.fetchone()
+                        if existing_tag:
+                            tag_id = existing_tag['tag_id']
+                        else:
+                            # If tag does not exist, insert it
+                            cursor.execute(
+                                "INSERT INTO Tags (tag_name) VALUES (%s)", (tag,))
+                            tag_id = cursor.lastrowid
+                        # Insert the tag-post relationship
+                        cursor.execute(
+                            "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (post_id, tag_id))
+
                 db.commit()
                 flash('Post updated successfully', 'success')
                 return redirect(url_for('view_post', post_id=post_id))
             else:
                 flash('Please fill in all fields', 'error')
 
-    return render_template('edit_post.html', post=post_data, categories=categories)
+    return render_template('edit_post.html', post=post_data, tags=tags, categories=categories)
 
 
 def get_tag_id(tag_name):
@@ -478,15 +522,17 @@ def newPost():
         categories = cursor.fetchall()
 
         if request.method == 'POST':
-            data = request.json
+
             user_id = session.get('user_id')
             title = request.form['title']
             body = request.form['content']
             category = request.form['category']
+            tags = request.form.getlist('tag[]')
 
             # Retrieve tags list directly from the request object
-            tags = data.get('tagIds')
-
+            if not title or not body or not category or not tags:
+                flash('Please fill in all fields.', 'error')
+                return redirect(url_for('newPost'))
             cursor.execute(
                 "INSERT INTO Posts (title, body, category,  user_id, create_date) VALUES (%s, %s, %s, %s, NOW())",
                 (title, body, category,  user_id)
@@ -497,11 +543,11 @@ def newPost():
                 # Check if the tag already exists in the Tags table
                 cursor.execute(
                     "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
-                tag_row = cursor.fetchone()
+                tag_row = cursor.fetchall()
 
                 if tag_row:
                     # If tag exists, get its tag_id
-                    tag_id = tag_row[0]
+                    tag_id = tag_row[0]['tag_id']
                 else:
                     # If tag doesn't exist, insert it into Tags table
                     cursor.execute(

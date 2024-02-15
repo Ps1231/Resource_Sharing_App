@@ -157,9 +157,88 @@ input[type=text]:focus,textarea:focus,select:focus {
         {% for category in categories %}
         <option value="{{ category.name }}" {% if category.name == post.category %} selected {% endif %}>{{ category.name }}</option>
         {% endfor %}
+        
       </select>
-      <button type="submit">Save Changes</button></div>
-    </form>
+      <div id="tagInputs">
+        <input type="text" name="tag[]" placeholder="Enter Tag" required>
+        
+      </div>
+      <button type="button" id="addTag" style="display: inline-block;  padding: 5px 10px; background-color: #28a745; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;">Add More</button>
+      <button type="button" id="removeTag" style="display: inline-block; padding: 5px 10px; background-color: #dc3545; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;" disabled>Remove</button>
+
+      <button type="submit" class="btn" id="saveButton" style="margin-top: 20px"><b>Post Blog</b></button>
+    
+    </form><script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const addTagButton = document.getElementById('addTag');
+          const removeTagButton = document.getElementById('removeTag');
+          const tagInputs = document.getElementById('tagInputs');
+          const submitButton = document.getElementById('saveButton');
+          const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
+  
+          let tagCount = 1;
+          const maxTags = 3;
+  
+          // Function to check if all required fields are filled
+          function checkAllFieldsFilled() {
+              for (const field of requiredFields) {
+                  if (!field.value) {
+                      return false;
+                  }
+              }
+              // Check if all tag inputs are filled
+              const tagInputsArray = Array.from(tagInputs.querySelectorAll('input[name="tag[]"]'));
+              for (const tagInput of tagInputsArray) {
+                  if (tagInput.value.trim() === '') {
+                      return false;
+                  }
+              }
+              return true;
+          }
+  
+          // Update submit button state based on field validity
+          function updateSubmitButtonState() {
+              submitButton.disabled = !checkAllFieldsFilled();
+          }
+  
+          // Add event listeners
+          addTagButton.addEventListener('click', function () {
+              if (tagCount < maxTags) {
+                  const newInput = document.createElement('input');
+                  newInput.type = 'text';
+                  newInput.name = 'tag[]';
+                  newInput.placeholder = 'Enter Tag';
+                  tagInputs.appendChild(newInput);
+                  tagCount++;
+                  removeTagButton.disabled = false;
+                  updateSubmitButtonState(); // Check and update submit button state
+              } else {
+                  addTagButton.disabled = true;
+              }
+          });
+  
+          removeTagButton.addEventListener('click', function () {
+              const inputs = tagInputs.getElementsByTagName('input');
+              if (inputs.length > 1) {
+                  tagInputs.removeChild(inputs[inputs.length - 1]);
+                  tagCount--;
+                  addTagButton.disabled = false;
+                  updateSubmitButtonState(); // Check and update submit button state
+              } else {
+                  removeTagButton.disabled = true;
+              }
+          });
+  
+          // Listen for input changes on required fields and tag inputs
+          for (const field of requiredFields) {
+              field.addEventListener('input', updateSubmitButtonState);
+          }
+          tagInputs.addEventListener('input', updateSubmitButtonState);
+  
+          // Initial check and update of submit button state
+          updateSubmitButtonState();
+      });
+  </script>
   </section>
  
   </main>

@@ -1,3 +1,8 @@
+import pymysql
+from config import DATABASE_CONFIG
+db = pymysql.connect(**DATABASE_CONFIG, cursorclass=pymysql.cursors.DictCursor)
+
+
 def all_posts(limit=None, offset=None):
     query = '''SELECT
     p.post_id,
@@ -35,31 +40,95 @@ def get_total_rows_query():
     return f"SELECT COUNT(*) FROM ({all_posts()}) AS subquery"
 
 
-def posts_by_category(category, limit=None, offset=None):
-    query = f'''SELECT
-        p.post_id,
-        u.gravatar_url as user_image,
-        u.display_name as display_name,
-        p.title as post_title,
-        p.body AS post_content,
-        p.category as category,
-        p.create_date as create_date,
-        (select count(*) from Votes where post_id=p.post_id and vote_type='upvote' ) as upvote_count,
-        (select count(*) from Votes where post_id=p.post_id and vote_type='downvote' ) as downvote_count,
-        (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
-        GROUP_CONCAT(t.tag_name) as tags
-    FROM
-        Posts p
-        INNER JOIN Users u ON p.user_id = u.user_id
-        LEFT JOIN Votes v ON p.post_id = v.post_id
-        INNER JOIN PostTags pt ON p.post_id = pt.post_id
-        INNER JOIN Tags t ON pt.tag_id = t.tag_id
-    WHERE
-        p.category = '{category}'
-    GROUP BY
-        p.post_id
-    ORDER BY
-        p.create_date DESC
+def search_posts(search_query, limit=None, offset=None):
+    query = f'''
+        SELECT
+            p.post_id,
+            u.gravatar_url AS user_image,
+            u.display_name AS display_name,
+            p.title AS post_title,
+            p.body AS post_content,
+            p.category AS category,
+            p.create_date AS create_date,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'upvote') AS upvote_count,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'downvote') AS downvote_count,
+            (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) AS comment_count,
+            GROUP_CONCAT(t.tag_name) AS tags
+        FROM
+            Posts p
+            INNER JOIN Users u ON p.user_id = u.user_id
+            LEFT JOIN Votes v ON p.post_id = v.post_id
+            INNER JOIN PostTags pt ON p.post_id = pt.post_id
+            INNER JOIN Tags t ON pt.tag_id = t.tag_id
+        WHERE
+            p.title LIKE '%{search_query}%' OR
+            p.title LIKE '{search_query}%' OR
+            p.title LIKE '%{search_query}'
+
+        GROUP BY
+            p.post_id
+        ORDER BY
+            p.create_date DESC
+    '''
+    return query
+
+
+def search_posts_by_category(category, limit=None, offset=None):
+    query = f'''
+        SELECT
+            p.post_id,
+            u.gravatar_url AS user_image,
+            u.display_name AS display_name,
+            p.title AS post_title,
+            p.body AS post_content,
+            p.category AS category,
+            p.create_date AS create_date,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'upvote') AS upvote_count,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'downvote') AS downvote_count,
+            (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) AS comment_count,
+            GROUP_CONCAT(t.tag_name) AS tags
+        FROM
+            Posts p
+            INNER JOIN Users u ON p.user_id = u.user_id
+            LEFT JOIN Votes v ON p.post_id = v.post_id
+            LEFT JOIN PostTags pt ON p.post_id = pt.post_id
+            LEFT JOIN Tags t ON pt.tag_id = t.tag_id
+        WHERE
+            p.category = '{category}'
+        GROUP BY
+            p.post_id
+        ORDER BY
+            p.create_date DESC
+    '''
+    return query
+
+
+def search_posts_by_tag(tag, limit=None, offset=None):
+    query = f'''
+        SELECT
+            p.post_id,
+            u.gravatar_url AS user_image,
+            u.display_name AS display_name,
+            p.title AS post_title,
+            p.body AS post_content,
+            p.category AS category,
+            p.create_date AS create_date,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'upvote') AS upvote_count,
+            (SELECT COUNT(*) FROM Votes WHERE post_id = p.post_id AND vote_type = 'downvote') AS downvote_count,
+            (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) AS comment_count,
+            GROUP_CONCAT(t.tag_name) AS tags
+        FROM
+            Posts p
+            INNER JOIN Users u ON p.user_id = u.user_id
+            LEFT JOIN Votes v ON p.post_id = v.post_id
+            left JOIN PostTags pt ON p.post_id = pt.post_id
+            left JOIN Tags t ON pt.tag_id = t.tag_id
+        WHERE
+            t.tag_name = '{tag}'
+        GROUP BY
+            p.post_id
+        ORDER BY
+            p.create_date DESC
     '''
 
     if limit is not None:
@@ -68,47 +137,6 @@ def posts_by_category(category, limit=None, offset=None):
         query += f" OFFSET {offset}"
 
     return query
-
-
-def get_total_rows_query_for_categorypost():
-    return f"SELECT COUNT(*) FROM ({posts_by_category()}) AS subquery"
-
-
-def search_posts(search_query, limit=None, offset=None):
-    query = '''
-        SELECT
-            u.gravatar_url as user_image,
-            u.display_name as display_name,
-            p.title as post_title,
-            p.body AS post_content,
-            p.category as category,
-            p.create_date as create_date,
-            (select count(*) from Votes where post_id=p.post_id and vote_type='upvote' ) as upvote_count,
-            (select count(*) from Votes where post_id=p.post_id and vote_type='downvote' ) as downvote_count,
-            (SELECT COUNT(*) FROM Comments WHERE post_id = p.post_id) as comment_count,
-            GROUP_CONCAT(t.tag_name) as tags
-        FROM
-            Posts p
-            INNER JOIN Users u ON p.user_id = u.user_id
-            LEFT JOIN Votes v ON p.post_id = v.post_id
-            INNER JOIN PostTags pt ON p.post_id = pt.post_id
-            INNER JOIN Tags t ON pt.tag_id = t.tag_id
-        WHERE
-            p.title LIKE %s
-        GROUP BY
-            p.post_id
-        ORDER BY
-            p.create_date DESC
-    '''
-
-    search_query_param = f"%{search_query}%"
-
-    if limit is not None:
-        query += f" LIMIT {limit}"
-    if offset is not None:
-        query += f" OFFSET {offset}"
-
-    return query, (search_query_param,)
 
 
 def all_tags():
@@ -153,7 +181,7 @@ LIMIT
 def get_post_details(post_id):
     query = '''
         SELECT
-            p.post_id,
+            p.post_id as post_id,
             p.user_id as user_id,
             u.gravatar_url as user_image,
             u.about_me as about,
@@ -171,8 +199,8 @@ def get_post_details(post_id):
             Posts p
             INNER JOIN Users u ON p.user_id = u.user_id
             LEFT JOIN Votes v ON p.post_id = v.post_id
-            INNER JOIN PostTags pt ON p.post_id = pt.post_id
-            INNER JOIN Tags t ON pt.tag_id = t.tag_id
+            left JOIN PostTags pt ON p.post_id = pt.post_id
+            left JOIN Tags t ON pt.tag_id = t.tag_id
         WHERE
             p.post_id = %s
         GROUP BY

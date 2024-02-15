@@ -70,50 +70,7 @@ input[type=text]:focus,textarea:focus,select:focus {
   padding: 10px;
   cursor: pointer;
 }
-.tags-input { 
-  display: inline-block; 
-  position: relative; 
-  border: 1px solid #ccc; 
-  border-radius: 4px; 
-  padding: 5px; 
-  box-shadow: 2px 2px 5px #00000033; 
-  width: 50%; 
-} 
 
-.tags-input ul { 
-  list-style: none; 
-  padding: 0; 
-  margin: 0; 
-} 
-
-.tags-input li { 
-  display: inline-block; 
-  background-color: #f2f2f2; 
-  color: #333; 
-  border-radius: 20px; 
-  padding: 5px 10px; 
-  margin-right: 5px; 
-  margin-bottom: 5px; 
-} 
-
-.tags-input input[type="text"] { 
-  border: none; 
-  outline: none; 
-  padding: 5px; 
-  font-size: 14px; 
-} 
-
-.tags-input input[type="text"]:focus { 
-  outline: none; 
-} 
-
-.tags-input .delete-button { 
-  background-color: transparent; 
-  border: none; 
-  color: #999; 
-  cursor: pointer; 
-  margin-left: 5px; 
-} 
 </style>
 </head>
 <body>
@@ -133,7 +90,7 @@ input[type=text]:focus,textarea:focus,select:focus {
           <li><a href="{{ url_for('index')}}">Home</a></li>
           <li><a class="active" href="#"><span>Write</span> </a></li>
         
-          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
          
           <li class="dropdown">
             <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
@@ -169,129 +126,110 @@ input[type=text]:focus,textarea:focus,select:focus {
       <section id="blog" class="blog">  
         <form method="post"  action="{{ url_for('newPost') }}">
 
-<div class="container" >
- <label for="title" ><b>Title</b></label>
-    <div>
-        <input type="text" placeholder="Enter Blog Title" name="title" id='title' required>
-    </div>
- <label for="content"><b>Blog Content</b></label>
-    <div>
-        <textarea type="password" placeholder="Enter Blog Content" name="content" id="content" required></textarea>
-    </div>
- <label for="category"><b>Category</b></label>
-    <div>
-        <select id="category" name="category">
-          {% if categories is not none %}
-          {% for category in categories %}
-        <option>{{category.name}} </option>
-        {% endfor %}
-        {% endif %}
-        
-        </select>
-    </div>
- 
- <label for="tags"><b>Tags</b></label>
- <div class="tags-input"> 
-  <ul id="tags"></ul> 
-  <input type="text" id="input-tag" 
-      placeholder="Enter tag name" /> 
-</div> 
- <!-- <div>
-     <input type="text" id="tagInput" placeholder="Enter Tags" name="tags">
-     <button type="button" class='addTags' onsubmit="addTag()">Add Tag</button>
- </div>
+          <div class="container" >
+            <span class="asterisk_required_field"></span><label for="title" ><b>Title</b></label>
+              <div>
+                  <input required type="text" placeholder="Enter Blog Title" name="title" id='title' required>
+              </div>
+              <span class="asterisk_required_field"></span><label for="content"><b>Blog Content</b></label>
+              <div>
+                  <textarea required type="text" placeholder="Enter Blog Content" name="content" id="content" required></textarea>
+              </div><span class="asterisk_required_field"></span>
+           <label for="category"><b>Category</b></label>
+              <div>
+                  <select id="category" name="category">
+                    {% if categories is not none %}
+                    {% for category in categories %}
+                  <option>{{category.name}} </option>
+                  {% endfor %}
+                  {% endif %}
+                  
+                  </select>
+              </div>
+           
+              <span class="asterisk_required_field"></span><label for="tags"><b>Tags</b></label>
+           <div id="tagInputs">
+            <input type="text" name="tag[]" placeholder="Enter Tag" required>
+            
+          </div>
+          <button type="button" id="addTag" style="display: inline-block;  padding: 5px 10px; background-color: #28a745; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;">Add More</button>
+          <button type="button" id="removeTag" style="display: inline-block; padding: 5px 10px; background-color: #dc3545; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;" disabled>Remove</button>
 
- <ul id="tagList"></ul> -->
-
- <button type="submit" class="btn" id="saveButton" ><b>Post Blog</b></button>
-</div></form>
-</section><script> 
-  // Get the tags and input elements from the DOM 
-  const tags = document.getElementById('tags'); 
-  const input = document.getElementById('input-tag'); 
-
-  // Add an event listener for keydown on the input element 
-  input.addEventListener('keydown', function (event) { 
-
-      // Check if the key pressed is 'Enter' 
-      if (event.key === 'Enter') { 
-        
-          // Prevent the default action of the keypress 
-          // event (submitting the form) 
-          event.preventDefault(); 
-        
-          // Create a new list item element for the tag 
-          const tag = document.createElement('li'); 
-        
-          // Get the trimmed value of the input element 
-          const tagContent = input.value.trim(); 
-        
-          // If the trimmed value is not an empty string 
-          if (tagContent !== '') { 
-        
-              // Set the text content of the tag to  
-              // the trimmed value 
-              tag.innerText = tagContent; 
-
-              // Add a delete button to the tag 
-              tag.innerHTML += '<button class="delete-button">X</button>'; 
-                
-              // Append the tag to the tags list 
-              tags.appendChild(tag); 
-                
-              // Clear the input element's value 
-              input.value = ''; 
-          } 
-      } 
-  }); 
-
-  // Add an event listener for click on the tags list 
-  tags.addEventListener('click', function (event) { 
-
-      // If the clicked element has the class 'delete-button' 
-      if (event.target.classList.contains('delete-button')) { 
-        
-          // Remove the parent element (the tag) 
-          event.target.parentNode.remove(); 
-      } 
-  }); 
-
-  // Add an event listener for form submission
-const form = document.querySelector('form');
-form.addEventListener('submit', function(event) {
-// Prevent the default form submission behavior
-event.preventDefault();
-
-// Get the tag IDs from the tags list
-const tagIds = [];
-const tags = document.querySelectorAll('#tags li');
-for (let i = 0; i < tags.length; i++) {
-tagIds.push(tags[i].textContent.trim());
-}
-
-// Send a POST request to the server with the tag IDs
-fetch('/newPost', {
-method: 'POST',
-body: JSON.stringify({
-title: document.querySelector('#title').value,
-content: document.querySelector('#content').value,
-tagIds: tagIds
-}),
-headers: {
-'Content-Type': 'application/json'
-}
-})
-.then(function(response) {
-return response.text();
-})
-.then(function(text) {
-console.log(text);
-})
-.catch(function(error) {
-console.error(error);
-});
-});
-</script> 
+          <button type="submit" class="btn" id="saveButton" style="margin-top: 20px"><b>Post Blog</b></button>
+        </div></form>
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+              const addTagButton = document.getElementById('addTag');
+              const removeTagButton = document.getElementById('removeTag');
+              const tagInputs = document.getElementById('tagInputs');
+              const submitButton = document.getElementById('saveButton');
+              const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
+      
+              let tagCount = 1;
+              const maxTags = 3;
+      
+              // Function to check if all required fields are filled
+              function checkAllFieldsFilled() {
+                  for (const field of requiredFields) {
+                      if (!field.value) {
+                          return false;
+                      }
+                  }
+                  // Check if all tag inputs are filled
+                  const tagInputsArray = Array.from(tagInputs.querySelectorAll('input[name="tag[]"]'));
+                  for (const tagInput of tagInputsArray) {
+                      if (tagInput.value.trim() === '') {
+                          return false;
+                      }
+                  }
+                  return true;
+              }
+      
+              // Update submit button state based on field validity
+              function updateSubmitButtonState() {
+                  submitButton.disabled = !checkAllFieldsFilled();
+              }
+      
+              // Add event listeners
+              addTagButton.addEventListener('click', function () {
+                  if (tagCount < maxTags) {
+                      const newInput = document.createElement('input');
+                      newInput.type = 'text';
+                      newInput.name = 'tag[]';
+                      newInput.placeholder = 'Enter Tag';
+                      tagInputs.appendChild(newInput);
+                      tagCount++;
+                      removeTagButton.disabled = false;
+                      updateSubmitButtonState(); // Check and update submit button state
+                  } else {
+                      addTagButton.disabled = true;
+                  }
+              });
+      
+              removeTagButton.addEventListener('click', function () {
+                  const inputs = tagInputs.getElementsByTagName('input');
+                  if (inputs.length > 1) {
+                      tagInputs.removeChild(inputs[inputs.length - 1]);
+                      tagCount--;
+                      addTagButton.disabled = false;
+                      updateSubmitButtonState(); // Check and update submit button state
+                  } else {
+                      removeTagButton.disabled = true;
+                  }
+              });
+      
+              // Listen for input changes on required fields and tag inputs
+              for (const field of requiredFields) {
+                  field.addEventListener('input', updateSubmitButtonState);
+              }
+              tagInputs.addEventListener('input', updateSubmitButtonState);
+      
+              // Initial check and update of submit button state
+              updateSubmitButtonState();
+          });
+      </script>
+      
+</section>
 </main>
   <!-- ======= Footer ======= -->
   <!-- ======= Footer ======= -->

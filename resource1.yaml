@@ -19,7 +19,7 @@ table_definition:
 
       - Gravatar_url: VARCHAR(255)
 
-      - role: enum('Admin','Moderator','Regular User')
+      - role: enum('Admin','Regular User')
 
   Posts:
     columns:

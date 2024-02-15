@@ -49,7 +49,7 @@
           <li><a href="{{ url_for('newPost')}}">Write</a></li>
          
          
-          <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
+          <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
          
           <li class="dropdown">
             <a class="getstarted" href="#"><span>Get Started</span><i class="bi bi-chevron-right"></i> </a>
@@ -81,7 +81,16 @@
       <div class="container">
         <ol>
           <li><a href="{{ url_for('index')}}">Home</a></li>
-          <li>Blog</li>
+          <li>Posts</li>
+          {% if clicked_category %}
+          <li>{{ clicked_category }}</li>
+          {% endif %}
+          {% if search_query %}
+          <li>{{ search_query }}</li>
+          {% endif %}
+          {% if clicked_tag %}
+          <li>{{ clicked_tag }}</li>
+          {% endif %}
         </ol>
       </div>
     </section><!-- End Breadcrumbs -->
@@ -147,8 +156,8 @@
 
               <h3 class="sidebar-title">Search</h3>
               <div class="sidebar-item search-form">
-                <form action="">
-                  <input type="text" id="search-input" placeholder="Search" maxlength="50">
+                <form action="{{ url_for('get_posts_and_tags') }}" method="POST">
+                  <input type="text" id="search-input" placeholder="Search" maxlength="50" name="search" >
                   <button type="submit"><i class="bi bi-search"></i></button>
                 </form>
               </div><!-- End sidebar search formn-->
@@ -158,7 +167,7 @@
                 <ul id="category-list">
                     {% if categories is not none %}
                     {% for category in categories %}
-                  <li><a href="#" class="category-link" data-category="{{ category.name }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
+                  <li><a href="{{ url_for('get_posts_and_tags', category=category.name) }}" class="category-link" data-category="{{ category.name }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
                   {% endfor %}
                   {% endif %}
                 </ul>
@@ -185,7 +194,7 @@
                 <ul>
                     {% if tags is not none %}
                     {% for tag in tags %}
-                  <li><a href="#">{{tag.name}}</a></li>
+                  <li><a href="{{ url_for('get_posts_and_tags', tag=tag.name) }}">{{tag.name}}</a></li>
                   {% endfor %}
               {% endif %}
 

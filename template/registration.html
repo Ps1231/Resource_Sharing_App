@@ -181,7 +181,7 @@ body {
                 <input type="email" name="email" title="Email" maxlength="40" placeholder="Email address" value="{{ form_data.get('email', '') }}" required/>  <span class="asterisk_required_field"></span>
                 <input type="text" name="display_name" title="Display Name (This name will be displayed)" placeholder="Display Name" value="{{ form_data.get('display_name', '') }}" minlength="4" maxlength="50" required/> <span class="asterisk_required_field"></span>
                
-                <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="130"required/>
+                <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="100"required/>
                
                 <input type="text" name="Gravatar_url" title="URL of your Profile picture" placeholder="Gravatar URL" value="{{ form_data.get('Gravatar_url', '') }}" required/>
                 <span id="wrong_pass_alert" ></span>

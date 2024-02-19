@@ -127,13 +127,13 @@ input[type=text]:focus,textarea:focus,select:focus {
         <form method="post"  action="{{ url_for('newPost') }}">
 
           <div class="container" >
-            <span class="asterisk_required_field"></span><label for="title" ><b>Title</b></label>
+            <span class="asterisk_required_field"></span><label for="title"  ><b>Title</b></label>
               <div>
-                  <input required type="text" placeholder="Enter Blog Title" name="title" id='title' required>
+                  <input required type="text" placeholder="Enter Blog Title" maxlength="45" name="title" id='title' required>
               </div>
               <span class="asterisk_required_field"></span><label for="content"><b>Blog Content</b></label>
               <div>
-                  <textarea required type="text" placeholder="Enter Blog Content" name="content" id="content" required></textarea>
+                  <textarea required type="text" placeholder="Enter Blog Content" maxlength="2000" name="content" id="content" required></textarea>
               </div><span class="asterisk_required_field"></span>
            <label for="category"><b>Category</b></label>
               <div>
@@ -145,11 +145,11 @@ input[type=text]:focus,textarea:focus,select:focus {
                   {% endif %}
                   
                   </select>
-              </div>
+              </div>   
            
               <span class="asterisk_required_field"></span><label for="tags"><b>Tags</b></label>
            <div id="tagInputs">
-            <input type="text" name="tag[]" placeholder="Enter Tag" required>
+            <input type="text" name="tag[]" placeholder="Enter Tag" maxlength="30" required>
             
           </div>
           <button type="button" id="addTag" style="display: inline-block;  padding: 5px 10px; background-color: #28a745; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;">Add More</button>
@@ -195,6 +195,7 @@ input[type=text]:focus,textarea:focus,select:focus {
                   if (tagCount < maxTags) {
                       const newInput = document.createElement('input');
                       newInput.type = 'text';
+                      newInput.maxLength = '30';
                       newInput.name = 'tag[]';
                       newInput.placeholder = 'Enter Tag';
                       tagInputs.appendChild(newInput);

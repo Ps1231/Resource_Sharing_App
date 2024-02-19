@@ -1649,6 +1649,7 @@ section {
   font-weight: bold;
   padding: 0;
   margin: 0 0 20px 0;
+  word-wrap: break-word; /* This will wrap long words to the next line */
 }
 
 .blog .entry .entry-title a {

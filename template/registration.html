@@ -127,7 +127,7 @@ body {
           function wrong_pass_alert() {
             if (document.getElementById('myInput').value != "" &&
               document.getElementById('myInput1').value != "") {
-              alert("Your response is submitted");
+              
             } else {
               alert("Please fill all the fields");
             }
@@ -165,12 +165,12 @@ body {
     <div class="login-page">
         <div class="form">
             <form class="register-form" method="post" action="{{ url_for('registration') }}">
-              <div class="error-message">
-                {% for message in get_flashed_messages() %}
+            {% for message in get_flashed_messages() %}
+            <div class="error-message"> 
                     {{ message }}
-                {% endfor %}
             </div>
-                <p>Register Now !!!</p>
+            {% endfor %}
+                <p >Register Now !!!</p>
                 <input type="text" name="username" onkeyup="validate_username()"  id="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"   required/> <span class="asterisk_required_field"></span>
                 
                 <input type="password" name="password" title="Password" placeholder="Password"  id="myInput" minlength="8" maxlength="20" required/> <span class="asterisk_required_field"></span>
@@ -183,7 +183,7 @@ body {
                
                 <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="100"required/>
                
-                <input type="text" name="Gravatar_url" title="URL of your Profile picture" placeholder="Gravatar URL" value="{{ form_data.get('Gravatar_url', '') }}" required/>
+                <input type="text" name="Gravatar_url" title="URL of your Profile picture" required pattern="^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$" placeholder="Gravatar URL" value="{{ form_data.get('Gravatar_url', '') }}" MAXLENGTH='225' required/>
                 <span id="wrong_pass_alert" ></span>
                 <span id="username_alert" ></span>
                 <button type="submit" id="create" class="submit_btn"

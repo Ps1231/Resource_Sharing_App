@@ -133,12 +133,12 @@
               <article class="entry entry-single">
   
                 <h2 class="entry-title">
-                  <a >{{post.post_title}}</a>
+                  {{post.post_title}}
                 </h2>
   
                 <div class="entry-meta">
                   <ul>
-                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> {{post.display_name}}</li>
+                    <li class="d-flex align-items-center"><a href="{{ url_for('userPost', username=post.username) }}"><i class="bi bi-person"></i> {{post.display_name}}</a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-clock"></i> {{post.create_date}}</li>
                     <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> Comments: {{post.comment_count}}</li>
                     <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> Upvotes: {{post.upvote_count}}</li>
@@ -166,9 +166,9 @@
                     <li><a href="#">{{post.category}}</a></li>
                   </ul>
                  
-                  <i class="bi bi-tags"></i>
+                 
                   <ul class="tags">
-                    <li><a href="#">{{post.tags}}</a></li>
+                    <li> <i class="bi bi-tags"></i><a href="#">   {{post.tags}}</a></li>
                   </ul>
                   
                   <ul class="cats"> 
@@ -193,7 +193,7 @@
               <div class="blog-author d-flex align-items-center">
                 <img src="{{ url_for('static' , filename = 'blog-author.jpg') }}" class="rounded-circle float-left" alt="">
                 <div>
-                  <h4>{{post.display_name}}</h4>
+                  <h4><a href="{{ url_for('userPost', username=post.username) }}">{{post.display_name}}</a></h4>
                   <div class="social-links">
                     <i></i>{{post.role}}
                   </div>

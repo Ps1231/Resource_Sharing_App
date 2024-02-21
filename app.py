@@ -31,14 +31,14 @@ def registration():
         about_me = request.form['about_me']
         role = 'Regular User'
         Gravatar_url = request.form['Gravatar_url']
-
+        session['registration_form_data'] = request.form
         # Check if all fields are provided
         if not username or not password or not confirm_password or not email or not display_name:
-            session['registration_form_data'] = request.form
+
             flash('Please fill the required fields', 'error')
 
         elif password != confirm_password:
-            session['registration_form_data'] = request.form
+
             flash('Passwords do not match.', 'error')
 
         else:
@@ -49,18 +49,23 @@ def registration():
                 existing_user = cursor.fetchone()
 
                 if existing_user:
-                    session['registration_form_data'] = request.form
+
                     flash(
                         'Username or email already exists. Please choose a different one.', 'error')
 
                 else:
+
                     # Validate email format
                     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-                        session['registration_form_data'] = request.form
-                        flash('Invalid email address.', 'error')
 
+                        flash('Invalid email address.', 'error')
+                    if not re.match(r"^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$", Gravatar_url):
+                        flash('Invalid Gravatar Url', 'error')
+                    if not re.match(r"/^[a-zA-Z0-9]+$/", display_name):
+                        flash('Display name should be alphanumeric too', 'error')
                     else:
                         # Check password strength and provide suggestions
+
                         if len(password) < 8:
 
                             flash(

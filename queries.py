@@ -183,6 +183,7 @@ def get_post_details(post_id):
         SELECT
             p.post_id as post_id,
             p.user_id as user_id,
+            u.username as username,
             u.gravatar_url as user_image,
             u.about_me as about,
             u.role,

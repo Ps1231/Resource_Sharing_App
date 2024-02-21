@@ -1694,6 +1694,8 @@ section {
 
 .blog .entry .entry-content p {
   line-height: 24px;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .blog .entry .entry-content .read-more {
@@ -1814,6 +1816,7 @@ section {
   padding: 20px;
   margin-bottom: 30px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  
 }
 
 .blog .blog-author img {
@@ -1827,6 +1830,8 @@ section {
   margin-bottom: 0px;
   padding: 0;
   color: #3c4133;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .blog .blog-author .social-links {
@@ -1841,6 +1846,8 @@ section {
 .blog .blog-author p {
   font-style: italic;
   color: #b7b7b7;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .blog .blog-comments {

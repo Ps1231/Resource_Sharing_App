@@ -71,7 +71,7 @@
  color: #4CAF50;
  text-decoration: none;
 }
-label {
+.mylabel {
   
   font-weight: bold;
 letter-spacing: 0.46px;
@@ -96,14 +96,15 @@ body {
                 $('form.register-form').submit();  // Submit the form
             });
         });
-        function myFunction() {
-            var x = document.getElementById("myInput");
-            if (x.type === "password") {
+        function myFunction()  {
+          var x = document.getElementById("myInput");
+          if (x.type === "password") {
               x.type = "text";
-            } else {
+          } else {
               x.type = "password";
-            }
           }
+      }
+      
           function myFunction1() {
             var x = document.getElementById("myInput1");
             if (x.type === "password") {
@@ -139,32 +140,6 @@ body {
               alert("Please fill all the fields");
             }
           }
-          function validate_username() {
-            let username = document.getElementById('username').value;
-            let alphanumericRegex = /^[a-zA-Z0-9]+$/;
-    
-            if (!alphanumericRegex.test(username)) {
-                document.getElementById('username_alert').style.color = 'red';
-                document.getElementById('username_alert').innerHTML = '☒ Use alphanumeric characters only';
-                document.getElementById('create').disabled = true;
-                document.getElementById('create').style.opacity = 0.4;
-            } else {
-                document.getElementById('username_alert').style.color = 'green';
-                document.getElementById('username_alert').innerHTML = '🗹 Valid Username';
-                document.getElementById('create').disabled = false;
-                document.getElementById('create').style.opacity = 1;
-            }
-        }
-    
-        function wrong_username_alert() {
-            let username = document.getElementById('username').value;
-    
-            if (username === "") {
-                alert("Please fill in the username field");
-            } else {
-                alert("Please use alphanumeric characters only for the username");
-            }
-        }
     </script>
    
 
@@ -177,24 +152,27 @@ body {
                     {{ message }}
             </div>
             {% endfor %}
+            <span id="wrong_pass_alert" style="display:block" ></span>
+                <span id="username_alert"  style="display:block"></span>
                 <p style="font-size:20px; margin: 20px 0 15px;">Register Now !!!</p>
-                <label for="username"  >Username</label><input type="text" name="username" onkeyup="validate_username()"  id="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"   required/> <span class="asterisk_required_field"></span>
-                <label for="password"  >Password</label>
+                <label for="username" class="mylabel">Username</label><input type="text" name="username" onkeyup="validate_username()"  id="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"   required/> <span class="asterisk_required_field"></span>
+                <label for="password"  class="mylabel">Password</label>
                 <input type="password" name="password" title="Password" placeholder="Password"  id="myInput" minlength="8" maxlength="20" required/> <span class="asterisk_required_field"></span>
-                <input type="checkbox" onclick="myFunction()" style="width:10%">Show Password
+                <input type="checkbox" id="showPasswordCheckbox" style="width:10%" onchange="myFunction() ">
+                <label for="showPasswordCheckbox" class="special-label">Show Password</label>
                 <!-- <label for="confirmPassword"  >Confirm Password</label> -->
                 <input type="password" title="Confirm Password" name="confirm_password" title="It must be Letters only" placeholder="Confirm Password" minlength="8" maxlength="20" id="myInput1" onkeyup="validate_password()" required/> <span class="asterisk_required_field"></span>
-                <input type="checkbox" onclick="myFunction1()" style="width:10%">Show Password
-                <label for="email"  >Email</label>
+                <input type="checkbox" id="showPasswordCheckbox2" style="width:10%" onchange="myFunction1()">
+                <label for="showPasswordCheckbox2" class="special-label">Show Password</label>
+                <label for="email" class="mylabel" >Email</label>
                 <input type="email" name="email" title="Email" maxlength="40" placeholder="Email address" value="{{ form_data.get('email', '') }}" required/>  <span class="asterisk_required_field"></span>
-                <label for="displayName"  >Display Name</label>
+                <label for="displayName" class="mylabel" >Display Name</label>
                 <input type="text" name="display_name" title="Display Name (This name will be displayed)" placeholder="Display Name" value="{{ form_data.get('display_name', '') }}" minlength="4" maxlength="50" required/> <span class="asterisk_required_field"></span>
-                <label for="aboutMe"  >About Me</label>
+                <label for="aboutMe" class="mylabel"  >About Me</label>
                 <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="100"required/>
-                <label for="gravatarUrl"  >Gravatar Url</label>
+                <label for="gravatarUrl" class="mylabel" >Gravatar Url</label>
                 <input type="text" name="Gravatar_url" title="URL of your Profile picture" required pattern="^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$" placeholder="Gravatar URL" value="{{ form_data.get('Gravatar_url', '') }}" MAXLENGTH='225' required/>
-                <span id="wrong_pass_alert" ></span>
-                <span id="username_alert" ></span>
+                
                 <button type="submit" id="create" class="submit_btn"
 
                 onclick="wrong_pass_alert()"value="Submit">Create</button>

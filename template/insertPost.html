@@ -124,7 +124,7 @@ input[type=text]:focus,textarea:focus,select:focus {
         </div>
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
-        <form method="post"  action="{{ url_for('newPost') }}">
+        <form method="post"  action="{{ url_for('newPost') }}" onsubmit="submitForm(event)">
 
           <div class="container" >
             <span class="asterisk_required_field"></span><label for="title"  ><b>Title</b></label>
@@ -158,6 +158,27 @@ input[type=text]:focus,textarea:focus,select:focus {
           <button type="submit" class="btn" id="saveButton" style="margin-top: 20px"><b>Post Blog</b></button>
         </div></form>
         <script>
+          function submitForm(event) {
+            event.preventDefault(); // Prevent the form from being submitted normally
+    
+            // Perform form submission using AJAX
+            fetch(event.target.action, {
+                method: 'POST',
+                body: new FormData(event.target)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Post created successfully');
+                    window.location.href = '{{ url_for('account') }}'; // Redirect to the account page
+                } else {
+                    alert('Error creating post'); // Display an error message if the response is not OK
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error creating post'); // Display an error message if there is an error
+            });
+        }
           document.addEventListener('DOMContentLoaded', function () {
               const addTagButton = document.getElementById('addTag');
               const removeTagButton = document.getElementById('removeTag');
@@ -228,6 +249,7 @@ input[type=text]:focus,textarea:focus,select:focus {
               // Initial check and update of submit button state
               updateSubmitButtonState();
           });
+          
       </script>
       
 </section>

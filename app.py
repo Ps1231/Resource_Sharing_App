@@ -54,14 +54,16 @@ def registration():
                         'Username or email already exists. Please choose a different one.', 'error')
 
                 else:
-
+                    if not re.match(r"/^[a-zA-Z0-9_]*$", username):
+                        flash('Username should be alphanumeric ', 'error')
                     # Validate email format
                     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
 
                         flash('Invalid email address.', 'error')
                     if not re.match(r"^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$", Gravatar_url):
                         flash('Invalid Gravatar Url', 'error')
-                    if not re.match(r"/^[a-zA-Z0-9]+$/", display_name):
+
+                    if not re.match(r"/^[a-zA-Z0-9_]*$", display_name):
                         flash('Display name should be alphanumeric too', 'error')
                     else:
                         # Check password strength and provide suggestions
@@ -173,7 +175,7 @@ def get_posts_and_tags():
 
     page = request.args.get('page', 1, type=int)
     if page < 1:
-        abort(403)
+        abort(404)
 
     offset = (page - 1) * POSTS_PER_PAGE
 
@@ -199,7 +201,7 @@ def get_posts_and_tags():
             total_posts = len(posts)
         total_pages = ceil(total_posts / POSTS_PER_PAGE)
         if page > total_pages:
-            abort(403)
+            abort(404)
 
         cursor.execute(popular_posts())
         popularPosts = cursor.fetchall()

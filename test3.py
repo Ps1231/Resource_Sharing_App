@@ -1,4 +1,4 @@
-
+from queries import *
 # import pdb
 
 
@@ -69,5 +69,11 @@ with db.cursor() as cursor:
     cursor.execute(tags_query, (post_id,))
     tags_data = cursor.fetchall()
     tags = [tag['tag_name'] for tag in tags_data]
+    cursor.execute(get_total_rows_query())
+    posts = cursor.fetchone()['COUNT(*)']
+    cursor.execute("select count(*)from Users")
+    users = cursor.fetchone()['count(*)']
 print(tags_data)
 print(tags)
+
+print(users)

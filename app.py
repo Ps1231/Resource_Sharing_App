@@ -162,8 +162,13 @@ POSTS_PER_PAGE = 10
 @app.route('/')
 def index():
     user_id = session.get('user_id')
+    with db.cursor() as cursor:
+        cursor.execute(get_total_rows_query())
+        posts = cursor.fetchone()['COUNT(*)']
+        cursor.execute("select count(*)from Users")
+        users = cursor.fetchone()['count(*)']
     background_image_url = url_for('static', filename='hero-bg.jpg')
-    return render_template('index.html', background_image_url=background_image_url, user_id=user_id)
+    return render_template('index.html', background_image_url=background_image_url, user_id=user_id, posts=posts, users=users)
 
 
 @app.route('/posts', methods=['GET', 'POST'])
@@ -527,48 +532,60 @@ def newPost():
     with db.cursor() as cursor:
         cursor.execute(get_category())
         categories = cursor.fetchall()
-
         if request.method == 'POST':
-
             user_id = session.get('user_id')
             title = request.form['title']
             body = request.form['content']
             category = request.form['category']
             tags = request.form.getlist('tag[]')
-
+            session['post_form_data'] = request.form
+            errors = []
+            if not title.isalnum():
+                errors.append('Title should be alphanumeric')
+            if not all(re.match(r"[a-zA-Z]", tag) for tag in tags):
+                errors.append('Tags must contain letters only.')
+            # Check if the body contains at least one letter
+            if not re.search(r"[a-zA-Z]", body):
+                errors.append('Body content is not valid; contains no letters')
             # Retrieve tags list directly from the request object
             if not title or not body or not category or not tags:
-                flash('Please fill in all fields.', 'error')
+                errors.append('Please fill in all fields.')
+            if errors:
+                for error in errors:
+                    flash(error, 'error')
                 return redirect(url_for('newPost'))
-            cursor.execute(
-                "INSERT INTO Posts (title, body, category,  user_id, create_date) VALUES (%s, %s, %s, %s, NOW())",
-                (title, body, category,  user_id)
-            )
-            post_id = cursor.lastrowid
-
-            for tag_name in tags:
-                # Check if the tag already exists in the Tags table
+            else:
                 cursor.execute(
-                    "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
-                tag_row = cursor.fetchall()
+                    "INSERT INTO Posts (title, body, category,  user_id, create_date) VALUES (%s, %s, %s, %s, NOW())",
+                    (title, body, category,  user_id)
+                )
+                post_id = cursor.lastrowid
 
-                if tag_row:
-                    # If tag exists, get its tag_id
-                    tag_id = tag_row[0]['tag_id']
-                else:
-                    # If tag doesn't exist, insert it into Tags table
+                for tag_name in tags:
+                    # Check if the tag already exists in the Tags table
                     cursor.execute(
-                        "INSERT INTO Tags (tag_name) VALUES (%s)", (tag_name,))
-                    tag_id = cursor.lastrowid
+                        "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
+                    tag_row = cursor.fetchall()
 
-                # Insert entry into PostTags table
-                cursor.execute(
-                    "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (post_id, tag_id))
+                    if tag_row:
+                        # If tag exists, get its tag_id
+                        tag_id = tag_row[0]['tag_id']
+                    else:
+                        # If tag doesn't exist, insert it into Tags table
+                        cursor.execute(
+                            "INSERT INTO Tags (tag_name) VALUES (%s)", (tag_name,))
+                        tag_id = cursor.lastrowid
 
-            db.commit()
-            cursor.close()
-
-    return render_template('insertPost.html', categories=categories)
+                    # Insert entry into PostTags table
+                    cursor.execute(
+                        "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (post_id, tag_id))
+                    session.pop('post_form_data', None)
+                db.commit()
+                cursor.close()
+                flash('Post created successfully', 'success')
+                # return redirect(url_for('account'))
+    form_data = session.pop('post_form_data', {})
+    return render_template('insertPost.html', categories=categories, form_data=form_data)
 
 
 @app.route('/<username>', methods=['GET', 'POST'])

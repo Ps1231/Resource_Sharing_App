@@ -124,16 +124,26 @@ input[type=text]:focus,textarea:focus,select:focus {
         </div>
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
-        <form method="post"  action="{{ url_for('newPost') }}" onsubmit="submitForm(event)">
-
-          <div class="container" >
+        <form method="post" id="newPostForm" action="{{ url_for('newPost') }}" onsubmit="submitForm(event)">
+        
+          <div class="container" > 
+            {% for message in get_flashed_messages(category_filter=['success']) %}
+          <div class="error-message" style="color:rgb(88, 142, 13);font-size:30px;padding:20px"> 
+                  {{ message }}
+          </div>
+          {% endfor %}
+             {% for message in get_flashed_messages(category_filter=['error']) %}
+          <div class="error-message" style="color:red"> 
+                  {{ message }}
+          </div>
+          {% endfor %}
             <span class="asterisk_required_field"></span><label for="title"  ><b>Title</b></label>
               <div>
-                  <input required type="text" placeholder="Enter Blog Title" maxlength="45" name="title" id='title' required>
+                  <input required type="text" placeholder="Enter Blog Title" value="{{ form_data.get('title', '') }}" maxlength="45" name="title" id='title' required>
               </div>
               <span class="asterisk_required_field"></span><label for="content"><b>Blog Content</b></label>
               <div>
-                  <textarea required type="text" placeholder="Enter Blog Content" maxlength="2000" name="content" id="content" required></textarea>
+                  <textarea required type="text" placeholder="Enter Blog Content"  maxlength="2000" name="content" id="content" required>{{ form_data.get('content', '') }}</textarea>
               </div><span class="asterisk_required_field"></span>
            <label for="category"><b>Category</b></label>
               <div>
@@ -149,7 +159,7 @@ input[type=text]:focus,textarea:focus,select:focus {
            
               <span class="asterisk_required_field"></span><label for="tags"><b>Tags</b></label>
            <div id="tagInputs">
-            <input type="text" name="tag[]" placeholder="Enter Tag" maxlength="30" required>
+            <input type="text" name="tag[]" value="{{ form_data.get('tag[]', '') }}" placeholder="Enter Tag"  maxlength="30" required>
             
           </div>
           <button type="button" id="addTag" style="display: inline-block;  padding: 5px 10px; background-color: #28a745; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;">Add More</button>
@@ -158,27 +168,8 @@ input[type=text]:focus,textarea:focus,select:focus {
           <button type="submit" class="btn" id="saveButton" style="margin-top: 20px"><b>Post Blog</b></button>
         </div></form>
         <script>
-          function submitForm(event) {
-            event.preventDefault(); // Prevent the form from being submitted normally
-    
-            // Perform form submission using AJAX
-            fetch(event.target.action, {
-                method: 'POST',
-                body: new FormData(event.target)
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Post created successfully');
-                    window.location.href = '{{ url_for('account') }}'; // Redirect to the account page
-                } else {
-                    alert('Error creating post'); // Display an error message if the response is not OK
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error creating post'); // Display an error message if there is an error
-            });
-        }
+
+
           document.addEventListener('DOMContentLoaded', function () {
               const addTagButton = document.getElementById('addTag');
               const removeTagButton = document.getElementById('removeTag');

@@ -33,7 +33,7 @@ def registration():
         Gravatar_url = request.form['Gravatar_url']
         session['registration_form_data'] = request.form
         # Check if all fields are provided
-        if not username or not password or not confirm_password or not email or not display_name:
+        if not username or not password or not confirm_password or not email or not display_name or not Gravatar_url or not about_me:
 
             flash('Please fill the required fields', 'error')
 
@@ -54,7 +54,7 @@ def registration():
                         'Username or email already exists. Please choose a different one.', 'error')
 
                 else:
-                    if not re.match(r"/^[a-zA-Z0-9_]*$", username):
+                    if not re.match(r"^[a-zA-Z0-9_]*$", username):
                         flash('Username should be alphanumeric ', 'error')
                     # Validate email format
                     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
@@ -63,41 +63,41 @@ def registration():
                     if not re.match(r"^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$", Gravatar_url):
                         flash('Invalid Gravatar Url', 'error')
 
-                    if not re.match(r"/^[a-zA-Z0-9_]*$", display_name):
+                    if not re.match(r"^[a-zA-Z0-9_]*$", display_name):
                         flash('Display name should be alphanumeric too', 'error')
-                    else:
+
                         # Check password strength and provide suggestions
 
-                        if len(password) < 8:
+                    if len(password) < 8:
 
-                            flash(
-                                'Password must be at least 8 characters long.', 'error')
+                        flash(
+                            'Password must be at least 8 characters long.', 'error')
 
-                        elif not any(char.isdigit() for char in password):
-                            flash(
-                                'Password must contain at least one digit.', 'error')
-                        elif not any(char.isalpha() for char in password):
-                            flash(
-                                'Password must contain at least one letter.', 'error')
-                        elif not any(char.isupper() for char in password):
-                            flash(
-                                'Password must contain at least one uppercase letter.', 'error')
-                        else:
-                            # Hash the password before storing in the database
-                            hashed_password = generate_password_hash(password)
+                    elif not any(char.isdigit() for char in password):
+                        flash(
+                            'Password must contain at least one digit.', 'error')
+                    elif not any(char.isalpha() for char in password):
+                        flash(
+                            'Password must contain at least one letter.', 'error')
+                    elif not any(char.isupper() for char in password):
+                        flash(
+                            'Password must contain at least one uppercase letter.', 'error')
+                    else:
+                        # Hash the password before storing in the database
+                        hashed_password = generate_password_hash(password)
 
-                            # Insert new user into the database
-                            cursor.execute(insert_user(username, email, hashed_password,
-                                           display_name, about_me, role, Gravatar_url),
-                                           (username, email, hashed_password, display_name, about_me, role, Gravatar_url))
-                            db.commit()
-                            session.pop('registration_form_data', None)
-                            session['registered_username'] = username
-                            session['registered_password'] = password
+                        # Insert new user into the database
+                        cursor.execute(insert_user(username, email, hashed_password,
+                                                   display_name, about_me, role, Gravatar_url),
+                                       (username, email, hashed_password, display_name, about_me, role, Gravatar_url))
+                        db.commit()
+                        session.pop('registration_form_data', None)
+                        session['registered_username'] = username
+                        session['registered_password'] = password
 
-                            flash(
-                                'Registration successful. You can now log in.', 'success')
-                            return redirect(url_for('login'))
+                        flash(
+                            'Registration successful. You can now log in.', 'success')
+                        return redirect(url_for('login'))
     form_data = session.pop('registration_form_data', {})
     return render_template('registration.html', form_data=form_data)
 
@@ -128,7 +128,7 @@ def login():
                     session['display_name'] = user['display_name']
                     session['current_user'] = user
                     session['role'] = user['role']
-                    flash('Login successful!', 'success')
+
                     return redirect(url_for('get_posts_and_tags'))
 
     # Return the template even if the login attempt fails
@@ -313,7 +313,7 @@ def view_post(post_id):
                         cursor.execute(query, (post_id, user_id, comment_text))
                         db.commit()
 
-                    flash('Comment posted successfully', 'success')
+                    # flash('Comment posted successfully', 'success')
                     return redirect(url_for('view_post', post_id=post_id))
 
     with db.cursor() as cursor:
@@ -348,15 +348,15 @@ def delete_comment():
         query = "SELECT user_id FROM Comments WHERE comment_id = %s"
         cursor.execute(query, (comment_id,))
         comment = cursor.fetchone()
-
+        session.pop('_flashes', [])
         if comment and (comment['user_id'] == user_id or session.get('role') == 'admin'):
             # Delete the comment
             delete_query = "DELETE FROM Comments WHERE comment_id = %s"
             cursor.execute(delete_query, (comment_id,))
             db.commit()
-            flash('Comment deleted successfully', 'success')
-        else:
-            flash('You are not authorized to delete this comment', 'error')
+        #     flash('Comment deleted successfully', 'success')
+        # else:
+        #     flash('You are not authorized to delete this comment', 'error')
 
     return redirect(request.referrer)
 
@@ -379,9 +379,9 @@ def update_comment():
             update_query = "UPDATE Comments SET text = %s WHERE comment_id = %s"
             cursor.execute(update_query, (updated_comment_text, comment_id))
             db.commit()
-            flash('Comment updated successfully', 'success')
-        else:
-            flash('You are not authorized to update this comment', 'error')
+
+        # else:
+        #     flash('You are not authorized to update this comment', 'error')
 
     return redirect(request.referrer)
 
@@ -433,7 +433,7 @@ def delete_post():
         query = "SELECT user_id FROM Posts WHERE post_id = %s"
         cursor.execute(query, (post_id,))
         post = cursor.fetchone()
-
+        session.pop('_flashes', [])
         if post and post['user_id'] == user_id:
             # Delete the post
             delete_query = "DELETE FROM Posts WHERE post_id = %s"
@@ -442,6 +442,7 @@ def delete_post():
             flash('Post deleted successfully', 'success')
         else:
             flash('You are not authorized to delete this post', 'error')
+        session.pop('_flashes', [])
 
     return redirect(request.referrer)
 
@@ -475,7 +476,7 @@ def edit_post(post_id):
 
             cursor.execute(get_category())
             categories = cursor.fetchall()
-
+            session.pop('_flashes', [])
             if title and body and category:
                 # Update the post details in the database
                 update_query = "UPDATE Posts SET title = %s, body = %s, category = %s WHERE post_id = %s"
@@ -503,8 +504,9 @@ def edit_post(post_id):
                             "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (post_id, tag_id))
 
                 db.commit()
+
                 flash('Post updated successfully', 'success')
-                return redirect(url_for('view_post', post_id=post_id))
+
             else:
                 flash('Please fill in all fields', 'error')
 
@@ -540,7 +542,7 @@ def newPost():
             tags = request.form.getlist('tag[]')
             session['post_form_data'] = request.form
             errors = []
-            if not title.isalnum():
+            if not re.match(r"^[a-zA-Z0-9_ ]+$", title):
                 errors.append('Title should be alphanumeric')
             if not all(re.match(r"[a-zA-Z]", tag) for tag in tags):
                 errors.append('Tags must contain letters only.')
@@ -582,7 +584,9 @@ def newPost():
                     session.pop('post_form_data', None)
                 db.commit()
                 cursor.close()
+                session.pop('_flashes', [])
                 flash('Post created successfully', 'success')
+
                 # return redirect(url_for('account'))
     form_data = session.pop('post_form_data', {})
     return render_template('insertPost.html', categories=categories, form_data=form_data)

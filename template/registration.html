@@ -155,7 +155,7 @@ body {
             <span id="wrong_pass_alert" style="display:block" ></span>
                 <span id="username_alert"  style="display:block"></span>
                 <p style="font-size:20px; margin: 20px 0 15px;">Register Now !!!</p>
-                <label for="username" class="mylabel">Username</label><input type="text" name="username" onkeyup="validate_username()"  id="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"   required/> <span class="asterisk_required_field"></span>
+                <label for="username" class="mylabel">Username</label><input type="text" name="username"   id="username" title="Username" placeholder="Username" value="{{ form_data.get('username', '') }}" minlength="4" maxlength="20"   required/> <span class="asterisk_required_field"></span>
                 <label for="password"  class="mylabel">Password</label>
                 <input type="password" name="password" title="Password" placeholder="Password"  id="myInput" minlength="8" maxlength="20" required/> <span class="asterisk_required_field"></span>
                 <input type="checkbox" id="showPasswordCheckbox" style="width:10%" onchange="myFunction() ">
@@ -169,9 +169,9 @@ body {
                 <label for="displayName" class="mylabel" >Display Name</label>
                 <input type="text" name="display_name" title="Display Name (This name will be displayed)" placeholder="Display Name" value="{{ form_data.get('display_name', '') }}" minlength="4" maxlength="50" required/> <span class="asterisk_required_field"></span>
                 <label for="aboutMe" class="mylabel"  >About Me</label>
-                <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="100"required/>
+                <input type="text" name="about_me" title="About me should be less than 130 words" placeholder="About Me" value="{{ form_data.get('about_me', '') }}" maxlength="100"required/> <span class="asterisk_required_field"></span>
                 <label for="gravatarUrl" class="mylabel" >Gravatar Url</label>
-                <input type="text" name="Gravatar_url" title="URL of your Profile picture" required pattern="^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$" placeholder="Gravatar URL" value="{{ form_data.get('Gravatar_url', '') }}" MAXLENGTH='225' required/>
+                <input type="text" name="Gravatar_url" title="URL of your Profile picture" required pattern="^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$" placeholder="Gravatar URL" value="{{ form_data.get('Gravatar_url', '') }}" MAXLENGTH='225' required/> <span class="asterisk_required_field"></span>
                 
                 <button type="submit" id="create" class="submit_btn"
 

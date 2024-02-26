@@ -124,7 +124,7 @@ input[type=text]:focus,textarea:focus,select:focus {
         </div>
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
-        <form method="post" id="newPostForm" action="{{ url_for('newPost') }}" onsubmit="submitForm(event)">
+        <form method="post" id="newPostForm" action="{{ url_for('newPost') }}" >
         
           <div class="container" > 
             {% for message in get_flashed_messages(category_filter=['success']) %}

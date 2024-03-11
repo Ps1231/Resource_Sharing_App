@@ -118,8 +118,8 @@ input[type=text]:focus,textarea:focus,select:focus {
           <li><a href="{{ url_for('index')}}">Home</a></li>
           
         
-          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
-          <li><a href="{{ url_for('account')}}">Account</a></li>
+          <li><a  href="{{ url_for('posts.get_posts_and_tags')}}">Blog</a></li>
+          <li><a href="{{ url_for('users.account')}}">Account</a></li>
           
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -145,7 +145,7 @@ input[type=text]:focus,textarea:focus,select:focus {
         </div>
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
-    <form method="post" action="{{ url_for('edit_post', post_id=post.post_id) }}">
+    <form method="post" action="{{ url_for('posts.edit_post', post_id=post.post_id) }}">
       <div class="container" >
         {% for message in get_flashed_messages(category_filter=['success']) %}
         <div class="error-message" style="color:rgb(88, 142, 13);font-size:30px;padding:20px"> 

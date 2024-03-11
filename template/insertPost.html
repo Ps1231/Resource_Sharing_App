@@ -90,13 +90,13 @@ input[type=text]:focus,textarea:focus,select:focus {
           <li><a href="{{ url_for('index')}}">Home</a></li>
           <li><a class="active" href="#"><span>Write</span> </a></li>
         
-          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
+          <li><a  href="{{ url_for('posts.get_posts_and_tags')}}">Blogs</a></li>
          
           <li class="dropdown">
             <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
             <ul>
               <li><a href="{{ url_for('auth.logout')}}">Logout</a></li>
-              <li><a href="{{ url_for('account')}}">Account</a></li>
+              <li><a href="{{ url_for('users.account')}}">Account</a></li>
               
             </ul>
           </li>
@@ -124,7 +124,7 @@ input[type=text]:focus,textarea:focus,select:focus {
         </div>
       </section><!-- End Breadcrumbs -->
       <section id="blog" class="blog">  
-        <form method="post" id="newPostForm" action="{{ url_for('newPost') }}" >
+        <form method="post" id="newPostForm" action="{{ url_for('posts.newPost') }}" >
         
           <div class="container" > 
             {% for message in get_flashed_messages(category_filter=['success']) %}

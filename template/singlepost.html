@@ -129,16 +129,16 @@
         <ul>
           <li><a href="{{ url_for('index')}}">Home</a></li>
          
-          <li><a href="{{ url_for('newPost')}}">Write</a></li>
+          <li><a href="{{ url_for('posts.newPost')}}">Write</a></li>
          
          
-          <li><a  href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
+          <li><a  href="{{ url_for('posts.get_posts_and_tags')}}">Blogs</a></li>
          
           <li class="dropdown">
             <a class="getstarted" href="#"><span>Get Started</span><i class="bi bi-chevron-right"></i> </a>
             <ul>
               <li><a href="{{ url_for('auth.logout')}}">Logout</a></li>
-              <li><a href="{{ url_for('account')}}">Account</a></li>
+              <li><a href="{{ url_for('users.account')}}">Account</a></li>
               
             </ul>
           </li>
@@ -186,7 +186,7 @@
   
                 <div class="entry-meta">
                   <ul>
-                    <li class="d-flex align-items-center"><a href="{{ url_for('userPost', username=post.username) }}"><i class="bi bi-person"></i> {{post.display_name}}</a></li>
+                    <li class="d-flex align-items-center"><a href="{{ url_for('users.userPost', username=post.username) }}"><i class="bi bi-person"></i> {{post.display_name}}</a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-clock"></i> {{post.create_date}}</li>
                     <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> Comments: {{post.comment_count}}</li>
                     <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> Upvotes: {{post.upvote_count}}</li>
@@ -195,7 +195,7 @@
  
                     <li class="d-flex align-items-center">
                       {% if  post.user_id == session.user_id %} 
-                      <form method="post" action="{{ url_for('edit_post', post_id=post.post_id) }}">
+                      <form method="post" action="{{ url_for('posts.edit_post', post_id=post.post_id) }}">
                       <button type="submit" class="edit-post-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-pencil"></i></button>
                       </form>
                       {% endif %}
@@ -243,7 +243,7 @@
               <div class="blog-author d-flex align-items-center">
                 <img src="{{ url_for('static' , filename = 'blog-author.jpg') }}" class="rounded-circle float-left" alt="">
                 <div>
-                  <h4><a href="{{ url_for('userPost', username=post.username) }}">{{post.display_name}}</a></h4>
+                  <h4><a href="{{ url_for('users.userPost', username=post.username) }}">{{post.display_name}}</a></h4>
                   <div class="social-links">
                     <i></i>{{post.role}}
                   </div>
@@ -275,7 +275,7 @@
                       
                       <time >{{comment.Comment_DateTime}}</time>
                       {% if session.role == 'admin' %}
-                        <form method="post" action="{{ url_for('delete_comment') }}">
+                        <form method="post" action="{{ url_for('singlepost.delete_comment') }}">
                             <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
                             <button type="submit" class="delete-comment-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-trash"></i></button>
                         </form>
@@ -286,7 +286,7 @@
                        
                     </div>
                     
-                    <form id="edit_comment_{{ comment.comment_id }}" method="post" action="{{ url_for('update_comment') }}" style="display: none;">
+                    <form id="edit_comment_{{ comment.comment_id }}" method="post" action="{{ url_for('singlepost.update_comment') }}" style="display: none;">
                         <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
                         <textarea name="updated_comment_text" style="width: 700px;min-height:50px;height:100px;max-height:100px;max-width: 700px; resize: both;" rows="4" cols="50">{{ comment.Comment_Text }}</textarea>
                         <button type="submit" class="save-comment-btn">Save</button>
@@ -312,7 +312,7 @@
                     }
                     
                   </script>
-                      <form method="post" action="{{ url_for('delete_comment') }}">
+                      <form method="post" action="{{ url_for('singlepost.delete_comment') }}">
                           <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
                           <button type="submit" class="delete-comment-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-trash"></i></button>
                       </form>
@@ -328,7 +328,7 @@
                 <div class="reply-form" >
                   <h4>Leave a Reply</h4>
                   <p>Your email address will not be published. Required fields are marked * </p>
-                  <form method="post" action="{{ url_for('view_post', post_id=post_id) }}">
+                  <form method="post" action="{{ url_for('singlepost.view_post', post_id=post_id) }}">
                     <div class="row">
                         <div class="col form-group">
                             <textarea name="comment" id="comment" class="form-control" placeholder="Your Comment*"></textarea>
@@ -362,7 +362,7 @@
                     <ul>
                         {% if categories is not none %}
                         {% for category in categories %}
-                      <li><a href="{{ url_for('get_posts_and_tags', category=category.name) }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
+                      <li><a href="{{ url_for('posts.get_posts_and_tags', category=category.name) }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
                       {% endfor %}
                       {% endif %}
                     </ul>
@@ -375,7 +375,7 @@
                         {% for rp in popularPosts %}
                     <div class="post-item clearfix">
                      
-                      <h4><a href="{{ url_for('view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>
+                      <h4><a href="{{ url_for('singlepost.view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>
                       <time datetime="2020-01-01">{{rp.date}}</time>
                     
                     </div>   {% endfor %}
@@ -389,7 +389,7 @@
                     <ul>
                         {% if tags is not none %}
                         {% for tag in tags %}
-                      <li><a href="{{ url_for('get_posts_and_tags', tag=tag.name) }}">{{tag.name}}</a></li>
+                      <li><a href="{{ url_for('posts.get_posts_and_tags', tag=tag.name) }}">{{tag.name}}</a></li>
                       {% endfor %}
                   {% endif %}
     

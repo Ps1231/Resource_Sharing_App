@@ -54,16 +54,16 @@
           <ul>
             <li><a href="{{ url_for('index')}}">Home</a></li>
             
-            <li><a href="{{ url_for('newPost') }}" rel="stylesheet">Write</a></li>
+            <li><a href="{{ url_for('posts.newPost') }}" rel="stylesheet">Write</a></li>
            
            
-            <li><a  href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
+            <li><a  href="{{ url_for('posts.get_posts_and_tags')}}">Blogs</a></li>
            
             <li class="dropdown">
               <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
               <ul>
                 <li><a href="{{ url_for('auth.logout')}}">Logout</a></li>
-                <li><a href="{{ url_for('account')}}">Account</a></li>
+                <li><a href="{{ url_for('users.account')}}">Account</a></li>
                 
               </ul>
             </li>
@@ -104,7 +104,7 @@
             <article class="entry">
   
               <h2 class="entry-title">
-                <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.title}}</a>
+                <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.title}}</a>
               </h2>
 
               <div class="entry-meta">
@@ -116,10 +116,10 @@
                   <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> downvotes: {{post.downvote_count}}</li>
                   <li class="d-flex align-items-center">
                     {% if current_user is not none %} {% if current_user == Username %}
-                    <form method="post" action="{{ url_for('delete_post') }}">
+                    <form method="post" action="{{ url_for('posts.delete_post') }}">
                         <input type="hidden" name="post_id" value="{{ post.post_id }}">
                         <button type="submit" class="delete-post-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-trash"></i></button>
-                    </form><form method="post" action="{{ url_for('edit_post', post_id=post.post_id) }}">
+                    </form><form method="post" action="{{ url_for('posts.edit_post', post_id=post.post_id) }}">
                       <button type="submit" class="edit-post-btn" style="border: none; background: none; font-size: 1em; color: #9bc016; cursor: pointer;"><i class="bi bi-pencil"></i></button>
                   </form>
 
@@ -131,7 +131,7 @@
 
               <div class="entry-content">
                 <p> <p>{{ post.body.split()[:25] | join(' ') }}...</p><div class="read-more">
-                  <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet"> Read More</a>
+                  <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet"> Read More</a>
                 </div>
               </div>
 

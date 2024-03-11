@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
-from queries import insert_user
+from queries import *
 from config import *
+
 
 from functools import wraps
 
@@ -22,7 +23,7 @@ def registration():
         display_name = request.form['display_name']
         # Limit about me to 130 characters
         about_me = request.form['about_me']
-        role = 'Regular User'
+        role = 'Admin'
         Gravatar_url = request.form['Gravatar_url']
         session['registration_form_data'] = request.form
         # Check if all fields are provided
@@ -90,7 +91,7 @@ def registration():
 
                         flash(
                             'Registration successful. You can now log in.', 'success')
-                        return redirect(url_for('login'))
+                        return redirect(url_for('auth.login'))
     form_data = session.pop('registration_form_data', {})
     return render_template('registration.html', form_data=form_data)
 
@@ -121,8 +122,9 @@ def login():
                     session['display_name'] = user['display_name']
                     session['current_user'] = user
                     session['role'] = user['role']
-
-                    return redirect(url_for('get_posts_and_tags'))
+                    if session['role'] == 'Admin':
+                        return redirect(url_for('users.admin'))
+                    return redirect(url_for('posts.get_posts_and_tags'))
 
     # Return the template even if the login attempt fails
     return render_template('login.html')
@@ -132,17 +134,3 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('index'))
-
-
-def login_required(view):
-    @wraps(view)
-    def wrapped_view(*args, **kwargs):
-        if 'username' in session:
-            # User is authenticated, execute the original view function
-            return view(*args, **kwargs)
-        else:
-            # User is not authenticated, redirect to the login page
-            flash("You are not logged in. Please log in to access this page.", 'error')
-            return redirect(url_for('auth.login'))
-
-    return wrapped_view

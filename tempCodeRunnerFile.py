@@ -1,47 +1,36 @@
 
-@app.route('/newPost', methods=['GET', 'POST'])
-@login_required
-def newPost():
-    with db.cursor() as cursor:
-        cursor.execute(get_category())
-        categories = cursor.fetchall()
+# @app.route('/<username>', methods=['GET', 'POST'])
+# def userPost(username):
+#     current_user = session.get('username')
+#     Username = username
+#     with db.cursor() as cursor:
+#         try:
+#             user_id = session.get('user_id')
 
-        if request.method == 'POST':
-            data = request.json
-            user_id = session.get('user_id')
-            title = request.form['title']
-            body = request.form['content']
-            category = request.form['category']
+#             cursor.execute(get_author_info(username), (username,))
+#             user_info = cursor.fetchone()
 
-            # Retrieve tags list directly from the request object
-            tags = data.get('tagIds')
+#             cursor.execute(get_author_posts(username), (username,))
+#             user_posts = cursor.fetchall()
 
-            cursor.execute(
-                "INSERT INTO Posts (title, body, category,  user_id, create_date) VALUES (%s, %s, %s, %s, NOW())",
-                (title, body, category,  user_id)
-            )
-            post_id = cursor.lastrowid
+#             db.commit()
+#         except Exception as e:
+#             # Handle the exception appropriately, e.g., log the error
+#             print(f"Error fetching user information: {e}")
+#             user_info = None
+#             user_posts = []
+#             db.rollback()
 
-            for tag_name in tags:
-                # Check if the tag already exists in the Tags table
-                cursor.execute(
-                    "SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
-                tag_row = cursor.fetchone()
+#     return render_template('account1.html', user_info=user_info, user_posts=user_posts, current_user=current_user, Username=Username)
 
-                if tag_row:
-                    # If tag exists, get its tag_id
-                    tag_id = tag_row[0]
-                else:
-                    # If tag doesn't exist, insert it into Tags table
-                    cursor.execute(
-                        "INSERT INTO Tags (tag_name) VALUES (%s)", (tag_name,))
-                    tag_id = cursor.lastrowid
 
-                # Insert entry into PostTags table
-                cursor.execute(
-                    "INSERT INTO PostTags (post_id, tag_id) VALUES (%s, %s)", (post_id, tag_id))
+# @app.route('/admin', methods=['GET', 'POST'])
+# @login_required
+# @requires_role(['Admin'])
+# def admin():
+#     if request.method == 'POST':
+#         user_id = session.get('user_id')
+#         if not user_id:
+#             return redirect(url_for('login'))
 
-            db.commit()
-            cursor.close()
-
-    return render_template('insertPost.html', categories=categories)
+#     return render_template('adminDashboard.html')

@@ -2,7 +2,7 @@
   {% for post in posts %}
     <article class="entry">
       <h2 class="entry-title">
-        <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{ post.post_title }}</a>
+        <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">{{ post.post_title }}</a>
       </h2>
 
       <div class="entry-meta">
@@ -11,14 +11,14 @@
           <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{ post.create_date }}</a></li>
           <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Comments: {{ post.comment_count }}</a></li>
           <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Upvote: {{ post.upvote_count }}</a></li>
-          <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Downvote: {{ post.downvote_count }}</a></li>
+          <li class="d-flex align-items-center"><i class="biview bi-arrow-down"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Downvote: {{ post.downvote_count }}</a></li>
         </ul>
       </div>
 
       <div class="entry-content">
         <p>{{ post.post_content.split('\n')[:2] | join('\n') }}....</p>
         <div class="read-more">
-          <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
+          <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
         </div>
       </div>
     </article><!-- End blog entry -->

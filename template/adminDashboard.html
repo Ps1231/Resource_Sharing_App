@@ -46,7 +46,7 @@
         <ul>
           <li><a href="{{ url_for('index')}}">Home</a></li>
          
-          <li><a href="{{ url_for('newPost')}}">Write</a></li>
+          <li><a href="{{ url_for('posts.newPost')}}">Write</a></li>
          
          
           <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blog</a></li>
@@ -55,7 +55,7 @@
             <a class="getstarted" href="#"><span>Get Started</span><i class="bi bi-chevron-right"></i> </a>
             <ul>
               <li><a href="{{ url_for('logout')}}">Logout</a></li>
-              <li><a href="{{ url_for('account')}}">Account</a></li>
+              <li><a href="{{ url_for('users.account')}}">Account</a></li>
               
             </ul>
           </li>
@@ -99,7 +99,7 @@
             <div class="col-md-6 d-flex align-items-stretch" data-aos="fade-up">
               <div class="card" style="background-image: url(static/mypost.webp);">
                 <div class="card-body">
-                  <h5 class="card-title"><a href="{{ url_for('account')}}">My Posts</a></h5>
+                  <h5 class="card-title"><a href="{{ url_for('users.account')}}">My Posts</a></h5>
                   <p class="card-text">Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
                   <div class="read-more"><a href="#"><i class="bi bi-arrow-right"></i> Click Here</a></div>
                 </div>

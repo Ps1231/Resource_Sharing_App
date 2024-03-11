@@ -46,16 +46,16 @@
         <ul>
           <li><a href="{{ url_for('index')}}">Home</a></li>
          
-          <li><a href="{{ url_for('newPost')}}">Write</a></li>
+          <li><a href="{{ url_for('posts.newPost')}}">Write</a></li>
          
          
-          <li><a class="active" href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
+          <li><a class="active" href="{{ url_for('posts.get_posts_and_tags')}}">Blogs</a></li>
          
           <li class="dropdown">
             <a class="getstarted" href="#"><span>Get Started</span><i class="bi bi-chevron-right"></i> </a>
             <ul>
               <li><a href="{{ url_for('auth.logout')}}">Logout</a></li>
-              <li><a href="{{ url_for('account')}}">Account</a></li>
+              <li><a href="{{ url_for('users.account')}}">Account</a></li>
               
             </ul>
           </li>
@@ -107,23 +107,23 @@
               <article class="entry">
   
                 <h2 class="entry-title">
-                  <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.post_title}}</a>
+                  <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.post_title}}</a>
                 </h2>
   
                 <div class="entry-meta">
                   <ul>
-                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.display_name}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.create_date}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Comments: {{post.comment_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Upvote: {{post.upvote_count}}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Downvote: {{post.downvote_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.display_name}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">{{post.create_date}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">Comments: {{post.comment_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-arrow-up"></i> <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">Upvote: {{post.upvote_count}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-arrow-down"></i> <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">Downvote: {{post.downvote_count}}</a></li>
                   </ul>
                 </div>
   
                 <div class="entry-content">
                   <p>{{ post.post_content.split()[:25] | join(' ') }}...</p>
                   <div class="read-more">
-                    <a href="{{ url_for('view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
+                    <a href="{{ url_for('singlepost.view_post', post_id=post.post_id) }}" rel="stylesheet">Read More</a>
                   </div>
                 </div>
   
@@ -156,7 +156,7 @@
 
               <h3 class="sidebar-title">Search</h3>
               <div class="sidebar-item search-form">
-                <form action="{{ url_for('get_posts_and_tags') }}" method="POST">
+                <form action="{{ url_for('posts.get_posts_and_tags') }}" method="POST">
                   <input type="text" id="search-input" placeholder="Search" maxlength="50" name="search" >
                   <button type="submit"><i class="bi bi-search"></i></button>
                 </form>
@@ -167,7 +167,7 @@
                 <ul id="category-list">
                     {% if categories is not none %}
                     {% for category in categories %}
-                  <li><a href="{{ url_for('get_posts_and_tags', category=category.name) }}" class="category-link" data-category="{{ category.name }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
+                  <li><a href="{{ url_for('posts.get_posts_and_tags', category=category.name) }}" class="category-link" data-category="{{ category.name }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
                   {% endfor %}
                   {% endif %}
                 </ul>
@@ -180,7 +180,7 @@
                     {% for rp in popularPosts %}
                 <div class="post-item clearfix">
                  
-                  <h4><a href="{{ url_for('view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>
+                  <h4><a href="{{ url_for('singlepost.view_post', post_id=rp.post_id) }}" rel="stylesheet">{{rp.title}}</a></h4>
                   <time datetime="2020-01-01">{{rp.date}}</time>
                   
                 </div>   {% endfor %}
@@ -194,7 +194,7 @@
                 <ul>
                     {% if tags is not none %}
                     {% for tag in tags %}
-                  <li><a href="{{ url_for('get_posts_and_tags', tag=tag.name) }}">{{tag.name}}</a></li>
+                  <li><a href="{{ url_for('posts.get_posts_and_tags', tag=tag.name) }}">{{tag.name}}</a></li>
                   {% endfor %}
               {% endif %}
 

@@ -32,7 +32,7 @@
     </style>
     <div class="login-page">
         <div class="form">
-            <form class="login-form" method="post" action="{{ url_for('login') }}">
+            <form class="login-form" method="post" action="{{ url_for('auth.login') }}">
                 <p>Have an account??</p>
                 <input type="text" name="username" maxlength='25' title="Username" placeholder='Username' value="{{ session['registered_username'] }}" id="username" required/><span class="asterisk_required_field"></span>
                 <input type="password" name="password" maxlength='25' title="Password" placeholder='Password' value="{{ session['registered_password'] }}" id="password" required/><span class="asterisk_required_field"></span>
@@ -48,7 +48,7 @@
                     {% endif %}
                 {% endwith %}
                 </div>
-                <p class="message">Not registered? <a href="{{ url_for('registration') }}">Create an account</a></p>
+                <p class="message">Not registered? <a href="{{ url_for('auth.registration') }}">Create an account</a></p>
             </form>
         </div>
     </div>

@@ -51,16 +51,16 @@
         
           {% if user_id is not none %}
             <li><a  href="{{ url_for('get_posts_and_tags')}}">Blogs</a></li>
-            <li><a class="getstarted" href="{{ url_for('logout')}}"><span>Logout</span> </a></li>
+            <li><a class="getstarted" href="{{ url_for('auth.logout')}}"><span>Logout</span> </a></li>
            
               {% else  %}
             <li class="dropdown">
               <a class="getstarted" href="#"><span>Get Started</span> <i class="bi bi-chevron-right"></i></a>
               <ul>
               
-                <li><a href="{{ url_for('login')}}">Login</a></li>
-                <li><a href="{{ url_for('registration')}}">Register</a></li>
-                <!-- <li><a href="{{ url_for('registration')}}">Admin Login</a></li> -->
+                <li><a href="{{ url_for('auth.login')}}">Login</a></li>
+                <li><a href="{{ url_for('auth.registration')}}">Register</a></li>
+                <li><a href="{{ url_for('auth.registration')}}">Admin Login</a></li>
               
               </ul>
             </li>{% endif %}
@@ -79,7 +79,7 @@
       {% if user_id is not none %}
       <a href="{{ url_for('get_posts_and_tags')}}" class="btn-get-started scrollto">Get Started</a>
       {% else  %}
-      <a href="{{ url_for('login')}}" class="btn-get-started scrollto">Get Started</a>
+      <a href="{{ url_for('auth.login')}}" class="btn-get-started scrollto">Get Started</a>
       {% endif %}
     </div>
   </section><!-- End Hero -->

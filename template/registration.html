@@ -146,7 +146,7 @@ body {
 
     <div class="login-page">
         <div class="form">
-            <form class="register-form" method="post" action="{{ url_for('registration') }}">
+            <form class="register-form" method="post" action="{{ url_for('auth.registration') }}">
             {% for message in get_flashed_messages() %}
             <div class="error-message" style="color:red"> 
                     {{ message }}
@@ -177,7 +177,7 @@ body {
 
                 onclick="wrong_pass_alert()"value="Submit">Create</button>
                
-                <p class="message">Already registered? <a href="{{ url_for('login') }}">Sign In</a></p>
+                <p class="message">Already registered? <a href="{{ url_for('auth.login') }}">Sign In</a></p>
             </form>
             
         </div>

@@ -1,12 +1,12 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, render_template, request, flash, session, redirect, url_for, jsonify, abort
+from flask import Flask, render_template, request, flash,  make_response, session, redirect, url_for, jsonify, abort
 import pymysql
 from functools import wraps
-from werkzeug.security import check_password_hash, generate_password_hash
-from config import DATABASE_CONFIG
+from config import *
 from queries import *
 import re
 from math import ceil
+from auth import auth_bp
 
 # from models import Users, Base
 import datetime
@@ -14,125 +14,127 @@ import datetime
 
 app = Flask(__name__, template_folder='template')
 app.secret_key = '#qwertyuiop!!!!234567$$'
-db = pymysql.connect(**DATABASE_CONFIG, cursorclass=pymysql.cursors.DictCursor)
+# db = pymysql.connect(**DATABASE_CONFIG, cursorclass=pymysql.cursors.DictCursor)
+
+app.register_blueprint(auth_bp)
 
 
-@app.route('/registration/', methods=['GET', 'POST'])
-def registration():
-    if request.method == 'POST':
-        # Limit username to 50 characters
-        username = request.form['username']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        email = request.form['email']
-        # Limit display name to 50 characters
-        display_name = request.form['display_name']
-        # Limit about me to 130 characters
-        about_me = request.form['about_me']
-        role = 'Regular User'
-        Gravatar_url = request.form['Gravatar_url']
-        session['registration_form_data'] = request.form
-        # Check if all fields are provided
-        if not username or not password or not confirm_password or not email or not display_name or not Gravatar_url or not about_me:
+# @app.route('/registration/', methods=['GET', 'POST'])
+# def registration():
+#     if request.method == 'POST':
+#         # Limit username to 50 characters
+#         username = request.form['username']
+#         password = request.form['password']
+#         confirm_password = request.form['confirm_password']
+#         email = request.form['email']
+#         # Limit display name to 50 characters
+#         display_name = request.form['display_name']
+#         # Limit about me to 130 characters
+#         about_me = request.form['about_me']
+#         role = 'Regular User'
+#         Gravatar_url = request.form['Gravatar_url']
+#         session['registration_form_data'] = request.form
+#         # Check if all fields are provided
+#         if not username or not password or not confirm_password or not email or not display_name or not Gravatar_url or not about_me:
 
-            flash('Please fill the required fields', 'error')
+#             flash('Please fill the required fields', 'error')
 
-        elif password != confirm_password:
+#         elif password != confirm_password:
 
-            flash('Passwords do not match.', 'error')
+#             flash('Passwords do not match.', 'error')
 
-        else:
-            # Check if the username or email already exists
-            with db.cursor() as cursor:
-                cursor.execute(
-                    "SELECT * FROM Users WHERE username = %s OR email = %s", (username, email))
-                existing_user = cursor.fetchone()
+#         else:
+#             # Check if the username or email already exists
+#             with db.cursor() as cursor:
+#                 cursor.execute(
+#                     "SELECT * FROM Users WHERE username = %s OR email = %s", (username, email))
+#                 existing_user = cursor.fetchone()
 
-                if existing_user:
+#                 if existing_user:
 
-                    flash(
-                        'Username or email already exists. Please choose a different one.', 'error')
+#                     flash(
+#                         'Username or email already exists. Please choose a different one.', 'error')
 
-                else:
-                    if not re.match(r"^[a-zA-Z0-9_]*$", username):
-                        flash('Username should be alphanumeric ', 'error')
-                    # Validate email format
-                    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+#                 else:
+#                     if not re.match(r"^[a-zA-Z0-9_]*$", username):
+#                         flash('Username should be alphanumeric ', 'error')
+#                     # Validate email format
+#                     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
 
-                        flash('Invalid email address.', 'error')
-                    if not re.match(r"^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$", Gravatar_url):
-                        flash('Invalid Gravatar Url', 'error')
+#                         flash('Invalid email address.', 'error')
+#                     if not re.match(r"^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$", Gravatar_url):
+#                         flash('Invalid Gravatar Url', 'error')
 
-                    if not re.match(r"^[a-zA-Z0-9_]*$", display_name):
-                        flash('Display name should be alphanumeric too', 'error')
+#                     if not re.match(r"^[a-zA-Z0-9_]*$", display_name):
+#                         flash('Display name should be alphanumeric too', 'error')
 
-                        # Check password strength and provide suggestions
+#                         # Check password strength and provide suggestions
 
-                    if len(password) < 8:
+#                     if len(password) < 8:
 
-                        flash(
-                            'Password must be at least 8 characters long.', 'error')
+#                         flash(
+#                             'Password must be at least 8 characters long.', 'error')
 
-                    elif not any(char.isdigit() for char in password):
-                        flash(
-                            'Password must contain at least one digit.', 'error')
-                    elif not any(char.isalpha() for char in password):
-                        flash(
-                            'Password must contain at least one letter.', 'error')
-                    elif not any(char.isupper() for char in password):
-                        flash(
-                            'Password must contain at least one uppercase letter.', 'error')
-                    else:
-                        # Hash the password before storing in the database
-                        hashed_password = generate_password_hash(password)
+#                     elif not any(char.isdigit() for char in password):
+#                         flash(
+#                             'Password must contain at least one digit.', 'error')
+#                     elif not any(char.isalpha() for char in password):
+#                         flash(
+#                             'Password must contain at least one letter.', 'error')
+#                     elif not any(char.isupper() for char in password):
+#                         flash(
+#                             'Password must contain at least one uppercase letter.', 'error')
+#                     else:
+#                         # Hash the password before storing in the database
+#                         hashed_password = generate_password_hash(password)
 
-                        # Insert new user into the database
-                        cursor.execute(insert_user(username, email, hashed_password,
-                                                   display_name, about_me, role, Gravatar_url),
-                                       (username, email, hashed_password, display_name, about_me, role, Gravatar_url))
-                        db.commit()
-                        session.pop('registration_form_data', None)
-                        session['registered_username'] = username
-                        session['registered_password'] = password
+#                         # Insert new user into the database
+#                         cursor.execute(insert_user(username, email, hashed_password,
+#                                                    display_name, about_me, role, Gravatar_url),
+#                                        (username, email, hashed_password, display_name, about_me, role, Gravatar_url))
+#                         db.commit()
+#                         session.pop('registration_form_data', None)
+#                         session['registered_username'] = username
+#                         session['registered_password'] = password
 
-                        flash(
-                            'Registration successful. You can now log in.', 'success')
-                        return redirect(url_for('login'))
-    form_data = session.pop('registration_form_data', {})
-    return render_template('registration.html', form_data=form_data)
+#                         flash(
+#                             'Registration successful. You can now log in.', 'success')
+#                         return redirect(url_for('login'))
+#     form_data = session.pop('registration_form_data', {})
+#     return render_template('registration.html', form_data=form_data)
 
 
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if not username or not password:
-            flash('Username and password are required.', 'error')
-        else:
-            with db.cursor() as cursor:
-                cursor.execute(
-                    "SELECT * FROM Users WHERE username = %s", (username,))
-                user = cursor.fetchone()
+# @app.route('/login/', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
+#         if not username or not password:
+#             flash('Username and password are required.', 'error')
+#         else:
+#             with db.cursor() as cursor:
+#                 cursor.execute(
+#                     "SELECT * FROM Users WHERE username = %s", (username,))
+#                 user = cursor.fetchone()
 
-                if user is None:
-                    flash('User not found', 'error')
-                elif 'password_hash' not in user:
-                    flash('Password information not found for the user', 'error')
-                elif not check_password_hash(user['password_hash'], password):
-                    flash('Invalid password', 'error')
-                else:
-                    session.clear()
-                    session['user_id'] = user['user_id']
-                    session['username'] = user['username']
-                    session['display_name'] = user['display_name']
-                    session['current_user'] = user
-                    session['role'] = user['role']
+#                 if user is None:
+#                     flash('User not found', 'error')
+#                 elif 'password_hash' not in user:
+#                     flash('Password information not found for the user', 'error')
+#                 elif not check_password_hash(user['password_hash'], password):
+#                     flash('Invalid password', 'error')
+#                 else:
+#                     session.clear()
+#                     session['user_id'] = user['user_id']
+#                     session['username'] = user['username']
+#                     session['display_name'] = user['display_name']
+#                     session['current_user'] = user
+#                     session['role'] = user['role']
 
-                    return redirect(url_for('get_posts_and_tags'))
+#                     return redirect(url_for('get_posts_and_tags'))
 
-    # Return the template even if the login attempt fails
-    return render_template('login.html')
+#     # Return the template even if the login attempt fails
+#     return render_template('login.html')
 
 
 def login_required(view):
@@ -149,10 +151,10 @@ def login_required(view):
     return wrapped_view
 
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
+# @app.route('/logout')
+# def logout():
+#     session.clear()
+#     return redirect(url_for('index'))
 
 
 # Number of posts to display per page

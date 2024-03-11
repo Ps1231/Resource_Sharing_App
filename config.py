@@ -1,7 +1,4 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session, sessionmaker
-
+import pymysql
 DATABASE_CONFIG = {
     'host': 'localhost',
     'user': 'root',
@@ -12,3 +9,4 @@ DATABASE_CONFIG = {
 
 SECRET_KEY = 'your_secret_key_here'
 DEBUG = True
+db = pymysql.connect(**DATABASE_CONFIG, cursorclass=pymysql.cursors.DictCursor)

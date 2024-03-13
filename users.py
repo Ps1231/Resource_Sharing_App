@@ -73,3 +73,24 @@ def admin():
 @requires_role(['Admin'])
 def adminProfile():
     return render_template('users-profile.html')
+
+
+@users_bp.route('/adminAuthorStatus', methods=['GET', 'POST'])
+@login_required
+@requires_role(['Admin'])
+def authorStatus():
+    return render_template('tables-data.html')
+
+
+@users_bp.route('/adminPostCategories', methods=['GET', 'POST'])
+@login_required
+@requires_role(['Admin'])
+def postCategories():
+    return render_template("pages-contact.html")
+
+
+@users_bp.route('/adminReportrdPosts', methods=['GET', 'POST'])
+@login_required
+@requires_role(['Admin'])
+def reportedPosts():
+    return render_template("reported-posts.html")

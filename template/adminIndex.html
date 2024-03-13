@@ -119,7 +119,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="index.html">
+        <a class="nav-link " href="{{ url_for('users.admin')}}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -156,21 +156,21 @@
       </li><!-- End Profile Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-faq.html">
+        <a class="nav-link collapsed" href="{{ url_for('users.authorStatus')}}">
           <i class="bi bi-question-circle"></i>
           <span>Author Status</span>
         </a>
       </li><!-- End F.A.Q Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
+        <a class="nav-link collapsed" href="{{ url_for('users.reportedPosts')}}">
           <i class="bi bi-envelope"></i>
           <span>Reported Posts</span>
         </a>
       </li><!-- End Contact Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
+        <a class="nav-link collapsed" href="{{ url_for('users.postCategories')}}">
           <i class="bi bi-card-list"></i>
           <span>Categories</span>
         </a>

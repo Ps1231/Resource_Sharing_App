@@ -64,8 +64,14 @@ def admin():
         user_id = session.get('user_id')
         if not user_id:
             return redirect(url_for('auth.login'))
+    with db.cursor() as cursor:
+        cursor = db.cursor()
+        cursor.execute(get_total_rows_query())
+        posts = cursor.fetchone()['COUNT(*)']
+        cursor.execute("select count(*)from Users")
+        users = cursor.fetchone()['count(*)']
 
-    return render_template('adminIndex.html')
+    return render_template('adminIndex.html', posts=posts, users=users)
 
 
 @users_bp.route('/adminProfile', methods=['GET', 'POST'])
@@ -86,7 +92,10 @@ def authorStatus():
 @login_required
 @requires_role(['Admin'])
 def postCategories():
-    return render_template("pages-contact.html")
+    with db.cursor() as cursor:
+        cursor.execute(get_category())
+        categories = cursor.fetchall()
+    return render_template("pages-contact.html", categories=categories)
 
 
 @users_bp.route('/adminReportrdPosts', methods=['GET', 'POST'])

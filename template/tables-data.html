@@ -132,20 +132,20 @@
 
       <li class="nav-item">
         
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="{{ url_for('index')}}">
+        <a class="nav-link collapsed" href="{{ url_for('index')}}">
           <i class="bi bi-menu-button-wide"></i><span>Home</span>
         </a>
       </li><!-- End Components Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="{{ url_for('posts.get_posts_and_tags')}}">
+        <a class="nav-link collapsed"  href="{{ url_for('posts.get_posts_and_tags')}}">
           <i class="bi bi-journal-text"></i><span>Blogs</span>
         </a>
       
       </li><!-- End Forms Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="{{ url_for('users.account')}}">
+        <a class="nav-link collapsed"  href="{{ url_for('users.account')}}">
           <i class="bi bi-layout-text-window-reverse"></i><span>My Posts</span>
         </a>
        

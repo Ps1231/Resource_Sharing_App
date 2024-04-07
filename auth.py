@@ -23,7 +23,7 @@ def registration():
         display_name = request.form['display_name']
         # Limit about me to 130 characters
         about_me = request.form['about_me']
-        role = 'Admin'
+        role = 'Regular User'
         Gravatar_url = request.form['Gravatar_url']
         session['registration_form_data'] = request.form
         # Check if all fields are provided

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
+import random
 from queries import *
 from config import *
 
@@ -24,7 +25,10 @@ def registration():
         # Limit about me to 130 characters
         about_me = request.form['about_me']
         role = 'Regular User'
-        Gravatar_url = request.form['Gravatar_url']
+        AVATAR_FILES = ['avatar1.jpg', 'avatar2.png',
+                        'avatar3.jpeg', 'avatar4.jpg']
+        selected_avatar = random.choice(AVATAR_FILES)
+        Gravatar_url = selected_avatar
         session['registration_form_data'] = request.form
         # Check if all fields are provided
         if not username or not password or not confirm_password or not email or not display_name or not Gravatar_url or not about_me:
@@ -54,10 +58,10 @@ def registration():
                     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
 
                         flash('Invalid email address.', 'error')
-                    if not re.match(r"^https?:\/\/(www\.)?gravatar\.com\/avatar\/[a-zA-Z0-9]+(\?s=[0-9]+)?$", Gravatar_url):
-                        flash('Invalid Gravatar Url', 'error')
+                    # if not re.match(r"^https:\/\/gravatar\.com\/[a-zA-Z0-9]+$", Gravatar_url):
+                    #     flash('Invalid Gravatar Url', 'error')
 
-                    if not re.match(r"^[a-zA-Z0-9_]*$", display_name):
+                    if not re.match(r"^[a-zA-Z0-9\s_]*$", display_name):
                         flash('Display name should be alphanumeric too', 'error')
 
                         # Check password strength and provide suggestions
@@ -122,6 +126,7 @@ def login():
                     session['display_name'] = user['display_name']
                     session['current_user'] = user
                     session['role'] = user['role']
+                    session['avatar'] = user['Gravatar_url']
                     if session['role'] == 'Admin':
                         return redirect(url_for('users.admin'))
                     return redirect(url_for('posts.get_posts_and_tags'))

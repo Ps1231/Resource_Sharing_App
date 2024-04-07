@@ -288,7 +288,7 @@ def downvote_post(post_id, username):
 
 def get_user_info(user_id):
     return f"""
-    SELECT user_id, username, email, display_name,about_me,role
+    SELECT user_id, username, email, display_name,about_me,role,Gravatar_url
     FROM Users
     WHERE user_id = {user_id}
     """
@@ -339,7 +339,7 @@ def get_author_posts(username):
 
 def get_author_info(username):
     return """
-        SELECT user_id, username, email, display_name, about_me, role
+        SELECT user_id, username, email, display_name, about_me, role,Gravatar_url
         FROM Users
         WHERE username = %s
     """

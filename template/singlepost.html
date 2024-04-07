@@ -241,7 +241,7 @@
               </article><!-- End blog entry -->
             
               <div class="blog-author d-flex align-items-center">
-                <img src="{{ url_for('static' , filename = 'blog-author.jpg') }}" class="rounded-circle float-left" alt="">
+                <img src="{{ url_for('static' , filename = post.user_image) }}" class="rounded-circle float-left" alt="">
                 <div>
                   <h4><a href="{{ url_for('users.userPost', username=post.username) }}">{{post.display_name}}</a></h4>
                   <div class="social-links">

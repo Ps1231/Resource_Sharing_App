@@ -1,3 +1,4 @@
+import mysql.connector
 import pymysql
 from config import DATABASE_CONFIG
 db = pymysql.connect(**DATABASE_CONFIG, cursorclass=pymysql.cursors.DictCursor)
@@ -242,12 +243,19 @@ def get_comments(post_id):
 
 def get_category():
     return '''SELECT
-    category as name,
-    COUNT(post_id) AS post_count
+    c.category AS name,
+    COUNT(p.post_id) AS post_count
 FROM
-    Posts
+    (SELECT 'Class Notes & Study Materials' AS category
+     UNION SELECT 'Textbooks & References'
+     UNION SELECT 'Internship & Job Opportunities'
+     UNION SELECT 'Events & Hackathons'
+     UNION SELECT 'Study Groups & Tutoring'
+     UNION SELECT 'Online Courses') AS c
+LEFT JOIN
+    Posts p ON c.category = p.category
 GROUP BY
-    category;
+    c.category;
 '''
 
 
@@ -343,3 +351,109 @@ def get_author_info(username):
         FROM Users
         WHERE username = %s
     """
+
+
+def author_status():
+    return """SELECT u.user_id, u.username, u.display_name, u.email, u.creation_date,
+                       u.role, COUNT(DISTINCT c.comment_id) AS total_comments,
+                       COUNT(DISTINCT p.post_id) AS total_posts,
+                       COUNT(DISTINCT v.vote_id) AS total_votes
+                FROM Users u
+                LEFT JOIN Comments c ON u.user_id = c.user_id
+                LEFT JOIN Posts p ON u.user_id = p.user_id
+                LEFT JOIN Votes v ON u.user_id = v.user_id
+                GROUP BY u.user_id"""
+
+
+def top_author():
+    return """SELECT u.user_id, u.username, u.display_name, u.email, u.creation_date,
+                       u.role, COUNT(DISTINCT c.comment_id) AS total_comments,
+                       COUNT(DISTINCT p.post_id) AS total_posts,
+                       SUM(CASE WHEN v.vote_type = 'upvote' THEN 1 ELSE 0 END) AS total_upvotes
+                FROM Users u
+                LEFT JOIN Comments c ON u.user_id = c.user_id
+                LEFT JOIN Posts p ON u.user_id = p.user_id
+                LEFT JOIN Votes v ON u.user_id = v.user_id
+                GROUP BY u.user_id
+                ORDER BY total_upvotes DESC
+                LIMIT 10"""
+
+
+def top_tags():
+    return """SELECT 
+    T.tag_name,
+    COUNT(DISTINCT V.post_id) AS total_posts,
+    SUM(CASE WHEN V.vote_type = 'upvote' THEN 1 ELSE 0 END) AS total_upvotes,
+    COUNT(DISTINCT C.comment_id) AS total_comments
+FROM 
+    Tags T
+JOIN 
+    PostTags PT ON T.tag_id = PT.tag_id
+JOIN 
+    Votes V ON PT.post_id = V.post_id
+LEFT JOIN 
+    Comments C ON PT.post_id = C.post_id
+GROUP BY 
+    T.tag_name
+ORDER BY 
+    total_upvotes DESC, total_posts DESC, total_comments DESC
+LIMIT 
+    8;
+"""
+
+
+def recent_posts():
+    return """SELECT 
+    post_id,
+    user_id,
+    title,
+    body,
+    CASE
+        WHEN TIMESTAMPDIFF(SECOND, create_date, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, create_date, NOW()), ' seconds ago')
+        WHEN TIMESTAMPDIFF(MINUTE, create_date, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, create_date, NOW()), ' minutes ago')
+        WHEN TIMESTAMPDIFF(HOUR, create_date, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, create_date, NOW()), ' hours ago')
+        ELSE CONCAT(TIMESTAMPDIFF(DAY, create_date, NOW()), ' days ago')
+    END AS time_ago
+FROM 
+    Posts
+ORDER BY 
+    create_date DESC
+LIMIT 5;
+"""
+# def extract_categories():
+#     with db.cursor() as cursor:
+#         cursor.execute("DESCRIBE Posts")
+#         enum_definition = cursor.fetchall()
+#         categories = []
+#         for field in enum_definition:
+#             if field['Field'] == 'category':
+#                 enum_values = field['Type']
+#                 categories = enum_values[6:-2].replace("'", "").split(",")
+#                 break
+#         return categories
+
+
+# def get_category_post_counts():
+#     try:
+#         with db.cursor() as cursor:
+#             # Fetch the list of categories
+#             categories = extract_categories()
+
+#             # Initialize a dictionary to store category post counts
+#             category_post_counts = {}
+
+#             # Iterate over each category
+#             for category in categories:
+#                 # Query the database to count the number of posts in the category
+#                 cursor.execute(
+#                     f"SELECT COUNT(*) AS post_count FROM Posts WHERE category = '{category}'")
+#                 result = cursor.fetchone()
+#                 post_count = result['post_count'] if result else 0
+
+#                 # Store the category and its post count in the dictionary
+#                 category_post_counts[category] = post_count
+
+#             return category_post_counts
+#     except mysql.connector.Error as error:
+#         print("Error:", error)
+#         return None

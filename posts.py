@@ -9,9 +9,52 @@ posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
 POSTS_PER_PAGE = 10
 
 
+def extract_categories():
+    with db.cursor() as cursor:
+        cursor.execute("DESCRIBE Posts")
+        enum_definition = cursor.fetchall()
+        categories = []
+        for field in enum_definition:
+            if field['Field'] == 'category':
+                enum_values = field['Type']
+                categories = enum_values[6:-2].replace("'", "").split(",")
+                break
+        return categories
+
+
+def get_category_post_counts():
+    try:
+        with db.cursor() as cursor:
+            # Fetch the list of categories
+            categories = extract_categories()
+
+            # Initialize a dictionary to store category post counts
+            category_post_counts = {}
+
+            # Iterate over each category
+            for category in categories:
+                # Query the database to count the number of posts in the category
+                cursor.execute(
+                    f"SELECT COUNT(*) AS post_count FROM Posts WHERE category = '{category}'")
+                result = cursor.fetchone()
+                post_count = result['post_count'] if result else 0
+
+                # Store the category and its post count in the dictionary
+                category_post_counts[category] = post_count
+
+            return category_post_counts
+    except mysql.connector.Error as error:
+        print("Error:", error)
+        return None
+
+
 @posts_bp.route('/posts', methods=['GET', 'POST'])
 @login_required
 def get_posts_and_tags():
+    category_post_counts = get_category_post_counts()
+    if category_post_counts is None:
+        flash('Failed to fetch category post counts', 'error')
+        category_post_counts = {}
     search_query = request.values.get('search', '')
     selected_category = request.args.get('category')
     selected_tag = request.values.get('tag', '')
@@ -57,7 +100,7 @@ def get_posts_and_tags():
         categories = cursor.fetchall()
 
     return render_template('post.html', posts=posts, popularPosts=popularPosts, tags=tags, clicked_tag=selected_tag,
-                           current_page=page, total_pages=total_pages, categories=categories, search_query=search_query, clicked_category=selected_category)
+                           current_page=page, total_pages=total_pages, categories=categories, search_query=search_query, clicked_category=selected_category, category_post_counts=category_post_counts)
 
 
 @posts_bp.route('/delete-post', methods=['POST'])

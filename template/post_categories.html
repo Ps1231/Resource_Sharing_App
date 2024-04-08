@@ -127,20 +127,20 @@
 
       <li class="nav-item">
         
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="{{ url_for('index')}}">
+        <a class="nav-link collapsed" href="{{ url_for('index')}}">
           <i class="bi bi-menu-button-wide"></i><span>Home</span>
         </a>
       </li><!-- End Components Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="{{ url_for('posts.get_posts_and_tags')}}">
+        <a class="nav-link collapsed"  href="{{ url_for('posts.get_posts_and_tags')}}">
           <i class="bi bi-journal-text"></i><span>Blogs</span>
         </a>
       
       </li><!-- End Forms Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="{{ url_for('users.account')}}">
+        <a class="nav-link collapsed"  href="{{ url_for('users.account')}}">
           <i class="bi bi-layout-text-window-reverse"></i><span>My Posts</span>
         </a>
        
@@ -193,20 +193,23 @@
       <div class="row gy-4">
 
         <div class="col-xl-6">
-
           <div class="row">
-            {% if categories is not none %}
-            {% for category in categories %}
-            <div class="col-lg-6">
-              <div class="info-box card">
-                <h3>{{ category.name }}</h3>
-                <p>Total Posts : {{category.post_count}}</p>
+            {% if category_post_counts %}
+              {% for category, post_count in category_post_counts.items() %}
+                <div class="col-lg-6">
+                  <div class="info-box card">
+                    <h3>{{ category }}</h3>
+                    <p>Total Posts: {{ post_count }}</p>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="col-lg-12">
+                <p>No categories found.</p>
               </div>
-            </div>
-            {% endfor %}
             {% endif %}
-           
           </div>
+          
 
         </div>
 
@@ -228,9 +231,18 @@
 
           <form action="" method="post" class="php-email-form">
             <div class="row gy-4">
+              <span>Note: Deleting any category will remove all the posts related to that category</span>
               <label>Delete Category</label>
               <div class="col-md-12">
-                <input type="text" class="form-control" name="delete" placeholder=" Category Name " required>
+                <!-- <input type="text" class="form-control" name="delete" placeholder=" Category Name " required> -->
+                <select id="category" class="form-control" name="delete">
+                  {% if category_post_counts %}
+                    {% for category, post_count in category_post_counts.items() %}
+                      <option>{{ category }}</option>
+                    {% endfor %}
+                  {% endif %}
+                </select>
+
               </div>
               <button type="submit">Delete Category</button>               
             </div>

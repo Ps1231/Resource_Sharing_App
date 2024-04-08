@@ -6,6 +6,45 @@ from util import login_required
 singlepost_bp = Blueprint('singlepost', __name__, url_prefix='/singlepost')
 
 
+def extract_categories():
+    with db.cursor() as cursor:
+        cursor.execute("DESCRIBE Posts")
+        enum_definition = cursor.fetchall()
+        categories = []
+        for field in enum_definition:
+            if field['Field'] == 'category':
+                enum_values = field['Type']
+                categories = enum_values[6:-2].replace("'", "").split(",")
+                break
+        return categories
+
+
+def get_category_post_counts():
+    try:
+        with db.cursor() as cursor:
+            # Fetch the list of categories
+            categories = extract_categories()
+
+            # Initialize a dictionary to store category post counts
+            category_post_counts = {}
+
+            # Iterate over each category
+            for category in categories:
+                # Query the database to count the number of posts in the category
+                cursor.execute(
+                    f"SELECT COUNT(*) AS post_count FROM Posts WHERE category = '{category}'")
+                result = cursor.fetchone()
+                post_count = result['post_count'] if result else 0
+
+                # Store the category and its post count in the dictionary
+                category_post_counts[category] = post_count
+
+            return category_post_counts
+    except mysql.connector.Error as error:
+        print("Error:", error)
+        return None
+
+
 def handle_vote(post_id, user_id, vote_type):
     with db.cursor() as cursor:
         # Check if the user has already voted on this post
@@ -75,7 +114,10 @@ def handle_like(user_id, comment_id):
 @singlepost_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def view_post(post_id):
-
+    category_post_counts = get_category_post_counts()
+    if category_post_counts is None:
+        flash('Failed to fetch category post counts', 'error')
+        category_post_counts = {}
     if request.method == 'POST':
         user_id = session.get('user_id')
 
@@ -119,7 +161,7 @@ def view_post(post_id):
         cursor.execute(get_category())
         categories = cursor.fetchall()
 
-        return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id)
+        return render_template('singlepost.html', post=post, comments=comments, popularPosts=popularPosts, categories=categories, tags=tags, post_id=post_id, category_post_counts=category_post_counts)
 
 
 @singlepost_bp.route('/delete-comment', methods=['POST'])

@@ -164,13 +164,21 @@
 
               <h3 class="sidebar-title">Categories</h3>
               <div class="sidebar-item categories">
-                <ul id="category-list">
+                <!-- <ul id="category-list">
                     {% if categories is not none %}
                     {% for category in categories %}
                   <li><a href="{{ url_for('posts.get_posts_and_tags', category=category.name) }}" class="category-link" data-category="{{ category.name }}">{{category.name}} <span>({{category.post_count}})</span></a></li>
                   {% endfor %}
                   {% endif %}
+                </ul> -->
+                <ul id="category-list">
+                  {% if category_post_counts %}
+                    {% for category, post_count in category_post_counts.items() %}
+                      <li><a href="{{ url_for('posts.get_posts_and_tags', category=category) }}" class="category-link" data-category="{{ category }}">{{ category }} <span>({{ post_count }})</span></a></li>
+                    {% endfor %}
+                  {% endif %}
                 </ul>
+                
               </div><!-- End sidebar categories-->
 
                <h3 class="sidebar-title">Popular Posts</h3>

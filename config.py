@@ -2,7 +2,7 @@ import pymysql
 DATABASE_CONFIG = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'rashi@2003',
+    'password': '2003',
     'db': 'resource1',
     'charset': 'utf8mb4'
 }

@@ -1,7 +1,7 @@
 mysql:
   host: localhost
   user: root
-  password: rashi@2003
+  password: "2003"
   database: resource1
   num_records: 10
 

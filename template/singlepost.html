@@ -241,7 +241,9 @@
               </article><!-- End blog entry -->
             
               <div class="blog-author d-flex align-items-center">
-                <img src="{{ url_for('static' , filename = post.user_image) }}" class="rounded-circle float-left" alt="">
+                <!-- <img src="{{ url_for('static' , filename = post.user_image) }}" class="rounded-circle float-left" alt=""> -->
+                <img src="{{ url_for('static' , filename = 'avatar2.png') }}" class="rounded-circle float-left" alt="">
+
                 <div>
                   <h4><a href="{{ url_for('users.userPost', username=post.username) }}">{{post.display_name}}</a></h4>
                   <div class="social-links">
@@ -260,7 +262,7 @@
                 {% for comment in comments %}
                 <div id="comment-1" class="comment">
                   <div class="d-flex">
-                    <div class="comment-img"><img src="{{ url_for('static' , filename = 'blog-author.jpg') }}"alt=""></div>
+                    <div class="comment-img"><img src="{{ url_for('static' , filename = 'avatar1.jpg') }}"alt=""></div>
                     <div>
                     
                       <h5><a href="">{{comment.Commenter_Name}}</a></h5>
